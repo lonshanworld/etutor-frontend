@@ -10,7 +10,8 @@ export default {
     extend: {
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        font: "var(--font-color)",
+        popup: "var(--popup)",
       },
     },
   },

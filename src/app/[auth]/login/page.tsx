@@ -1,12 +1,14 @@
-"use client"
+"use client";
 
-import { useUserStore } from "@/stores/userStore";
-
-export default function LoginPage(){
-    const user = useUserStore((state)=>state.user);
-    const login = useUserStore((state)=> state.login);
-
-    return (
-        <p>This is login page</p>
-    );
+export default function LoginPage() {
+  return (
+    <div>
+      <h1>Login Page</h1>
+      <form>
+        <input type="text" placeholder="Username" />
+        <input type="password" placeholder="Password" />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  );
 }

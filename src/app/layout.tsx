@@ -1,7 +1,10 @@
 // import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
+"use client";
 
+import { errorStore } from "@/stores/errorStore";
 import "./../styles/globals.css";
+import ToggleTheme from "./components/toggleTheme";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -23,11 +26,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { setError } = errorStore();
+
   return (
     <html lang="en">
-      <body
-        className={``}
-      >
+      <body className={``}>
+        <div className="flex gap-5 m-3">
+          <ToggleTheme />
+          <div>
+            <button
+              onClick={() => setError("Login Failed!")}
+              className="p-2 rounded-md border transition duration-300 bg-white text-black"
+            >
+              Show Error
+            </button>
+          </div>
+        </div>
+        <div
+          className={`w-full h-[500px] bg-background text-font transition-all duration-500`}
+        >
+          Layout
+        </div>
         {children}
       </body>
     </html>

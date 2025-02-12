@@ -1,8 +1,14 @@
+"use client";
+
+import ErrorPopup from "./components/errorPopup";
+import { errorStore } from "@/stores/errorStore";
 
 export default function Home() {
+  const { isError } = errorStore();
   return (
     <div>
-      <p>This is etutor, may be intro or something. Temporary leave blank for now.</p>
+      {isError && <ErrorPopup />}
+      <div className="bg-blue-300 text-font p-5">Page</div>
     </div>
   );
 }
