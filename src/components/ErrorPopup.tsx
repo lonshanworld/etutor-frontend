@@ -1,3 +1,4 @@
+
 import { errorStore } from "@/stores/errorStore";
 import { IoClose } from "react-icons/io5";
 
@@ -14,7 +15,7 @@ export default function ErrorPopup() {
           className="p-2 rounded-md transition duration-300 bg-blue-800 text-white w-[99px] h-[38px]"
           onClick={() => setError()}
         >
-          ok
+          Ok
         </button>
       </div>
       <div className="bg-black opacity-30 fixed w-screen h-screen z-10 top-0 left-0"></div>

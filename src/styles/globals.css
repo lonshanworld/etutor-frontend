@@ -4,13 +4,21 @@
 @tailwind utilities;
 
 :root {
+
   --background: #ffffff;
-  --font-color: #3b3b3b;
+  --secondaryBackground: #E5E5E5;
+  --bgOpposite : #202020;
+  --bgSecondaryOpposite : #2A2A2A;
+  --font-color: black;
 }
 
 .dark {
+ 
   --background: #202020;
-  --font-color: #eaeaea;
+  --secondaryBackground : #2A2A2A;
+  --bgOpposite : #ffffff;
+  --bgSecondaryOpposite : #E5E5E5;
+  --font-color: white;
 }
 
 body {

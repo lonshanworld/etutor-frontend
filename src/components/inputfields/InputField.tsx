@@ -1,4 +1,4 @@
-import React from "react";
+
 
 interface Props {
   id: string;
@@ -7,7 +7,7 @@ interface Props {
   placeholder: string;
 }
 
-const InputField = ({ id, label, type, placeholder }: Props) => {
+export default function InputField ({ id, label, type, placeholder }: Props) {
   return (
     <div className='mb-3'>
       <label
@@ -26,4 +26,4 @@ const InputField = ({ id, label, type, placeholder }: Props) => {
   );
 };
 
-export default InputField;
+

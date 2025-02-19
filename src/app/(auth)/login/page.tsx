@@ -1,9 +1,18 @@
 "use client";
 
-import Button from "@/app/components/Button";
-import InputField from "@/app/components/InputField";
+import { login } from "@/api/services/login";
+import Button from "@/components/buttons/Button";
+import InputField from "@/components/inputfields/InputField";
 
 export default function LoginPage() {
+
+
+  async function submitLogin(){
+    // *** this is just sample *** //
+    // const data = await login()
+  }
+
+
   return (
     <div className='h-screen flex items-center justify-center bg-[#363333] sm:px-4'>
       <div className='flex flex-col sm:flex-row justify-between bg-[#099797] sm:bg-gray-100 sm:shadow-lg sm:rounded-3xl h-screen w-screen sm:w-full sm:max-w-[800px] sm:h-[583px] relative'>

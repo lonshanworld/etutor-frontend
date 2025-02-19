@@ -1,3 +1,4 @@
+"use client"
 import { useThemeStore } from "@/stores/useThemeStore";
 
 export default function ToggleTheme() {

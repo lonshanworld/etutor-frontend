@@ -1,5 +1,3 @@
-import React from "react";
-
 interface Props {
   text: string;
   type: "submit" | "button";
@@ -7,7 +5,7 @@ interface Props {
   onCLick?: () => void;
 }
 
-const Button = ({ text, type, fullWidth = false, onCLick }: Props) => {
+export default function Button({ text, type, fullWidth = false, onCLick }: Props){
   return (
     <button
       type={type}
@@ -21,4 +19,4 @@ const Button = ({ text, type, fullWidth = false, onCLick }: Props) => {
   );
 };
 
-export default Button;
+
