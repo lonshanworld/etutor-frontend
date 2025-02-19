@@ -24,10 +24,10 @@ export default function SideBarBox(
             
             <Image 
             src={isSelected ? selectedIcon : icon}
-            width={24}
-            height={24}
+            width={22}
+            height={22}
             alt="Icon"/>
-            <span className="text-lg md:text-xl font-bold">{label}</span>
+            <span className="text-lg md:text-lg font-bold">{label}</span>
         </button>
     );
 }

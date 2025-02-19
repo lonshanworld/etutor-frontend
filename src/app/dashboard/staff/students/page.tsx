@@ -1,5 +1,5 @@
 export default function StudentListPage(){
     return (
-        <>This is student page</>
+        <>This is student list page</>
     );
 }

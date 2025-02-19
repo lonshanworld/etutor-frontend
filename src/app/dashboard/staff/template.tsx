@@ -3,12 +3,17 @@
 import SideBarBox from "@/components/sidebar/SidebarBox";
 import CreateAccountIcon from "@/assets/svgs/create-account-grey.svg";
 import SelectedCreateAccountIcon from "@/assets/svgs/create-account-colored.svg";
+import { usePathname, useRouter } from "next/navigation";
+import { AppRouter } from "@/router";
 
 export default function StaffDashboardTemplate({
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>){
+    const pathName = usePathname();
+    const router = useRouter();
+    
     return (
         <div
         className="flex flex-row w-full h-full">
@@ -17,9 +22,20 @@ export default function StaffDashboardTemplate({
             <SideBarBox 
               icon={CreateAccountIcon}
               selectedIcon={SelectedCreateAccountIcon}
-              isSelected={false}
+              isSelected={AppRouter.staffDashboardStudents === pathName}
               label="Students"
-              onClick={()=>{}}
+              onClick={()=>{
+                router.push(AppRouter.staffDashboardStudents)
+              }}
+            />
+            <SideBarBox 
+              icon={CreateAccountIcon}
+              selectedIcon={SelectedCreateAccountIcon}
+              isSelected={AppRouter.staffDashboardTutors === pathName}
+              label="Tutors"
+              onClick={()=>{
+                router.push(AppRouter.staffDashboardTutors)
+              }}
             />
           </div>
           <div

@@ -1,6 +1,6 @@
 async function fetchData(method: string, apiString?: string, body? : any) : Promise<any> {
     const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${apiString}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/${apiString}`,
         {
             method : method,
             body: body ? JSON.stringify(body) : undefined
