@@ -10,13 +10,14 @@ export default {
     extend: {
       colors: {
         background: "var(--background)",
-        secondaryBackground : "var(--secondaryBackground)",
-        backgroundOpposite : "var(--bgOpposite)",
-        secondaryBackgroundOpposite : "var(--bgSecondaryOpposite)",
-        theme : "#099797",
+        secondaryBackground: "var(--secondaryBackground)",
+        backgroundOpposite: "var(--bgOpposite)",
+        secondaryBackgroundOpposite: "var(--bgSecondaryOpposite)",
+        theme: "#099797",
         font: "var(--font-color)",
         popup: "var(--popup)",
-        cusGray : "#818181"
+        cusGray: "#818181",
+        login: "#363333", // bg color of login page
       },
     },
   },
