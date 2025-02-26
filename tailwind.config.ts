@@ -18,6 +18,9 @@ export default {
         popup: "var(--popup)",
         cusGray : "#818181"
       },
+      boxShadow: {
+        left: "-7px 0 10px rgba(0, 0, 0, 0.5)", // Left shadow only
+      },
     },
   },
   plugins: [],
