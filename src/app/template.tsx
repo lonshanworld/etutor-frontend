@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
 export default function MainTemplate({
-    children,
-  }: Readonly<{
-    children: React.ReactNode;
-  }>){
-    // const { setError } = errorStore();
-    return (
-        <>
-            {/* <div className="flex gap-5 m-3">
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  // const { setError } = errorStore();
+  return (
+    <>
+      {/* <div className="flex gap-5 m-3">
                 <ToggleTheme />
                     <div>
                         <button
@@ -24,8 +24,7 @@ export default function MainTemplate({
                     >
                 Layout
             </div> */}
-            {children}
-        </>
-    );
-
+      {children}
+    </>
+  );
 }

@@ -2,21 +2,24 @@ interface Props {
   text: string;
   type: "submit" | "button";
   fullWidth?: boolean;
-  onCLick?: () => void;
+  onClick?: (event: React.FormEvent) => void;
 }
 
-export default function Button({ text, type, fullWidth = false, onCLick }: Props){
+export default function Button({
+  text,
+  type,
+  fullWidth = false,
+  onClick,
+}: Props) {
   return (
     <button
       type={type}
-      onClick={onCLick}
+      onClick={onClick}
       className={`${
         fullWidth ? "w-full" : "w-auto"
-      } bg-[#099797] text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition text-center`}
+      } bg-theme text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition text-center`}
     >
       {text}
     </button>
   );
-};
-
-
+}
