@@ -7,15 +7,15 @@ type State = {
 
 type Action = {
   setError: (message?: string) => void;
+  clearError: () => void;
 };
 
 export const errorStore = create<State & Action>((set) => ({
   isError: false,
   message: "",
+
   setError: (message) =>
-    set((state) =>
-      state.isError
-        ? { isError: false, message: "" }
-        : { isError: true, message: message || "Error occurred!" }
-    ),
+    set({ isError: true, message: message || "Error occurred!" }),
+
+  clearError: () => set({ isError: false, message: "" }),
 }));
