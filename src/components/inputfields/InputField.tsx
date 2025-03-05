@@ -1,13 +1,14 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 interface Props {
   id: string;
-  label: string;
+  label?: string;
   type: string;
-  placeholder: string;
+  placeholder?: string;
+  register?: UseFormRegisterReturn;
   error?: string;
-  register: UseFormRegisterReturn;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function InputField({
@@ -15,22 +16,26 @@ export default function InputField({
   label,
   type,
   placeholder,
-  error,
   register,
+  error,
+  onChange,
 }: Props) {
   return (
-    <div className='mt-3.5'>
-      <label htmlFor={id} className='block text-sm font-medium text-font mb-1'>
-        {label}
-      </label>
+    <div>
+      {label && (
+        <label htmlFor={id} className='block text-sm font-medium text-font'>
+          {label}
+        </label>
+      )}
       <input
         id={id}
         type={type}
-        className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md'
+        className='mt-2 h-10 w-full px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md'
         placeholder={placeholder}
+        onChange={onChange}
         {...register}
       />
-      {error && <p className='text-red-500 text-sm mt-1'>{error}</p>}
+      {error && <p className='text-red-500 text-sm pt-1'>{error}</p>}
     </div>
   );
 }
