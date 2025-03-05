@@ -5,18 +5,21 @@ interface Props {
   onCLick?: () => void;
 }
 
-export default function Button({ text, type, fullWidth = false, onCLick }: Props){
+export default function CustomButton({
+  text,
+  type,
+  fullWidth = false,
+  onCLick,
+}: Props) {
   return (
     <button
       type={type}
       onClick={onCLick}
       className={`${
         fullWidth ? "w-full" : "w-auto"
-      } bg-[#099797] text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition text-center`}
+      } bg-theme text-white py-2 px-4 rounded-lg hover:bg-themeHover transition-300 text-center`}
     >
       {text}
     </button>
   );
-};
-
-
+}

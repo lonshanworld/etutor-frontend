@@ -6,7 +6,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-screen h-screen bg-background md:pl-5 flex flex-col  ">
+    <div className="max-w-screen min-h-screen bg-background md:pl-5 flex flex-col  ">
       <div className="py-2 pr-4">
         <DashboardAppbar />
       </div>
