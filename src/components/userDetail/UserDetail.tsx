@@ -21,7 +21,7 @@ export default function UserDetail({
   const [activeTab, setActiveTab] = useState(1);
   return (
     <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[350px] md:w-[500px] bg-background z-20 rounded-lg min-h-[600px]">
-      <div className="h-[80px] bg-theme w-full"></div>
+      <div className="h-[80px] bg-theme w-full rounded-t-lg"></div>
       {!user && <div className="text-2xl">User Not Found</div>}
       {user && (
         <div>
@@ -69,7 +69,7 @@ export default function UserDetail({
 
           {/* about me */}
           <div className="w-full px-5">
-            <div className="bg-detailBg rounded-lg min-h-[300px] px-8 py-3">
+            <div className="bg-detailBg rounded-lg h-[360px] px-8 py-3">
               <div className="tag grid grid-cols-8 ">
                 <p
                   className={twMerge(
