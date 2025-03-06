@@ -1,18 +1,18 @@
 "use client";
 
-import { login } from "@/api/services/login";
 import desktopImage from "@/assets/images/desktop-login-icon.png";
 import mobileImage from "@/assets/images/mobile-login-icon.png";
 import Button from "@/components/buttons/Button";
 import ErrorPopup from "@/components/ErrorPopup";
 import InputField from "@/components/inputfields/InputField";
 import LogoBox from "@/components/LogoBox";
+import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
 import { loginSchema } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -20,6 +20,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const { isError, setError } = errorStore();
+  const router = useRouter();
 
   const {
     register,
@@ -56,6 +57,7 @@ export default function LoginPage() {
         throw new Error("Incorrect email or password");
       }
       console.log("Login successful", user);
+      router.push(AppRouter.introPage);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message || "Login failed. Please try again.");
@@ -90,7 +92,7 @@ export default function LoginPage() {
           </div>
 
           {/* Middle Section */}
-          <div className='flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-6 py-6 mx-5 sm:shadow-none shadow-lg rounded-lg'>
+          <div className='flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-5 py-6 mx-5 sm:shadow-none shadow-lg rounded-lg'>
             <h2 className='text-3xl font-semibold text-font text-left'>
               Login
             </h2>
@@ -98,37 +100,31 @@ export default function LoginPage() {
               onSubmit={handleSubmit(handleLogin)}
               className='w-full mt-1 flex flex-col'
             >
-              <InputField
-                id='email'
-                label='Email'
-                type='email'
-                placeholder='Enter Your Email'
-                register={register("email")}
-              />
-              {errors.email && (
-                <p className='text-red-400 text-sm pt-1'>
-                  {errors.email.message}
-                </p>
-              )}
+              <div className='mt-3.5 space-y-2'>
+                <InputField
+                  id='email'
+                  label='Email'
+                  type='email'
+                  placeholder='Enter Your Email'
+                  register={register("email")}
+                  error={errors.email?.message}
+                />
 
-              <InputField
-                id='password'
-                label='Password'
-                type='password'
-                placeholder='Enter Your Password'
-                register={register("password")}
-              />
-              {errors.password && (
-                <p className='text-red-400 text-sm pt-1'>
-                  {errors.password.message}
-                </p>
-              )}
+                <InputField
+                  id='password'
+                  label='Password'
+                  type='password'
+                  placeholder='Enter Your Password'
+                  register={register("password")}
+                  error={errors.password?.message}
+                />
+              </div>
 
               <div className='flex justify-center mt-4'>
                 <Button text='Sign In' type='submit' fullWidth={true} />
               </div>
               <Link
-                href=''
+                href='/forget-password'
                 className='pt-2 text-xs text-center text-theme cursor-pointer hover:underline'
               >
                 Forgot password?

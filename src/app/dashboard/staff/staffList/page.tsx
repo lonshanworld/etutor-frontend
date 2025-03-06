@@ -20,50 +20,50 @@ const staffs = [
     activityStatus: "active",
     role: UserRole.staff,
   },
-  {
-    id: 2,
-    firstName: "Aung",
-    middleName: "Min",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042422",
-    profileImagePath: "",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-  {
-    id: 3,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042421",
-    profileImagePath: "/assets/images/Profile.png",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-  {
-    id: 4,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042421",
-    profileImagePath: "",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-  {
-    id: 5,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042421",
-    profileImagePath: "",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
+  // {
+  //   id: 2,
+  //   firstName: "Aung",
+  //   middleName: "Min",
+  //   lastName: "Myat",
+  //   email: "akm@gmail.com",
+  //   phoneNo: "09756042422",
+  //   profileImagePath: "",
+  //   activityStatus: "active",
+  //   role: UserRole.staff,
+  // },
+  // {
+  //   id: 3,
+  //   firstName: "Aung",
+  //   middleName: "Kaung",
+  //   lastName: "Myat",
+  //   email: "akm@gmail.com",
+  //   phoneNo: "09756042421",
+  //   profileImagePath: "/assets/images/Profile.png",
+  //   activityStatus: "active",
+  //   role: UserRole.staff,
+  // },
+  // {
+  //   id: 4,
+  //   firstName: "Aung",
+  //   middleName: "Kaung",
+  //   lastName: "Myat",
+  //   email: "akm@gmail.com",
+  //   phoneNo: "09756042421",
+  //   profileImagePath: "",
+  //   activityStatus: "active",
+  //   role: UserRole.staff,
+  // },
+  // {
+  //   id: 5,
+  //   firstName: "Aung",
+  //   middleName: "Kaung",
+  //   lastName: "Myat",
+  //   email: "akm@gmail.com",
+  //   phoneNo: "09756042421",
+  //   profileImagePath: "",
+  //   activityStatus: "active",
+  //   role: UserRole.staff,
+  // },
 ];
 
 export default function StaffListPage() {
@@ -86,7 +86,7 @@ export default function StaffListPage() {
 
       <div>
         <div className="float-end mt-5">
-          <CreateFormButton role={"staff"} />
+          <CreateFormButton role={UserRole.staff} />
         </div>
         <Form />
       </div>

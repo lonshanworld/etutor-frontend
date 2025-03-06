@@ -19,7 +19,7 @@ export default function MobileSideBar(
                 <RiArrowLeftSLine 
                 className="text-background w-8 h-8"/>
               </div>
-              <LogoBox withBox={false} width="w-full" height="h-14"/>
+              <LogoBox/>
               <div
               className="w-full px-4 py-4">
                 <SideBarContainer />

@@ -1,13 +1,14 @@
 "use client";
 
+import { UserRole } from "@/model/user";
 import { Button } from "../ui/button";
 import { useFormStore } from "@/stores/useFormStore";
 
-const CreateFormButton = ({ role }: { role: string }) => {
+const CreateFormButton = ({ role }: { role: UserRole }) => {
   const { setShowForm, setRole } = useFormStore();
   const handleClick = () => {
     setShowForm();
-    setRole(role);
+    setRole(role.toString());
   };
   return (
     <Button

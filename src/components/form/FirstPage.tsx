@@ -14,7 +14,7 @@ import { UserRole } from "@/model/user";
 
 type Props = {
   setPageForm: (page: number) => void;
-  // role: string | null;
+  role: string | null;
 };
 
 const FormSchema = z
@@ -75,7 +75,7 @@ export default function FirstPage({ setPageForm }: Props) {
     e.preventDefault();
     const { confirmPassword, ...userData } = data;
     console.log(userData);
-    setFormData(userData);
+    setFormData(userData as any);
     setPageForm(2);
   };
 

@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
+"use client"
+
 import FilterBox from "@/components/filterbox/FilterBox";
 import SearchBar from "@/components/searchbar/SearchBar";
 import TableDemo from "@/components/table/Table";
 import Form from "@/components/form/Form";
 import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
-import UserHomePage from "@/components/userhomepage/UserHomePage";
-import { User } from "@/model/user";
+import { User, UserRole } from "@/model/user";
 
 const students : User[] = [
   {
@@ -94,7 +94,7 @@ export default function StudentListPage() {
 
       <div>
         <div className="float-end mt-5">
-          <CreateFormButton role={"student"} />
+          <CreateFormButton role={UserRole.student} />
         </div>
         <Form />
       </div>

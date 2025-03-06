@@ -17,7 +17,7 @@ type State = {
     phoneNo: string;
     email: string;
     password: string;
-    role: UserRole;
+    role: any;
   };
   studentData?: {
     emgContactName?: string;

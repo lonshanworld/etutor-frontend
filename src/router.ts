@@ -6,4 +6,8 @@ export const AppRouter = {
   staffDashboardTutors: "/dashboard/staff/tutors",
   staffDashboardStaff: "/dashboard/staff/staffList",
   chat: "/dashboard/staff/chat",
+  forgetPassword: "/forget-password",
+  verifyOtp: "/verify-otp",
+  resetPassword: "/reset-password",
 };
+

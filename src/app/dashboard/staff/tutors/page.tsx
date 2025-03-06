@@ -5,6 +5,7 @@ import TableDemo from "@/components/table/Table";
 import Form from "@/components/form/Form";
 import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
+import { UserRole } from "@/model/user";
 
 const tutors = [
   {
@@ -92,7 +93,7 @@ export default function TutorListPage() {
 
       <div>
         <div className="float-end mt-5">
-          <CreateFormButton role={"tutor"} />
+          <CreateFormButton role={UserRole.tutor} />
         </div>
         <Form />
       </div>

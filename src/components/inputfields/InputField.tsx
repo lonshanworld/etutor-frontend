@@ -1,6 +1,5 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { ChangeEvent } from "react";
 import "./style.css";
 import { twMerge } from "tailwind-merge";
 
@@ -9,8 +8,8 @@ interface Props {
   label?: string | null;
   type: string;
   className?: string | null;
-  register: UseFormRegisterReturn;
-  error?: { name: string | null; message?: string };
+  register?: UseFormRegisterReturn;
+  error?: any;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder? : string;
 }
@@ -23,17 +22,10 @@ export default function InputField({
   register,
   error,
   placeholder,
-}: // onChange,
-// console.log(error?.name)
+  onChange
+}: 
 Props) {
-// export default function InputField({
-//   id,
-//   label,
-//   type,
-//   placeholder,
-//   error,
-//   register,
-// }: Props) {
+
   return (
     <div className="relative grid grid-cols-1">
       <input
@@ -60,14 +52,26 @@ Props) {
       >
         {label}
       </label>
-      <input
+      {
+        register 
+        ? 
+        <input
         id={id}
         type={type}
-        className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md'
+        className='mt-2 h-10 w-full px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md'
         placeholder={placeholder}
         {...register}
+        />
+        :
+        <input
+        id={id}
+        type={type}
+        className='mt-2 h-10 w-full px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md'
+        placeholder={placeholder}
+        onChange={onChange}
       />
-      {error && <p className='text-red-500 text-sm mt-1'>{error.message ?? error.name}</p>}
+      }
+      {error && <p className='text-red-500 text-sm mt-1'>{error.message ?? error.name ?? error}</p>}
     </div>
   );
 }

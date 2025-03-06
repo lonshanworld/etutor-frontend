@@ -1,8 +1,10 @@
 import FilterBox from "@/components/filterbox/FilterBox";
 import SearchBar from "@/components/searchbar/SearchBar";
 import TableDemo from "@/components/table/Table";
-import Form, { CreateFormButton } from "@/components/form/Form";
+import Form from "@/components/form/Form";
+import CreateFormButton from "../form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
+import { User, UserRole } from "@/model/user";
 
 type Props = {
   id: number;
@@ -10,7 +12,7 @@ type Props = {
   email: string;
   activityStatus: string;
 };
-export default function UserHomePage({ users }: { users: Props[] }) {
+export default function UserHomePage({ users }: { users: User[] }) {
   return (
     <div className="w-[97%] mx-auto">
       <div className="flex gap-5">
@@ -30,7 +32,7 @@ export default function UserHomePage({ users }: { users: Props[] }) {
 
       <div>
         <div className="float-end mt-5">
-          <CreateFormButton />
+          <CreateFormButton role={ UserRole.student} />
         </div>
         <Form />
       </div>
