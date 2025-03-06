@@ -17,15 +17,7 @@ export default function DashboardTemplate({
     const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
     return (
-        // <div
-        // className="px-2 md:px-5 w-full h-full">
-        //   <div
-        //   className="py-2">
-        //     <DashboardAppbar />
-        //   </div>
-          
-        //   {children}
-        // </div>
+     
         <>
           <div
             className="py-2 pr-4 hidden md:block">

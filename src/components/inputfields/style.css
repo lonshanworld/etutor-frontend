@@ -1,0 +1,10 @@
+.label {
+    /* @apply -mb-7; */
+}
+
+
+/* .input:focus {
+    .label {
+        @apply !text-red-500 mb-7;
+    }
+} */

@@ -7,3 +7,4 @@ export const loginSchema = z.object({
     .email({ message: "Please enter the valid email" }),
   password: z.string().min(1, { message: "Password is required" }),
 });
+

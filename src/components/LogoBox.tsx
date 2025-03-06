@@ -1,26 +1,18 @@
+"use client";
 import Image from "next/image";
-import UniLogo from "@/assets/svgs/unilogo.svg";
+import UniLogo from "@/assets/svgs/lightunilogo.svg";
+import darkUniLogo from "@/assets/svgs/darkunilogo.svg";
+import { useThemeStore } from "@/stores/useThemeStore";
 
-export default function LogoBox(
-    {
-        withBox,
-        width,
-        height,
-    } : {
-        withBox : boolean,
-        width? : string,
-        height? : string,
-    }
-){
-    return (
-        <div
-        className={`${width ?? "w-[100px]"} ${height ?? "h-[40px]"} pl-2 ${withBox && "rounded-md shadow-md"} bg-theme flex justify-center items-center`}>
-            <Image 
-            src={UniLogo}
-            alt="University Logo"
-            width={110}
-            height={60}
-            />
-        </div>
-    )
+export default function LogoBox() {
+  const { theme } = useThemeStore();
+  return (
+    // <div className=" pl-2 py-1 rounded-md shadow-md bg-theme flex justify-center items-center">
+    <Image
+      src={theme === "light" ? UniLogo : darkUniLogo}
+      className="w-[150px] h-[45px]"
+      alt="University Logo"
+    />
+    // </div>
+  );
 }

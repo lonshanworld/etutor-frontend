@@ -7,7 +7,7 @@ export default function DashboardLayout({
   }>){
     return (
         <div
-        className="w-screen h-screen bg-background md:pl-5 flex flex-col  ">
+        className="w-screen h-screen bg-background md:pl-5 flex flex-col overflow-clip ">
             {children}
         </div>
         
