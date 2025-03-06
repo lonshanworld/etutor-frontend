@@ -1,5 +1,6 @@
 "use client";
 
+import { login } from "@/api/services/login";
 import desktopImage from "@/assets/images/desktop-login-icon.png";
 import mobileImage from "@/assets/images/mobile-login-icon.png";
 import Button from "@/components/buttons/Button";
@@ -51,16 +52,30 @@ export default function LoginPage() {
   }
 
   async function handleLogin(data: LoginFormData) {
+    // try {
+    //   const token = await login(data.email, data.password);
+    //   console.log("Token: ", token);
+    //   if (!token) {
+    //     throw new Error("Incorrect email or password");
+    //   }
+    //   console.log("Login successful", token);
+    //   // router.push(AppRouter.introPage);
+    // } catch (error) {
+    //   if (error instanceof Error) {
+    //     setError(error.message || "Login failed. Please try again.");
+    //   } else {
+    //     setError("An unknown error occurred. Please try again.");
+    //   }
+    // }
+
     try {
-      const user = await testLogin(data.email, data.password);
-      if (!user) {
-        throw new Error("Incorrect email or password");
-      }
-      console.log("Login successful", user);
-      router.push(AppRouter.introPage);
+      const response = await login(data.email, data.password);
+      // if (!response || response.message !== "success") {
+      //   throw new Error();
+      // }
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message || "Login failed. Please try again.");
+        setError("Login failed. Please try again.");
       } else {
         setError("An unknown error occurred. Please try again.");
       }
