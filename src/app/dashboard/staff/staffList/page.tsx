@@ -20,59 +20,59 @@ const staffs = [
     activityStatus: "active",
     role: UserRole.staff,
   },
-  // {
-  //   id: 2,
-  //   firstName: "Aung",
-  //   middleName: "Min",
-  //   lastName: "Myat",
-  //   email: "akm@gmail.com",
-  //   phoneNo: "09756042422",
-  //   profileImagePath: "",
-  //   activityStatus: "active",
-  //   role: UserRole.staff,
-  // },
-  // {
-  //   id: 3,
-  //   firstName: "Aung",
-  //   middleName: "Kaung",
-  //   lastName: "Myat",
-  //   email: "akm@gmail.com",
-  //   phoneNo: "09756042421",
-  //   profileImagePath: "/assets/images/Profile.png",
-  //   activityStatus: "active",
-  //   role: UserRole.staff,
-  // },
-  // {
-  //   id: 4,
-  //   firstName: "Aung",
-  //   middleName: "Kaung",
-  //   lastName: "Myat",
-  //   email: "akm@gmail.com",
-  //   phoneNo: "09756042421",
-  //   profileImagePath: "",
-  //   activityStatus: "active",
-  //   role: UserRole.staff,
-  // },
-  // {
-  //   id: 5,
-  //   firstName: "Aung",
-  //   middleName: "Kaung",
-  //   lastName: "Myat",
-  //   email: "akm@gmail.com",
-  //   phoneNo: "09756042421",
-  //   profileImagePath: "",
-  //   activityStatus: "active",
-  //   role: UserRole.staff,
-  // },
+  {
+    id: 2,
+    firstName: "Aung",
+    middleName: "Min",
+    lastName: "Myat",
+    email: "akm@gmail.com",
+    phoneNo: "09756042422",
+    profileImagePath: "",
+    activityStatus: "active",
+    role: UserRole.staff,
+  },
+  {
+    id: 3,
+    firstName: "Aung",
+    middleName: "Kaung",
+    lastName: "Myat",
+    email: "akm@gmail.com",
+    phoneNo: "09756042421",
+    profileImagePath: "/assets/images/Profile.png",
+    activityStatus: "active",
+    role: UserRole.staff,
+  },
+  {
+    id: 4,
+    firstName: "Aung",
+    middleName: "Kaung",
+    lastName: "Myat",
+    email: "akm@gmail.com",
+    phoneNo: "09756042421",
+    profileImagePath: "",
+    activityStatus: "active",
+    role: UserRole.staff,
+  },
+  {
+    id: 5,
+    firstName: "Aung",
+    middleName: "Kaung",
+    lastName: "Myat",
+    email: "akm@gmail.com",
+    phoneNo: "09756042421",
+    profileImagePath: "",
+    activityStatus: "active",
+    role: UserRole.staff,
+  },
 ];
 
 export default function StaffListPage() {
   return (
-    <div className="w-[97%] mx-auto">
-      <div className="flex gap-5">
+    <div className="w-full sm:w-[97%] mx-auto min-h-screen">
+      <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
         <SearchBar placeholder="Search Staffs" />
         <div className="flex items-center w-[200px]">
-          <BiFilterAlt className="-me-6 z-10" />
+          <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
             placeholder="Filter Users"
             options={["Name", "Email"]}
@@ -84,12 +84,10 @@ export default function StaffListPage() {
         <TableDemo users={staffs} />
       </div>
 
-      <div>
-        <div className="float-end mt-5">
-          <CreateFormButton role={UserRole.staff} />
-        </div>
-        <Form />
+      <div className="mt-5 flex justify-end">
+        <CreateFormButton role={UserRole.staff} />
       </div>
+      <Form />
     </div>
   );
 }

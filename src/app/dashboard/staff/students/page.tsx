@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import FilterBox from "@/components/filterbox/FilterBox";
 import SearchBar from "@/components/searchbar/SearchBar";
@@ -8,7 +8,7 @@ import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
 import { User, UserRole } from "@/model/user";
 
-const students : User[] = [
+const students: User[] = [
   {
     id: 1,
     firstName: "Aung",
@@ -76,11 +76,11 @@ const students : User[] = [
 
 export default function StudentListPage() {
   return (
-    <div className="w-[97%] mx-auto">
-      <div className="flex gap-5">
+    <div className="w-full sm:w-[97%] mx-auto min-h-screen">
+      <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
         <SearchBar placeholder="Search Students" />
-        <div className="flex items-center">
-          <BiFilterAlt className="-me-6 z-10" />
+        <div className="flex items-center w-[200px]">
+          <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
             placeholder="Filter Users"
             options={["Name", "Email"]}
@@ -92,12 +92,10 @@ export default function StudentListPage() {
         <TableDemo users={students} />
       </div>
 
-      <div>
-        <div className="float-end mt-5">
-          <CreateFormButton role={UserRole.student} />
-        </div>
-        <Form />
+      <div className="mt-5 flex justify-end">
+        <CreateFormButton role={UserRole.student} />
       </div>
+      <Form />
     </div>
   );
 }

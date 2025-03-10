@@ -43,7 +43,7 @@ export default function Toast({ message, onClose }: ToastProps) {
         ${isClosing ? "translate-x-full opacity-0" : ""}`}
     >
       <div className="text-toastFont px-6 py-3 flex">
-        <img src={SuccessImage.src} className="w-[30px] h-[30px] mt-1" alt="" />
+        <img src={SuccessImage.src} className="w-[50px] h-[50px] mt-1" alt="" />
         <div className="ms-3">
           <h1 className="text-xl font-bold">Success</h1>
           <span className="text-sm">{message}</span>

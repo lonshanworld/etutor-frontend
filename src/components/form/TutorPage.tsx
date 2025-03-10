@@ -1,4 +1,4 @@
-import InputField from "../inputfields/InputField";
+import InputField from "../inputfields/FormInputField";
 import { Label } from "@/components/ui/label";
 import CustomButton from "../buttons/Button";
 import { z } from "zod";

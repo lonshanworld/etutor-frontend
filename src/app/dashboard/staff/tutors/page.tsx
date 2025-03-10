@@ -75,11 +75,11 @@ const tutors = [
 
 export default function TutorListPage() {
   return (
-    <div className="w-[97%] mx-auto">
-      <div className="flex gap-5">
+    <div className="w-full sm:w-[97%] mx-auto min-h-screen">
+      <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
         <SearchBar placeholder="Search Tutors" />
-        <div className="flex items-center">
-          <BiFilterAlt className="-me-6 z-10" />
+        <div className="flex items-center w-[200px]">
+          <BiFilterAlt className="text-cusGray -me-6 ms-2 z-10" />
           <FilterBox
             placeholder="Filter Users"
             options={["Name", "Email"]}
@@ -92,7 +92,7 @@ export default function TutorListPage() {
       </div>
 
       <div>
-        <div className="float-end mt-5">
+        <div className="mt-5 flex justify-end">
           <CreateFormButton role={UserRole.tutor} />
         </div>
         <Form />

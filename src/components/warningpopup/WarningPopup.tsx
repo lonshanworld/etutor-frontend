@@ -12,7 +12,7 @@ export default function WarningPopup({
       <div className="max-md:p-5 p-8 pe-5 pb-5">
         <div className="flex items-center max-sm:gap-2 gap-4">
           <img src="/assets/svgs/warning.svg" alt="" />
-          <h1 className="max-md:text-2xl text-3xl font-bold text-headingColor">
+          <h1 className="max-md:text-2xl text-3xl font-semibold text-headingColor">
             Confirm Deactivation
           </h1>
         </div>

@@ -9,9 +9,11 @@ import StudentPage from "./StudentPage";
 import { useFormStore } from "@/stores/useFormStore";
 import TutorPage from "./TutorPage";
 import StaffPage from "./StaffPage";
+import { UserRole } from "@/model/user";
 
 const Form = () => {
   const { showForm, page, setShowForm, setPageForm, role } = useFormStore();
+  console.log("roless", role);
 
   useEffect(() => {
     if (showForm) {
@@ -25,13 +27,13 @@ const Form = () => {
   };
 
   const getSecondPage = () => {
-    switch (role) {
-      case "student":
+    switch (Number(role)) {
+      case UserRole.student:
         return <StudentPage setPageForm={setPageForm} />;
-      case "tutor":
-        <TutorPage setPageForm={setPageForm} />;
-      case "staff":
-        <StaffPage setPageForm={setPageForm} />;
+      case UserRole.tutor:
+        return <TutorPage setPageForm={setPageForm} />;
+      case UserRole.staff:
+        return <StaffPage setPageForm={setPageForm} />;
     }
   };
   return (

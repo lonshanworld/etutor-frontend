@@ -4,7 +4,7 @@ import { create } from "zustand";
 type State = {
   showForm: boolean;
   page: number;
-  role: string;
+  role: UserRole;
   formData: {
     firstName: string;
     middleName?: string;
@@ -17,7 +17,7 @@ type State = {
     phoneNo: string;
     email: string;
     password: string;
-    role: any;
+    role: UserRole | null;
   };
   studentData?: {
     emgContactName?: string;
@@ -40,7 +40,7 @@ type State = {
 type Action = {
   setPageForm: (page: number) => void;
   setShowForm: () => void;
-  setRole: (role: string) => void;
+  setRole: (role: UserRole) => void;
   setFormData: (data: State["formData"]) => void;
   setStudentData: (data: State["studentData"]) => void;
   setTutorData: (data: State["tutorData"]) => void;
@@ -50,7 +50,7 @@ type Action = {
 export const useFormStore = create<State & Action>((set) => ({
   showForm: false,
   page: 1,
-  role: "",
+  role: UserRole.student,
   formData: {
     firstName: "",
     middleName: "",
@@ -63,7 +63,7 @@ export const useFormStore = create<State & Action>((set) => ({
     phoneNo: "",
     email: "",
     password: "",
-    role: "",
+    role: UserRole.student,
   },
   studentData: {
     emgContactName: "",
@@ -152,7 +152,7 @@ export const useFormStore = create<State & Action>((set) => ({
         phoneNo: "",
         email: "",
         password: "",
-        role: "",
+        role: null,
       },
     });
     set({

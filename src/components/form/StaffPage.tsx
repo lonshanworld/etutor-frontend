@@ -1,4 +1,4 @@
-import InputField from "../inputfields/InputField";
+import InputField from "../inputfields/FormInputField";
 import { Label } from "@/components/ui/label";
 import CustomButton from "../buttons/Button";
 import { z } from "zod";
@@ -14,7 +14,6 @@ type Props = {
 const StaffSchema = z.object({
   emgContactName: z.string().optional(),
   emgContactPhone: z.string().optional(),
-  accessLevel: z.string().optional(),
   startDate: z.string().min(1, { message: "Start Date is required." }),
 });
 
@@ -39,6 +38,8 @@ export default function StaffPage({ setPageForm }: Props) {
     setShowForm();
     setPageForm(1);
   };
+
+  console.log(errors);
 
   return (
     <div>
@@ -72,16 +73,30 @@ export default function StaffPage({ setPageForm }: Props) {
           </div>
           <div className="grid-2">
             <div>
-              <Label>Major</Label>
+              <Label>Join Date</Label>
               <DayPicker
-                watch={watch}
+                input="startDate"
+                watch={watch("startDate")}
                 setValue={setValue}
-                register={register("startDate")}
+                register={register("startDate", {
+                  required: "startDate is required",
+                })}
                 error={errors.startDate && errors.startDate.message}
               />
               {errors.startDate && (
                 <p className="text-red-500">{errors.startDate.message}</p>
               )}
+              <div>
+                {/* <Label>DOB</Label>
+              <DayPicker
+                watch={watch}
+                setValue={setValue}
+                register={register("dob", {
+                  required: "DOB is required",
+                })}
+                error={errors.dob && errors.dob.message}
+              /> */}
+              </div>
             </div>
           </div>
 

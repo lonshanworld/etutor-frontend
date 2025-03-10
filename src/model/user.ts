@@ -6,7 +6,7 @@ export type User = {
   email: string;
   phoneNo: string;
   profileImagePath?: string;
-  activityStatus : any;
+  activityStatus: any;
   role?: UserRole | null;
 };
 
@@ -15,6 +15,8 @@ export enum UserRole {
   "tutor",
   "staff",
 }
+
+// export type UserRole = "student" | "tutor" | "staff";
 
 function stringToUserRole(data?: string): UserRole | null {
   switch (data?.toLowerCase()) {
@@ -39,7 +41,7 @@ export function userFromJson(jsonData: any): User {
     phoneNo: jsonData.phone,
     profileImagePath: jsonData.profileImagePath,
     role: stringToUserRole(jsonData.role),
-    activityStatus : jsonData.activityStatus,
+    activityStatus: jsonData.activityStatus,
   };
 
   return data;

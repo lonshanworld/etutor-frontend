@@ -23,7 +23,11 @@ export const useSearchStore = create<State & Action>((set) => ({
   searchData: (data) => {
     // search data here (api fetch)
     console.log(data);
-    set({ isSearch: true });
+    if (data) {
+      set({ isSearch: true });
+    } else {
+      set({ isSearch: false });
+    }
     // set({
     //   data: {
     //     name: "akm",

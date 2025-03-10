@@ -10,7 +10,7 @@ import {
 
 export function PaginationDemo() {
   return (
-    <Pagination>
+    <Pagination className="flex justify-end">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious href="#" />

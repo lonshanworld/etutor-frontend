@@ -25,6 +25,8 @@ import { useUserStore } from "@/stores/userStore";
 import UserDetail from "../userDetail/UserDetail";
 import { FaUserCircle } from "react-icons/fa";
 import StatusIcon from "../statusicon/StatusIcon";
+import UserIcon from "@/assets/svgs/user.svg";
+import { twMerge } from "tailwind-merge";
 
 export default function TableDemo({ users }: { users: User[] }) {
   const { activeRowId, position, setActiveRow, closeOptionBox } =
@@ -34,9 +36,10 @@ export default function TableDemo({ users }: { users: User[] }) {
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const { isSearch, data, setIsSearch } = useSearchStore();
+  const { isSearch, data, setIsSearch, searchData } = useSearchStore();
 
   const [showToast, setShowToast] = useState(false);
+  const optionRef = useRef<HTMLDivElement | null>(null);
 
   const handleMenuClick = (id: number) => {
     const button = menuRefs.current[id];
@@ -46,6 +49,7 @@ export default function TableDemo({ users }: { users: User[] }) {
         top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX,
       });
+      getSelectedUser(id);
     }
   };
 
@@ -71,24 +75,41 @@ export default function TableDemo({ users }: { users: User[] }) {
       console.log("data is here", isSearch);
     }
   }, [data, isSearch]);
-  console.log("users", users);
+
+  useEffect(() => {
+    const handleResize = () => {
+      console.log("resize");
+      if (optionRef.current?.style.display) {
+        console.log(optionRef.current);
+        optionRef.current.style.display = "none";
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    // return () => {
+    //   window.removeEventListener("resize", handleResize);
+    // };
+  }, []);
 
   return (
-    <div className="overflow-y-scroll rounded-t-xl">
+    <div className="sm:rounded-t-xl">
       <Table className="border-collapse w-full bg-background">
         <TableHeader className="bg-theme py-3">
-          <TableRow className="!rounded-t-lg">
-            <TableHead className="w-[70px] ps-5 lg:w-[100px] lg:ps-8 rounded-tl-md text-left">
+          <TableRow className="">
+            <TableHead className="max-sm:text-sm w-[70px] ps-5 lg:w-[100px] lg:ps-8 sm:rounded-tl-md text-left">
               No
             </TableHead>
-            <TableHead className="text-left">Name</TableHead>
-            <TableHead className="text-left">Email</TableHead>
-            <TableHead className="ps-10 text-left">Activity Status</TableHead>
-            <TableHead>View</TableHead>
-            <TableHead className="rounded-tr-md">Action</TableHead>
+            <TableHead className="max-sm:text-sm text-left">Name</TableHead>
+            <TableHead className="max-sm:text-sm text-left">Email</TableHead>
+            <TableHead className="max-sm:hidden ps-10 text-left">
+              Activity Status
+            </TableHead>
+            <TableHead className="max-sm:hidden">View</TableHead>
+            <TableHead className="max-sm:text-sm sm:rounded-tr-md">
+              Action
+            </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="">
+        <TableBody className="max-sm:text-[11px]">
           {isSearch &&
             (data ? (
               <TableRow>{data.name}</TableRow>
@@ -119,7 +140,7 @@ export default function TableDemo({ users }: { users: User[] }) {
                     ) : (
                       <FaUserCircle className="text-3xl text-theme" />
                     )}
-                    <p>
+                    <p className="">
                       {user.firstName +
                         " " +
                         user.middleName +
@@ -134,13 +155,13 @@ export default function TableDemo({ users }: { users: User[] }) {
                   dsfasdfasdfasdfooooooooooooooooooooooooooooooooo
                   ppppppppppppppppp
                 </TableCell>
-                <TableCell className="ps-10 text-center">
+                <TableCell className="ps-10 text-center max-sm:hidden">
                   <div className="flex justify-left items-center gap-3">
                     <StatusIcon activeDays={activeDays} />
                     <div>{user.role} active</div>
                   </div>
                 </TableCell>
-                <TableCell className="text-center">
+                <TableCell className="text-center max-sm:hidden">
                   {/* <Link href={`/dashboard/staff/students/${user.id}`}> */}
                   <button
                     className="bg-theme p-2 px-4 text-white rounded-md"
@@ -176,15 +197,26 @@ export default function TableDemo({ users }: { users: User[] }) {
       {/* Option Box (Dropdown Menu) */}
       {activeRowId && position && (
         <div
-          className="absolute bg-optionBackground text-optionFontColor shadow-md w-[150px] z-10"
-          style={{ top: position.top, left: position.left - 30 }}
+          className="absolute bg-optionBackground text-optionFontColor shadow-md w-[150px] z-10 max-sm:text-sm"
+          ref={optionRef}
+          style={{ top: position.top, left: position.left - 120 }}
         >
           <ul>
             <li
               className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
+              onClick={() => showUserDetail(activeRowId)}
+            >
+              <img src={UserIcon.src} className="w-5 h-5" alt="" />
+              View Profile
+            </li>
+            <li
+              className={twMerge(
+                "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
+                selectedUser?.role === 2 ? "hidden" : ""
+              )}
               onClick={() => console.log("edit")}
             >
-              <FiEdit />
+              <FiEdit className="text-xl" />
               <span>Edit</span>
             </li>
             <li
@@ -230,7 +262,7 @@ export default function TableDemo({ users }: { users: User[] }) {
         <UserDetail user={selectedUser} setShowDetail={setShowDetail} />
       )}
 
-      <div className="float-end mt-3">
+      <div className="flex justify-end mt-3">
         {isSearch && data && <PaginationDemo />}
         {!isSearch && <PaginationDemo />}
       </div>

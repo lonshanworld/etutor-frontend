@@ -1,4 +1,4 @@
-import InputField from "../inputfields/InputField";
+import InputField from "../inputfields/FormInputField";
 import { Label } from "@/components/ui/label";
 import CustomButton from "../buttons/Button";
 import { DayPicker } from "../daypicker/DayPicker";
@@ -14,7 +14,7 @@ import { UserRole } from "@/model/user";
 
 type Props = {
   setPageForm: (page: number) => void;
-  role: string | null;
+  role: UserRole | null;
 };
 
 const FormSchema = z
@@ -39,15 +39,12 @@ const FormSchema = z
     confirmPassword: z
       .string()
       .min(1, { message: "Confirm Password is required." }),
-    role: z.enum(Object.values(UserRole) as [string, ...string[]], {
-      errorMap: () => {
-        return { message: "Invalid role" };
-      },
-    }),
+    role: z.number(),
   })
   .refine(
     (data) => {
       return data.password === data.confirmPassword;
+      console.log("confirm", data.confirmPassword);
     },
     {
       message: "Passwords do not match",
@@ -59,7 +56,7 @@ type FormSchemaType = z.infer<typeof FormSchema>;
 
 export default function FirstPage({ setPageForm }: Props) {
   const { setFormData, role } = useFormStore();
-
+  console.log("role", role);
   const {
     register,
     handleSubmit,
@@ -80,9 +77,12 @@ export default function FirstPage({ setPageForm }: Props) {
   };
 
   useEffect(() => {
-    console.log(role);
-    setValue("role", role || "");
+    setValue("role", Number(role));
   }, [role]);
+  console.log(typeof role);
+
+  useEffect(() => {});
+  console.log("errors", errors);
 
   return (
     <div>
@@ -100,9 +100,6 @@ export default function FirstPage({ setPageForm }: Props) {
                   message: errors?.firstName?.message,
                 }}
               />
-              {errors.firstName && (
-                <p className="text-red-500">{errors.firstName.message}</p>
-              )}
             </div>
             <div>
               <InputField
@@ -123,9 +120,6 @@ export default function FirstPage({ setPageForm }: Props) {
                   message: errors?.lastName?.message,
                 }}
               />
-              {errors.lastName && (
-                <p className="text-red-500">{errors.lastName.message}</p>
-              )}
             </div>
           </div>
 
@@ -159,25 +153,15 @@ export default function FirstPage({ setPageForm }: Props) {
                 setValue={setValue}
                 error={errors.gender && errors.gender.message}
               />
-              {errors.gender && (
-                <p className="text-red-500 mt-3">{errors.gender.message}</p>
-              )}
             </div>
             <div>
               <Label>DOB</Label>
-              {/* <DateSelector /> */}
               <DayPicker
-                watch={watch}
+                input="dob"
+                watch={watch("dob")}
                 setValue={setValue}
                 register={register("dob", {
                   required: "DOB is required",
-                  validate: (value) => {
-                    if (!value) return "Please select your Date of Birth";
-                    const minAge = subYears(new Date(), 18);
-                    if (new Date(value) > minAge)
-                      return "You must be at least 18 years old";
-                    return true;
-                  },
                 })}
                 error={errors.dob && errors.dob.message}
               />
@@ -208,9 +192,6 @@ export default function FirstPage({ setPageForm }: Props) {
                   message: errors?.phoneNo?.message,
                 }}
               />
-              {errors.phoneNo && (
-                <p className="text-red-500">{errors.phoneNo.message}</p>
-              )}
             </div>
 
             <div>
@@ -224,9 +205,6 @@ export default function FirstPage({ setPageForm }: Props) {
                   message: errors?.email?.message,
                 }}
               />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
-              )}
             </div>
           </div>
 
@@ -242,9 +220,6 @@ export default function FirstPage({ setPageForm }: Props) {
                   message: errors?.password?.message,
                 }}
               />
-              {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
-              )}
             </div>
             <div>
               <InputField
@@ -257,16 +232,15 @@ export default function FirstPage({ setPageForm }: Props) {
                   message: errors?.confirmPassword?.message,
                 }}
               />
-              {errors.confirmPassword && (
-                <p className="text-red-500">{errors.confirmPassword.message}</p>
-              )}
             </div>
-            <input
-              type="hidden"
-              id="userRole"
-              {...register("role")}
-              value={role}
-            />
+            {role && (
+              <input
+                type="hidden"
+                id="userRole"
+                {...register("role")}
+                value={Number(role)}
+              />
+            )}
           </div>
 
           <CustomButton text="Next" type="submit" fullWidth={true} />

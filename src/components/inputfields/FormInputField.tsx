@@ -50,23 +50,6 @@ export default function InputField({
       >
         {label}
       </label>
-      {register ? (
-        <input
-          id={id}
-          type={type}
-          className="mt-2 h-10 w-full px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md"
-          placeholder={placeholder}
-          {...register}
-        />
-      ) : (
-        <input
-          id={id}
-          type={type}
-          className="mt-2 h-10 w-full px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md"
-          placeholder={placeholder}
-          onChange={onChange}
-        />
-      )}
       {error && <p className="text-red-500 text-sm mt-1">{error.message}</p>}
     </div>
   );
