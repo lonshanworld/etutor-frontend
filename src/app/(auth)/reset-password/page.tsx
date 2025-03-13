@@ -2,10 +2,10 @@
 
 import resetPassword from "@/assets/images/reset-password.png";
 import Button from "@/components/buttons/Button";
-import InputField from "@/components/inputfields/InputField";
+import FormInputField from "@/components/inputfields/FormInputField";
 import Image from "next/image";
-import { RxCross1 } from "react-icons/rx";
 import { useRouter } from "next/navigation";
+import { RxCross1 } from "react-icons/rx";
 
 const ResetPasswordPage = () => {
   const router = useRouter();
@@ -25,8 +25,12 @@ const ResetPasswordPage = () => {
         />
         <div className='flex flex-col w-full '>
           <div className='space-y-3'>
-            <InputField id='email' label='New Password' type='email' />
-            <InputField id='email' label='Re-enter New Password' type='email' />
+            <FormInputField id='email' label='New Password' type='email' />
+            <FormInputField
+              id='email'
+              label='Re-enter New Password'
+              type='email'
+            />
           </div>
           <div className='mt-5'></div>
           <Button type='button' text='Reset Password' />

@@ -1,10 +1,11 @@
 "use client";
 
+import { login } from "@/api/services/login";
 import desktopImage from "@/assets/images/desktop-login-icon.png";
 import mobileImage from "@/assets/images/mobile-login-icon.png";
 import Button from "@/components/buttons/Button";
 import ErrorPopup from "@/components/ErrorPopup";
-import InputField from "@/components/inputfields/InputField";
+import FormInputField from "@/components/inputfields/FormInputField";
 import LogoBox from "@/components/LogoBox";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
@@ -37,8 +38,8 @@ export default function LoginPage() {
   ): Promise<{ email: string; name: string } | null> {
     return new Promise((resolve, reject) => {
       const testUser = {
-        email: "test@gmail.com",
-        password: "123456",
+        email: "test@example.com",
+        password: "password",
         name: "John Doe",
       };
 
@@ -51,12 +52,31 @@ export default function LoginPage() {
   }
 
   async function handleLogin(data: LoginFormData) {
+    console.log("checking login data",data.email, data.password)
     try {
-      const user = await testLogin(data.email, data.password);
-      if (!user) {
-        throw new Error("Incorrect email or password");
+      const response = await login(data.email, data.password);
+      console.log(response);
+      if (!response || response.message !== "success") {
+        if (response?.message === "The provided credentials are incorrect.") {
+          setError("Incorrect email or password. Please try again.");
+          return;
+        }
+
+        throw new Error();
       }
-      console.log("Login successful", user);
+
+      // Set Token in session with exp date
+      const token = response.token;
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 7);
+
+      const sessionData = {
+        token,
+        expiration: expirationDate.toString(),
+      };
+
+      sessionStorage.setItem("authToken", JSON.stringify(sessionData));
+      console.log("Login successful", token);
       router.push(AppRouter.introPage);
     } catch (error) {
       if (error instanceof Error) {
@@ -100,8 +120,9 @@ export default function LoginPage() {
               onSubmit={handleSubmit(handleLogin)}
               className='w-full mt-1 flex flex-col'
             >
+             
               <div className='mt-3.5 space-y-2'>
-                <InputField
+                <FormInputField
                   id='email'
                   label='Email'
                   type='email'
@@ -110,7 +131,7 @@ export default function LoginPage() {
                   error={errors.email?.message}
                 />
 
-                <InputField
+                <FormInputField
                   id='password'
                   label='Password'
                   type='password'
@@ -119,7 +140,6 @@ export default function LoginPage() {
                   error={errors.password?.message}
                 />
               </div>
-
               <div className='flex justify-center mt-4'>
                 <Button text='Sign In' type='submit' fullWidth={true} />
               </div>

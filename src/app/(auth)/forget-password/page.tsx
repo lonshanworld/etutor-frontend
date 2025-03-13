@@ -2,16 +2,15 @@
 
 import forgetPassword from "@/assets/images/forget-password.png";
 import Button from "@/components/buttons/Button";
-import InputField from "@/components/inputfields/InputField";
-import Image from "next/image";
-import { RxCross1 } from "react-icons/rx";
-import { useRouter } from "next/navigation";
-import { AppRouter } from "@/router";
-import { useState } from "react";
-import { errorStore } from "@/stores/errorStore";
 import ErrorPopup from "@/components/ErrorPopup";
-import { IoMdArrowBack } from "react-icons/io";
+import FormInputField from "@/components/inputfields/FormInputField";
+import { AppRouter } from "@/router";
+import { errorStore } from "@/stores/errorStore";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { IoMdArrowBack } from "react-icons/io";
 
 const ForgetPasswordPage = () => {
   const router = useRouter();
@@ -83,7 +82,7 @@ const ForgetPasswordPage = () => {
             <p className='text-sm text-font'>
               We will send you a confirmation code
             </p>
-            <InputField
+            <FormInputField
               id='email'
               type='email'
               onChange={handleEmailChange}
