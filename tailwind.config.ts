@@ -19,7 +19,7 @@ export default {
         font: "var(--font-color)",
         popup: "var(--popup)",
         cusGray: "#818181",
-        login: "#363333", 
+        login: "#363333",
         inputBackground: "var(--input-background)",
         inputBorder: "var(--input-border)",
         foreground: "hsl(var(--foreground))",
@@ -84,8 +84,20 @@ export default {
       },
       boxShadow: {
         left: "-7px 0 10px rgba(0, 0, 0, 0.5)",
-      }
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities }: any) {
+      addUtilities({
+        ".scrollbar-none": {
+          "scrollbar-width": "none", // For Firefox
+          "&::-webkit-scrollbar": {
+            display: "none", // For Chrome, Safari, Edge
+          },
+        },
+      });
+    },
+  ],
 } satisfies Config;
