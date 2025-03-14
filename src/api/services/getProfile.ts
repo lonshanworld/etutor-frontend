@@ -1,9 +1,9 @@
-import { User, userFromJson } from "@/model/user";
 import { APIS } from "../api-constants";
 import { GetRequest } from "../general-api-services";
+import { Profile, profileFromJson } from "@/model/profile";
 
-export async function getProfile(token: string): Promise<User> {
+export async function getProfile(token: string): Promise<Profile> {
   const response = await GetRequest(APIS.GET.getMyProfile, token);
 
-  return userFromJson(response);
+  return profileFromJson(response);
 }
