@@ -54,7 +54,7 @@ export default function LoginPage() {
         // console.log("User", user);
 
         if (user?.role === "admin") {
-          // router.push(AppRouter.studentDashboard);
+          router.push(AppRouter.staffDashboard);
         } else if (user?.role === "staff") {
           router.push(AppRouter.staffDashboard);
         } else if (user?.role === "student") {

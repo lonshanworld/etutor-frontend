@@ -1,7 +1,7 @@
 import { GetRequest, PostRequest } from "../general-api-services";
 import { APIS } from "../api-constants";
 import { Login, loginFromJson } from "@/model/login";
-import { otpFromJson } from "@/model/otp";
+import { otpFromJson, resetPasswordFromJson } from "@/model/resetPassword";
 
 export async function login(email: string, password: string): Promise<Login> {
   const response = await PostRequest(
@@ -39,5 +39,21 @@ export async function confirmOtp(email: string, otp: string): Promise<any> {
   );
 
   const data = otpFromJson(response);
+  return data;
+}
+
+export async function resetPassword(
+  email: string,
+  password: string
+): Promise<any> {
+  const response = await PostRequest(
+    {
+      email: email,
+      password: password,
+    },
+    APIS.POST.updatePassword
+  );
+
+  const data = resetPasswordFromJson(response);
   return data;
 }

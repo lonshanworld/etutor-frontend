@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
+import { checkEmailExists } from "@/api/services/authService";
 
 const ForgetPasswordPage = () => {
   const router = useRouter();
@@ -24,51 +25,55 @@ const ForgetPasswordPage = () => {
     setEmailError("");
   }
 
-  function checkEmailExists(email: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Simulate API response
-        const emailExists = email === "test@gmail.com"; // Example email
-        if (emailExists) {
-          resolve(true); // Email exists
-        } else {
-          reject("Email not found!"); // Email not found
-        }
-      }, 1000); // Simulating network delay
-    });
-  }
-
-  function sendOtp() {
-    if (!email) {
-      setEmailError("Email address is required.");
+  const handleSendOtp = async () => {
+    if (!email.trim()) {
+      setEmailError("Email is required");
       return;
     }
 
     setSubmitting(true);
-    checkEmailExists(email)
-      .then(() => {
-        setSubmitting(false);
-        router.push(AppRouter.verifyOtp);
-      })
-      .catch((error) => {
-        setSubmitting(false);
-        setError(`Error: ${error}`);
-      });
-  }
+    try {
+      const response = await checkEmailExists(email);
+      console.log(response);
+
+      const { message, otp } = response; // temp add otp for testing, remove afterward
+
+      console.log("OTP", otp); // log
+
+      if (message === "email found !") {
+        router.push(
+          `${AppRouter.confirmOtp}?email=${encodeURIComponent(email)}`
+        );
+        return;
+      }
+
+      if (message === "email not found!") {
+        setError("Email not found");
+      }
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error
+          ? error.message
+          : "An unknown error occurred. Please try again.";
+      setError(errorMsg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
       {isError && <ErrorPopup />}
       <div className='flex justify-center items-start sm:items-center w-full min-h-screen  bg-theme'>
-        <div className='w-[90%] sm:w-[500px] h-auto flex flex-col items-center bg-secondaryBackground p-6 sm:p-9 mt-10 sm:mt-0 rounded-xl shadow-2xl'>
+        <div className='w-[90%] sm:w-[500px] h-auto flex flex-col items-center bg-secondaryBackground p-6 sm:py-9 mt-10 sm:mt-0 rounded-xl shadow-2xl'>
           <div className='w-full flex gap-3 items-center'>
-            <Link className='text-theme text-3xl' href='/login'>
+            <Link
+              className='text-theme text-3xl'
+              href='/login'
+            >
               <IoMdArrowBack />
             </Link>
             <h2 className='text-font font-bold text-2xl'>OTP Verification</h2>
-            {/* <button className='text-theme text-3xl'>
-              <RxCross1 />
-            </button> */}
           </div>
           <Image
             src={forgetPassword}
@@ -85,13 +90,15 @@ const ForgetPasswordPage = () => {
             <FormInputField
               id='email'
               type='email'
+              placeholder='user@example.com'
+              ariaLabel='Email address input'
               onChange={handleEmailChange}
               error={emailError}
             />
             <div className='mt-5'></div>
             <Button
               disabled={isSubmitting}
-              onClick={sendOtp}
+              onClick={handleSendOtp}
               type='button'
               text='Send OTP'
             />
