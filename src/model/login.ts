@@ -1,13 +1,15 @@
 export type Login = {
   message: string;
+  errorMessage?: string;
   token?: string;
 };
 
 export function loginFromJson(jsonData: any) {
-  const data: Login = {
+  const login: Login = {
     message: jsonData.message,
+    errorMessage: jsonData.errorMessage,
     token: jsonData.token,
   };
 
-  return data;
+  return login;
 }
