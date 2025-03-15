@@ -7,7 +7,7 @@ interface Props {
   type: string;
   placeholder?: string;
   register?: UseFormRegisterReturn;
-  error?: string;
+  error?: any;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 

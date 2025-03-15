@@ -8,7 +8,7 @@ const CreateFormButton = ({ role }: { role: UserRole }) => {
   const { setShowForm, setRole } = useFormStore();
   const handleClick = () => {
     setShowForm();
-    setRole(role.toString());
+    setRole(role);
   };
   return (
     <Button
