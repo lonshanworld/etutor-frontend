@@ -20,7 +20,6 @@ export function RadioButton({
         defaultValue="male"
         className="flex gap-8 mt-2"
         onValueChange={(gender) => {
-          console.log(gender);
           setValue("gender", gender);
         }}
         value={watch("gender")}

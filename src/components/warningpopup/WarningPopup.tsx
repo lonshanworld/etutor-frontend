@@ -33,7 +33,7 @@ export default function WarningPopup({
             className="bg-red-500 text-white px-5 py-2 rounded-md font-bold"
             onClick={() => {
               setShowWarning(false);
-              setShowToast(true);
+              setShowToast("User Deactivated Successfully", "error");
             }}
           >
             Deactivate

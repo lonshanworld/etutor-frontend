@@ -20,8 +20,8 @@ export default function UserDetail({
 
   const [activeTab, setActiveTab] = useState(1);
   return (
-    <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[90%] md:w-[500px] bg-background z-20 rounded-lg min-h-[600px]">
-      <div className="h-[80px] bg-theme w-full rounded-t-lg"></div>
+    <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[90%] md:w-[500px] bg-background z-20 sm:rounded-lg min-h-[600px] max-sm:w-screen max-sm:h-screen">
+      <div className="h-[80px] bg-theme w-full sm:rounded-t-lg"></div>
       {!user && <div className="text-2xl">User Not Found</div>}
       {user && (
         <div>
@@ -54,10 +54,12 @@ export default function UserDetail({
                 <img src={Email.src} alt="" />
                 {user.email}
               </div>
-              <div className="flex gap-2">
-                <img src={Phone.src} alt="" />
-                {user.phoneNo}
-              </div>
+              {user.phoneNo && (
+                <div className="flex gap-2">
+                  <img src={Phone.src} alt="" />
+                  {user.phoneNo}
+                </div>
+              )}
             </div>
           </div>
 
@@ -95,23 +97,29 @@ export default function UserDetail({
                   <div className="mt-3">
                     <p className="font-bold text-base">Date of Birth</p>
                     <p className="text-sm font-bold text-profileText">
-                      10/6/2000
+                      {user.dob}
                     </p>
                   </div>
                   <div className="mt-3">
                     <p className="font-bold text-base">Gender</p>
-                    <p className="text-sm font-bold text-profileText">Male</p>
-                  </div>
-                  <div className="mt-3">
-                    <p className="font-bold text-base">Start Date</p>
                     <p className="text-sm font-bold text-profileText">
-                      10/6/2000
+                      {user.gender}
                     </p>
                   </div>
+                  {/* <div className="mt-3">
+                    <p className="font-bold text-base">Start Date</p>
+                    <p className="text-sm font-bold text-profileText">{user.startDate}</p>
+                  </div> */}
                   <div className="mt-3">
                     <p className="font-bold text-base">Nationality</p>
                     <p className="text-sm font-bold text-profileText">
-                      Myanmar
+                      {user.nationality}
+                    </p>
+                  </div>
+                  <div className="mt-3">
+                    <p className="font-bold text-base">Passport</p>
+                    <p className="text-sm font-bold text-profileText">
+                      {user.passport}
                     </p>
                   </div>
                 </div>

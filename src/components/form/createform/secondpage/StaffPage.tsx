@@ -1,43 +1,46 @@
-import InputField from "../inputfields/FormInputField";
+import InputField from "../../../inputfields/FormInputField";
 import { Label } from "@/components/ui/label";
-import CustomButton from "../buttons/Button";
+import CustomButton from "../../../buttons/Button";
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SelectBox from "../selectbox/SelectBox";
 import { useFormStore } from "@/stores/useFormStore";
+import { DayPicker } from "../../../daypicker/DayPicker";
 
 type Props = {
   setPageForm: (page: number) => void;
 };
 
-const StudentSchema = z.object({
+const StaffSchema = z.object({
   emgContactName: z.string().optional(),
   emgContactPhone: z.string().optional(),
-  major: z.string().min(1, { message: "Major is required." }),
+  startDate: z.string().min(1, { message: "Start Date is required." }),
 });
 
-type StudentSchemaType = z.infer<typeof StudentSchema>;
+type StaffSchemaType = z.infer<typeof StaffSchema>;
 
-export default function StudentPage({ setPageForm }: Props) {
+export default function StaffPage({ setPageForm }: Props) {
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-  } = useForm<StudentSchemaType>({
-    resolver: zodResolver(StudentSchema),
+  } = useForm<StaffSchemaType>({
+    resolver: zodResolver(StaffSchema),
     mode: "onBlur",
+    defaultValues: {},
   });
-  const { setShowForm, formData, studentData, setStudentData } = useFormStore();
+  const { setShowForm, formData, staffData, setStaffData } = useFormStore();
 
-  const onSubmit: SubmitHandler<StudentSchemaType> = (data, e: any) => {
+  const onSubmit: SubmitHandler<StaffSchemaType> = (data, e: any) => {
     e.preventDefault();
-    setStudentData(data);
+    setStaffData(data);
     setShowForm();
     setPageForm(1);
   };
+
+  console.log(errors);
 
   return (
     <div>
@@ -71,19 +74,20 @@ export default function StudentPage({ setPageForm }: Props) {
           </div>
           <div className="grid-2">
             <div>
-              <Label>Major</Label>
-              <SelectBox
-                placeholder="Select Major"
-                options={["Level-4", "Level-5"]}
-                className="mt-2"
-                name="major"
-                watch={watch}
+              <Label>Join Date</Label>
+              <DayPicker
+                input="startDate"
+                watch={watch("startDate")}
                 setValue={setValue}
-                register={register}
+                register={register("startDate", {
+                  required: "startDate is required",
+                })}
+                error={errors.startDate && errors.startDate.message}
               />
-              {errors.major && (
-                <p className="text-red-500">{errors.major.message}</p>
+              {errors.startDate && (
+                <p className="text-red-500">{errors.startDate.message}</p>
               )}
+              <div></div>
             </div>
           </div>
 

@@ -27,19 +27,67 @@ import { FaUserCircle } from "react-icons/fa";
 import StatusIcon from "../statusicon/StatusIcon";
 import UserIcon from "@/assets/svgs/user.svg";
 import { twMerge } from "tailwind-merge";
+import { useFormStore } from "@/stores/useFormStore";
+import { useSelectedUser } from "@/stores/useSelectedUser";
+import { AppRouter } from "@/router";
+import { useToast } from "@/stores/useToast";
 
-export default function TableDemo({ users }: { users: User[] }) {
+export default function TableDemo({
+  users,
+  pageCount,
+  currentPage,
+  role,
+}: {
+  users: User[];
+  pageCount: number;
+  currentPage: number;
+  role: number;
+}) {
   const { activeRowId, position, setActiveRow, closeOptionBox } =
     useOptionBoxStore();
 
   const { showDetail, setShowDetail } = useUserStore();
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { selectedUser, setSelectedUser } = useSelectedUser();
   const { isSearch, data, setIsSearch, searchData } = useSearchStore();
+  const { setShowForm, setRole, setUpdateFormRendered, setUpdateFormModified } =
+    useFormStore();
 
-  const [showToast, setShowToast] = useState(false);
+  // const [showToast, setShowToast] = useState(false);
   const optionRef = useRef<HTMLDivElement | null>(null);
+
+  const { toast, showToast } = useToast();
+
+  const [page, setPage] = useState(1);
+
+  const activeDays = 0;
+
+  useEffect(() => {
+    if (data) {
+      console.log("data is here", isSearch);
+    }
+  }, [data, isSearch]);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setActiveRow(null, null);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("taost", toast);
+  }, [toast]);
+
+  const getSelectedUser = (id: number) => {
+    const currentUser = users.filter((user) => user.id === id);
+    setSelectedUser(currentUser[0]);
+  };
+
+  const showUserDetail = (id: number) => {
+    getSelectedUser(id);
+    setShowDetail(true);
+  };
 
   const handleMenuClick = (id: number) => {
     const button = menuRefs.current[id];
@@ -53,47 +101,36 @@ export default function TableDemo({ users }: { users: User[] }) {
     }
   };
 
-  const activeDays = 0;
-
-  const getSelectedUser = (id: number) => {
-    const currentUser = users.filter((user) => user.id === id);
-    setSelectedUser(currentUser[0]);
-  };
-
   const showWarningPopup = () => {
     if (activeRowId) getSelectedUser(activeRowId);
     setShowWarning(true);
   };
 
-  const showUserDetail = (id: number) => {
+  const showEditForm = (id: number) => {
     getSelectedUser(id);
-    console.log(selectedUser);
-    setShowDetail(true);
+    setShowForm();
+    setRole(role);
+    setUpdateFormRendered(true);
+    setUpdateFormModified(false);
   };
-  useEffect(() => {
-    if (data) {
-      console.log("data is here", isSearch);
-    }
-  }, [data, isSearch]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      console.log("resize");
-      if (optionRef.current?.style.display) {
-        console.log(optionRef.current);
-        optionRef.current.style.display = "none";
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    // return () => {
-    //   window.removeEventListener("resize", handleResize);
-    // };
-  }, []);
+  const getUrl = () => {
+    switch (role) {
+      case 0:
+        return AppRouter.staffDashboardStudents;
+      case 1:
+        return AppRouter.staffDashboardTutors;
+      case 2:
+        return AppRouter.staffDashboardStaff;
+      default:
+        return AppRouter.staffDashboardStudents;
+    }
+  };
 
   return (
     <div className="sm:rounded-t-xl">
-      <Table className="border-collapse w-full bg-background">
-        <TableHeader className="bg-theme py-3">
+      <Table className="border-collapse w-full bg-background rounded-t-lg overflow-hidden">
+        <TableHeader className="bg-theme py-3 rounded-lg ">
           <TableRow className="">
             <TableHead className="max-sm:text-sm w-[70px] ps-5 lg:w-[100px] lg:ps-8 sm:rounded-tl-md text-left">
               No
@@ -110,37 +147,25 @@ export default function TableDemo({ users }: { users: User[] }) {
           </TableRow>
         </TableHeader>
         <TableBody className="max-sm:text-[11px]">
-          {isSearch &&
-            (data ? (
-              <TableRow>{data.name}</TableRow>
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center h-[450px]">
-                  <NoResultFound />
-                </TableCell>
-              </TableRow>
-            ))}
-          {!isSearch &&
+          {users.length > 0 ? (
             users.map((user, index) => (
               <TableRow
                 key={index}
                 className="border-[1px] border-tableRowBorder h-[70px]"
               >
                 <TableCell className="font-medium ps-5 lg:ps-8">
-                  {user.id}
+                  {index + 1}
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
-                    {user.profileImagePath ? (
-                      <img
-                        src={user.profileImagePath}
-                        className="w-[30px] h-[30px]"
-                        alt=""
-                      />
-                    ) : (
-                      <FaUserCircle className="text-3xl text-theme" />
-                    )}
-                    <p className="">
+                    <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] object-cover flex items-center">
+                      {user.profileImagePath ? (
+                        <img src={user.profileImagePath} className="" alt="" />
+                      ) : (
+                        <FaUserCircle className="text-lg sm:text-3xl text-theme" />
+                      )}
+                    </div>
+                    <p className="truncate">
                       {user.firstName +
                         " " +
                         user.middleName +
@@ -149,27 +174,20 @@ export default function TableDemo({ users }: { users: User[] }) {
                     </p>
                   </div>
                 </TableCell>
-                <TableCell>
-                  {user.email}asdfasdfasdfasdfasdfsadfasdfsfafasdf
-                  asdfasdfasdfsadfasfd
-                  dsfasdfasdfasdfooooooooooooooooooooooooooooooooo
-                  ppppppppppppppppp
-                </TableCell>
+                <TableCell>{user.email}</TableCell>
                 <TableCell className="ps-10 text-center max-sm:hidden">
                   <div className="flex justify-left items-center gap-3">
                     <StatusIcon activeDays={activeDays} />
-                    <div>{user.role} active</div>
+                    <div>{user.status}</div>
                   </div>
                 </TableCell>
                 <TableCell className="text-center max-sm:hidden">
-                  {/* <Link href={`/dashboard/staff/students/${user.id}`}> */}
                   <button
                     className="bg-theme p-2 px-4 text-white rounded-md"
                     onClick={() => showUserDetail(user.id)}
                   >
                     View Profile
                   </button>
-                  {/* </Link> */}
                 </TableCell>
                 <TableCell className="flex justify-center items-center mt-1 h-[70px]">
                   <button
@@ -184,15 +202,17 @@ export default function TableDemo({ users }: { users: User[] }) {
                   </button>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center h-[450px]">
+                <NoResultFound />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
-      {showToast && (
-        <CustomToast
-          message="The user account is successfully deactivated."
-          onClose={() => setShowToast(false)}
-        />
-      )}
+      {toast && <CustomToast message={toast.message} type={toast.type} />}
 
       {/* Option Box (Dropdown Menu) */}
       {activeRowId && position && (
@@ -214,7 +234,7 @@ export default function TableDemo({ users }: { users: User[] }) {
                 "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
                 selectedUser?.role === 2 ? "hidden" : ""
               )}
-              onClick={() => console.log("edit")}
+              onClick={() => showEditForm(activeRowId)}
             >
               <FiEdit className="text-xl" />
               <span>Edit</span>
@@ -241,7 +261,7 @@ export default function TableDemo({ users }: { users: User[] }) {
           <WarningPopup
             username={`${selectedUser?.firstName} ${selectedUser?.middleName} ${selectedUser?.lastName}`}
             setShowWarning={setShowWarning}
-            setShowToast={setShowToast}
+            setShowToast={showToast}
           />
         </div>
       )}
@@ -263,8 +283,20 @@ export default function TableDemo({ users }: { users: User[] }) {
       )}
 
       <div className="flex justify-end mt-3">
-        {isSearch && data && <PaginationDemo />}
-        {!isSearch && <PaginationDemo />}
+        {isSearch && data && (
+          <PaginationDemo
+            pageCount={pageCount}
+            currentPage={currentPage}
+            url={getUrl()}
+          />
+        )}
+        {!isSearch && (
+          <PaginationDemo
+            pageCount={pageCount}
+            currentPage={currentPage}
+            url={getUrl()}
+          />
+        )}
       </div>
     </div>
   );

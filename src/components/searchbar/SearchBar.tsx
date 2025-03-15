@@ -11,14 +11,16 @@ import {
 } from "react";
 interface Props {
   placeholder: string;
+  url: string;
 }
 
-export default function SearchBar({ placeholder }: Props) {
+export default function SearchBar({ placeholder, url }: Props) {
   const { data, searchData } = useSearchStore();
   const [value, setValue] = useState("");
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     searchData(value);
+    window.location.href = `${url}?name=${value}`;
   };
 
   useEffect(() => {

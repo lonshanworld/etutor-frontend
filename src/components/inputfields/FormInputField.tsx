@@ -2,6 +2,7 @@ import React, { ChangeEvent } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import "./style.css";
 import { twMerge } from "tailwind-merge";
+import { useFormStore } from "@/stores/useFormStore";
 
 interface Props {
   id: string;
@@ -12,6 +13,7 @@ interface Props {
   error?: any;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  value?: string | null;
 }
 
 export default function InputField({
@@ -22,12 +24,16 @@ export default function InputField({
   register,
   error,
   placeholder,
+  value,
   onChange,
 }: Props) {
+  const { formData, setFormData } = useFormStore();
+
   return (
     <div className="relative grid grid-cols-1">
       <input
         id={id}
+        name={id}
         type={type}
         {...register}
         className={twMerge(
@@ -38,6 +44,8 @@ export default function InputField({
           "peer block w-full h-[45px] px-4 py-2.5 border bg-transparent rounded-lg focus:outline-none focus:ring-1 text-base"
         )}
         placeholder=" "
+        value={value ?? undefined}
+        onChange={onChange}
       />
       <label
         htmlFor={id}

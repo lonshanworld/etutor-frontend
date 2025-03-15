@@ -23,7 +23,7 @@ export default function MobileSideBar({
         <div className="relative mt-5">
           <div
             onClick={() => onBackClick()}
-            className="absolute top-4 right-3 w-8 h-8 z-20 "
+            className="absolute top-4 right-3 w-8 h-8 z-20 cursor-pointer"
           >
             <HiOutlineChevronDoubleLeft className="text-backgroundOpposite w-6 h-6 transition-200 hover:text-theme" />
           </div>

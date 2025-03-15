@@ -6,7 +6,9 @@ import Form from "@/components/form/Form";
 import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
 import UserHomePage from "@/components/userhomepage/UserHomePage";
-import { UserRole } from "@/model/user";
+import { User, userFromJson, UserRole } from "@/model/user";
+import { getStaffs } from "@/api/services/staffs";
+import { AppRouter } from "@/router";
 
 const staffs = [
   {
@@ -66,11 +68,30 @@ const staffs = [
   },
 ];
 
-export default function StaffListPage() {
+export default async function StaffListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    page?: number;
+    name?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const name = params.name || "";
+
+  const response = await getStaffs(page, name);
+
+  const staffData: User[] = response?.data.map(userFromJson);
+  const pageCount = response.meta.last_page;
+
   return (
     <div className="w-full sm:w-[97%] mx-auto min-h-screen">
       <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
-        <SearchBar placeholder="Search Staffs" />
+        <SearchBar
+          placeholder="Search Staffs"
+          url={AppRouter.staffDashboardStaff}
+        />
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
@@ -81,7 +102,12 @@ export default function StaffListPage() {
         </div>
       </div>
       <div className="mt-5">
-        <TableDemo users={staffs} />
+        <TableDemo
+          users={staffData}
+          currentPage={page}
+          pageCount={pageCount}
+          role={2}
+        />
       </div>
 
       <div className="mt-5 flex justify-end">

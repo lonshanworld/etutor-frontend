@@ -2,7 +2,6 @@
 
 import DashboardAppbar from "@/components/appbar/DashboardAppbar";
 import DashboardAppbarMobile from "@/components/appbar/DashboardAppbarMobile";
-import LogoBox from "@/components/LogoBox";
 import MobileSideBar from "@/components/sidebar/MobileSideBar";
 
 import SideBarContainer from "@/components/sidebar/SidebarContainer";

@@ -1,88 +1,102 @@
-import InputField from "../inputfields/FormInputField";
+import InputField from "../../inputfields/FormInputField";
 import { Label } from "@/components/ui/label";
-import CustomButton from "../buttons/Button";
-import { DayPicker } from "../daypicker/DayPicker";
-import { z } from "zod";
+import CustomButton from "../../buttons/Button";
+import { DayPicker } from "../../daypicker/DayPicker";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RadioButton } from "../radioButton/RadioButton";
-import { subYears } from "date-fns";
-import { useFormState } from "react-dom";
+import { RadioButton } from "../../radioButton/RadioButton";
 import { useFormStore } from "@/stores/useFormStore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { UserRole } from "@/model/user";
+import { useSelectedUser } from "@/stores/useSelectedUser";
+import { UpdateFormSchema, UpdateFormSchemaType } from "@/model/form";
+import { set } from "date-fns";
 
 type Props = {
   setPageForm: (page: number) => void;
   role: UserRole | null;
 };
 
-const FormSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First Name is Required" }),
-    middleName: z.string().optional(),
-    lastName: z.string().min(1, { message: "Last Name is Required" }),
-    address: z.string().optional(),
-    nationality: z.string().optional(),
-    gender: z.string().min(1, { message: "Gender is required" }),
-    dob: z.string().min(1, { message: "DOB is required" }),
-    passportNo: z.string().optional(),
-    phoneNo: z.string().min(9, { message: "This is not a valid phone number" }),
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters." })
-      .max(16, { message: "Password must not exceed 16 characters." })
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/\d/, "Password must contain at least one number"),
-    confirmPassword: z
-      .string()
-      .min(1, { message: "Confirm Password is required." }),
-    role: z.number(),
-  })
-  .refine(
-    (data) => {
-      return data.password === data.confirmPassword;
-      console.log("confirm", data.confirmPassword);
-    },
-    {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
+export default function UpdateFirstPage({ setPageForm }: Props) {
+  const {
+    formData,
+    setUpdateFormData,
+    role,
+    isUpdateFormRendered,
+    isUpdateFormModified,
+    setUpdateFormModified,
+  } = useFormStore();
+  const { selectedUser } = useSelectedUser();
+
+  useEffect(() => {
+    if (selectedUser && !isUpdateFormModified) {
+      setUpdateFormData(selectedUser);
+      // setUpdateFormData({
+      //   firstName: selectedUser?.firstName ?? "",
+      //   middleName: selectedUser?.middleName ?? undefined,
+      //   lastName: selectedUser?.lastName ?? "",
+      //   address: selectedUser?.address ?? undefined,
+      //   nationality: selectedUser?.nationality ?? undefined,
+      //   gender: selectedUser?.gender ?? "",
+      //   dob: selectedUser?.dob ?? "",
+      //   passportNo: selectedUser?.passport ?? undefined,
+      //   phoneNo: selectedUser?.phoneNo ?? "",
+      //   email: selectedUser?.email ?? "",
+      //   password: "",
+      //   confirmPassword: "",
+      //   role: Number(selectedUser.role) ?? undefined,
+      // });
     }
-  );
+  }, [selectedUser, setUpdateFormData]);
 
-type FormSchemaType = z.infer<typeof FormSchema>;
-
-export default function FirstPage({ setPageForm }: Props) {
-  const { setFormData, role } = useFormStore();
-  console.log("role", role);
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    clearErrors,
     formState: { errors },
-  } = useForm<FormSchemaType>({
-    resolver: zodResolver(FormSchema),
+  } = useForm<UpdateFormSchemaType>({
+    resolver: zodResolver(UpdateFormSchema),
     mode: "onBlur",
+    defaultValues: {
+      firstName: formData?.firstName ?? "",
+      middleName: formData?.middleName ?? undefined,
+      lastName: formData?.lastName ?? "",
+      address: formData?.address ?? undefined,
+      nationality: formData?.nationality ?? undefined,
+      gender: formData?.gender ?? "",
+      dob: formData?.dob ?? "",
+      passportNo: formData?.passportNo ?? undefined,
+      phoneNo: formData?.phoneNo ?? "",
+      email: formData?.email ?? "",
+      password: formData?.password ?? undefined,
+      confirmPassword: formData?.confirmPassword ?? undefined,
+      role: formData?.role ?? undefined,
+    },
   });
 
-  const onSubmit: SubmitHandler<FormSchemaType> = (data, e: any) => {
+  useEffect(() => {
+    clearErrors();
+
+    if (selectedUser) {
+      Object.entries(selectedUser).forEach(([key, value]) => {
+        setValue(key as keyof UpdateFormSchemaType, value);
+      });
+    }
+  }, [selectedUser, setValue]);
+
+  const onSubmit: SubmitHandler<any> = (data, e: any) => {
     e.preventDefault();
-    const { confirmPassword, ...userData } = data;
-    console.log(userData);
-    setFormData(userData as any);
+    console.log("updated data", formData);
     setPageForm(2);
   };
 
-  useEffect(() => {
-    setValue("role", Number(role));
-  }, [role]);
-  console.log(typeof role);
-
-  useEffect(() => {});
-  console.log("errors", errors);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdateFormModified(true);
+    const { name, value } = e.target;
+    setUpdateFormData({ [name]: value });
+  };
 
   return (
     <div>
@@ -99,6 +113,8 @@ export default function FirstPage({ setPageForm }: Props) {
                   name: errors.firstName ? "firstName" : null,
                   message: errors?.firstName?.message,
                 }}
+                value={formData.firstName}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -107,6 +123,8 @@ export default function FirstPage({ setPageForm }: Props) {
                 label="Middle Name"
                 register={register("middleName", { required: false })}
                 type="text"
+                value={formData.middleName}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -114,11 +132,13 @@ export default function FirstPage({ setPageForm }: Props) {
                 id="lastName"
                 label="Last Name"
                 type="text"
-                register={register("lastName")}
+                register={register("lastName") ?? ""}
                 error={{
                   name: errors.lastName ? "lastName" : null,
                   message: errors?.lastName?.message,
                 }}
+                value={formData.lastName}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -129,12 +149,16 @@ export default function FirstPage({ setPageForm }: Props) {
               label="Address"
               register={register("address", { required: false })}
               type="text"
+              value={formData.address}
+              onChange={handleChange}
             />
             <InputField
               id="nationality"
               label="Nationality"
               type="text"
               register={register("nationality", { required: false })}
+              value={formData.nationality}
+              onChange={handleChange}
             />
           </div>
 
@@ -158,7 +182,7 @@ export default function FirstPage({ setPageForm }: Props) {
               <Label>DOB</Label>
               <DayPicker
                 input="dob"
-                watch={watch("dob")}
+                watch={watch}
                 setValue={setValue}
                 register={register("dob", {
                   required: "DOB is required",
@@ -176,6 +200,8 @@ export default function FirstPage({ setPageForm }: Props) {
                 label="Passport No"
                 type="text"
                 register={register("passportNo", { required: false })}
+                value={formData.passportNo}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -191,6 +217,8 @@ export default function FirstPage({ setPageForm }: Props) {
                   name: errors.phoneNo ? "phoneNo" : null,
                   message: errors?.phoneNo?.message,
                 }}
+                value={formData.phoneNo}
+                onChange={handleChange}
               />
             </div>
 
@@ -204,6 +232,8 @@ export default function FirstPage({ setPageForm }: Props) {
                   name: errors.email ? "email" : null,
                   message: errors?.email?.message,
                 }}
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -219,6 +249,8 @@ export default function FirstPage({ setPageForm }: Props) {
                   name: errors.password ? "password" : null,
                   message: errors?.password?.message,
                 }}
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -231,17 +263,25 @@ export default function FirstPage({ setPageForm }: Props) {
                   name: errors.confirmPassword ? "confirmPassword" : null,
                   message: errors?.confirmPassword?.message,
                 }}
+                value={formData.confirmPassword}
+                onChange={handleChange}
               />
             </div>
-            {role && (
-              <input
-                type="hidden"
-                id="userRole"
-                {...register("role")}
-                value={Number(role)}
-              />
-            )}
+            {/* {role && ( */}
+            <input
+              type="hidden"
+              id="userRole"
+              {...register("role")}
+              value={Number(role)}
+            />
+            {/* )} */}
           </div>
+          {isUpdateFormRendered && (
+            <p className="text-gray-500 text-sm -mt-5">
+              Please note that this password will overwrite the user's current
+              password.
+            </p>
+          )}
 
           <CustomButton text="Next" type="submit" fullWidth={true} />
         </div>

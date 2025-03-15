@@ -8,29 +8,52 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export function PaginationDemo() {
+export function PaginationDemo({
+  pageCount,
+  currentPage,
+  url,
+}: {
+  pageCount: number;
+  currentPage: number;
+  url: string;
+}) {
+  const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
+
   return (
     <Pagination className="flex justify-end">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious
+            aria-disabled={currentPage <= 1}
+            className={
+              currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
+            }
+            href={`${url}?page=${currentPage - 1}`}
+          />
         </PaginationItem>
+        {pages.map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink
+              href={`${url}?page=${page}`}
+              isActive={page === currentPage}
+              className={
+                page === currentPage ? "pointer-events-none " : undefined
+              }
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
         <PaginationItem>
-          <PaginationLink href="">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext
+            className={
+              currentPage === pageCount
+                ? "pointer-events-none opacity-50"
+                : undefined
+            }
+            aria-disabled={currentPage === pageCount}
+            href={`${url}?page=${currentPage + 1}`}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

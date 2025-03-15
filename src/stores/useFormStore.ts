@@ -1,3 +1,4 @@
+import { FormData } from "@/model/form";
 import { UserRole } from "@/model/user";
 import { create } from "zustand";
 
@@ -5,20 +6,9 @@ type State = {
   showForm: boolean;
   page: number;
   role: UserRole;
-  formData: {
-    firstName: string;
-    middleName?: string;
-    lastName: string | null;
-    address?: string | null;
-    nationality?: string | null;
-    gender: string | null;
-    dob: string | null;
-    passportNo?: string | null;
-    phoneNo: string;
-    email: string;
-    password: string;
-    role: UserRole | null;
-  };
+  isUpdateFormRendered: boolean;
+  isUpdateFormModified: boolean;
+  formData: FormData;
   studentData?: {
     emgContactName?: string;
     emgContactPhone?: string;
@@ -41,28 +31,36 @@ type Action = {
   setPageForm: (page: number) => void;
   setShowForm: () => void;
   setRole: (role: UserRole) => void;
-  setFormData: (data: State["formData"]) => void;
+  setUpdateFormRendered: (value: boolean) => void;
+  setUpdateFormModified: (value: boolean) => void;
+  setFormData: (data: any) => void;
   setStudentData: (data: State["studentData"]) => void;
   setTutorData: (data: State["tutorData"]) => void;
   setStaffData: (data: State["staffData"]) => void;
+  setUpdateFormData: (data: any) => void;
+  setUpdateStudentData: (data: any) => void;
+  resetFormData: () => void;
 };
 
 export const useFormStore = create<State & Action>((set) => ({
   showForm: false,
   page: 1,
   role: UserRole.student,
+  isUpdateFormRendered: false,
+  isUpdateFormModified: false,
   formData: {
     firstName: "",
     middleName: "",
     lastName: "",
     address: "",
     nationality: "",
-    gender: null,
-    dob: null,
+    gender: "",
+    dob: "",
     passportNo: "",
     phoneNo: "",
     email: "",
     password: "",
+    confirmPassword: "",
     role: UserRole.student,
   },
   studentData: {
@@ -80,6 +78,12 @@ export const useFormStore = create<State & Action>((set) => ({
     emgContactPhone: "",
     accessLevel: "",
     startDate: null,
+  },
+  setUpdateFormRendered: (value) => {
+    set({ isUpdateFormRendered: value });
+  },
+  setUpdateFormModified: (value) => {
+    set({ isUpdateFormModified: value });
   },
   setPageForm: (page) => {
     set({ page });
@@ -105,6 +109,7 @@ export const useFormStore = create<State & Action>((set) => ({
         phoneNo: data.phoneNo,
         email: data.email,
         password: data.password,
+        confirmPassword: data.confirmPassword,
         role: data.role,
       },
     });
@@ -138,6 +143,12 @@ export const useFormStore = create<State & Action>((set) => ({
       },
     });
   },
+  setUpdateFormData: (data) => {
+    set((state) => ({ formData: { ...state.formData, ...data } }));
+  },
+  setUpdateStudentData: (data) => {
+    set((state) => ({ studentData: { ...state.studentData, ...data } }));
+  },
   resetFormData: () => {
     set({
       formData: {
@@ -146,13 +157,14 @@ export const useFormStore = create<State & Action>((set) => ({
         lastName: "",
         address: "",
         nationality: "",
-        gender: null,
-        dob: null,
+        gender: "",
+        dob: "",
         passportNo: "",
         phoneNo: "",
         email: "",
         password: "",
-        role: null,
+        confirmPassword: "",
+        role: UserRole.student,
       },
     });
     set({
