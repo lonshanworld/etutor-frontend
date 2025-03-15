@@ -1,16 +1,24 @@
+"use server"
+
+import { cookies } from "next/headers";
+
 async function fetchData(
   method: string,
   apiString?: string,
   body?: any,
-  token?: string
 ): Promise<any> {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get("sessionToken")?.value;
+
+
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/${apiString}`,
     {
       method: method,
       headers: {
         "Content-Type": "Application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
+        ...(sessionToken && { Authorization: `Bearer ${sessionToken}` }),
       },
       credentials: "include",
       body: body ? JSON.stringify(body) : undefined,
@@ -20,14 +28,13 @@ async function fetchData(
   return response.json();
 }
 
-export function GetRequest(apiString?: string, token?: string): Promise<any> {
-  return fetchData("GET", apiString, undefined, token);
+export async function GetRequest(apiString?: string): Promise<any> {
+  return fetchData("GET", apiString, undefined);
 }
 
-export function PostRequest(
+export async function PostRequest(
   body: any,
   apiString?: string,
-  token?: string
 ): Promise<any> {
-  return fetchData("POST", apiString, body, token);
+  return fetchData("POST", apiString, body,);
 }
