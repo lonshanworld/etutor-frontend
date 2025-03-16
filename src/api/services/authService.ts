@@ -17,7 +17,7 @@ export async function login(email: string, password: string): Promise<Login> {
 }
 
 export async function logout(token: string): Promise<any> {
-  const response = await PostRequest({}, APIS.POST.logout, token);
+  const response = await PostRequest({}, APIS.POST.logout);
 
   return response; // server response 204 with no body if success
 }
@@ -51,7 +51,7 @@ export async function resetPassword(
       email: email,
       password: password,
     },
-    APIS.POST.updatePassword
+    APIS.PATCH.updatePassword
   );
 
   const data = resetPasswordFromJson(response);

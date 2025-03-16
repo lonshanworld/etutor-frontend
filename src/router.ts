@@ -6,7 +6,7 @@ export const AppRouter = {
   unauthorized: "/unauthorized",
 
   forgetPassword: "/forget-password",
-  verifyOtp: "/verify-otp",
+  confirmOtp: "/confirmOtp-otp",
   resetPassword: "/reset-password",
 
   staffDashboard: "/dashboard/staff",
