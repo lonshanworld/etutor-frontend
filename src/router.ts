@@ -10,6 +10,7 @@ export const AppRouter = {
   staffDashboardStudents: "/dashboard/staff/students",
   staffDashboardTutors: "/dashboard/staff/tutors",
   staffDashboardStaff: "/dashboard/staff/staffList",
+  staffDashboardAllocate : "/dashboard/staff/allocate",
   
 
   studentDashboard : "/dashboard/student",
@@ -26,5 +27,5 @@ export const AppRouter = {
   tutorMeeting: "/dashboard/tutor/meeting",
   tutorNote : "/dashboard/tutor/note",
   tutorPeople : "/dashboard/tutor/people",
+  tutorAllocatedStudents : "/dashboard/tutor/allocatedstudent",
 };
-

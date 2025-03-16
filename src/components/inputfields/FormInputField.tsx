@@ -6,6 +6,7 @@ interface Props {
   label?: string;
   type: string;
   placeholder?: string;
+  ariaLabel?: string;
   register?: UseFormRegisterReturn;
   error?: any;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -16,6 +17,7 @@ export default function FormInputField({
   label,
   type,
   placeholder,
+  ariaLabel,
   register,
   error,
   onChange,
@@ -23,7 +25,10 @@ export default function FormInputField({
   return (
     <div className='w-full'>
       {label && (
-        <label htmlFor={id} className='block text-sm font-medium text-font'>
+        <label
+          htmlFor={id}
+          className='block text-sm font-medium text-font'
+        >
           {label}
         </label>
       )}
@@ -32,6 +37,7 @@ export default function FormInputField({
         type={type}
         className='mt-2 h-10 w-full px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md'
         placeholder={placeholder}
+        aria-label={ariaLabel}
         onChange={onChange}
         {...register}
       />
