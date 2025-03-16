@@ -10,7 +10,7 @@ import { errorStore } from "@/stores/errorStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 
 const ResetPasswordPage = () => {
@@ -110,4 +110,12 @@ const ResetPasswordPage = () => {
   );
 };
 
-export default ResetPasswordPage;
+export default function ResetPage() {
+  return (
+    <Suspense
+    fallback={<div>Loading...</div>}>
+      <ResetPasswordPage />
+    </Suspense>
+  );
+}
+

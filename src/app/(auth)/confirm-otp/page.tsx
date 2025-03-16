@@ -9,7 +9,7 @@ import { errorStore } from "@/stores/errorStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 
 const OTP_LENGTH = 6;
@@ -161,4 +161,11 @@ const ConfirmOtpPage = () => {
   );
 };
 
-export default ConfirmOtpPage;
+export default function ConformPage() {
+  return (
+    <Suspense
+    fallback={<div>Loading...</div>}>
+      <ConfirmOtpPage />
+    </Suspense>
+  );
+}
