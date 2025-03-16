@@ -9,6 +9,7 @@ const roleRoutes = {
     AppRouter.staffDashboardStudents,
     AppRouter.staffDashboardTutors,
     AppRouter.staffDashboardStaff,
+    AppRouter.staffDashboardAllocate,
     
     AppRouter.studentDashboard,
     AppRouter.studentChat,
