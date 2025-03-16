@@ -1,6 +1,9 @@
+import { unauthorized } from "next/navigation";
+
 export const AppRouter = {
   loginPage: "/login",
   introPage: "/",
+  unauthorized : "/unauthorized",
 
   forgetPassword: "/forget-password",
   verifyOtp: "/verify-otp",
