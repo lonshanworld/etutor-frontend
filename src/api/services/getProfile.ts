@@ -4,6 +4,8 @@ import { Profile, profileFromJson } from "@/model/profile";
 
 // export async function getProfile(token: string): Promise<Profile> {
 //   const response = await GetRequest(APIS.GET.getMyProfile, token);
+export async function getProfile(): Promise<Profile> {
+  const response = await GetRequest(APIS.GET.getMyProfile);
 
-//   return profileFromJson(response);
-// }
+  return profileFromJson(response);
+}

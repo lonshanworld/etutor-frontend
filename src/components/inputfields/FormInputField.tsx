@@ -11,9 +11,9 @@ interface Props {
   placeholder?: string;
   value?: string | null;
   ariaLabel?: string;
-  register?: any;
-  error?: { name: string | null; message: string | undefined };
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  register?: UseFormRegisterReturn;
+  error?: any;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
 

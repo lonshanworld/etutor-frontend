@@ -17,12 +17,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
+import { useState } from "react";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const { isError, setError } = errorStore();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -33,7 +36,9 @@ export default function LoginPage() {
   });
 
   async function handleLogin(data: LoginFormData) {
+    setLoading(true);
     try {
+
       const response = await login(data.email, data.password);
 
       const { message, token, errorMessage } = response;
@@ -42,18 +47,17 @@ export default function LoginPage() {
         const expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 7);
 
-        sessionStorage.setItem(
-          "authToken",
-          JSON.stringify({ token, expiration: expirationDate.getTime() }) // Store expiration as timestamp
-        );
-
-        // console.log("Token", token);
+       
+        await storeTokenInCookie(token);
+        // const sessionToken = await getToken();
+        // console.log("stored session token", sessionToken); 
 
         // Check role
-        const user = await getProfile(token);
-        // console.log("User", user);
-
+        const user = await getProfile();
+        await storeRoleInCookie(user.role);
+        setLoading(false);
         if (user?.role === "admin") {
+
           router.push(AppRouter.staffDashboard);
         } else if (user?.role === "staff") {
           router.push(AppRouter.staffDashboard);
@@ -66,12 +70,14 @@ export default function LoginPage() {
       }
 
       if (errorMessage) {
+        setLoading(false);
         setError(errorMessage);
         return;
       }
 
       throw new Error("An unknown error occurred. Please try again.");
     } catch (error) {
+      setLoading(false);
       const errorMsg =
         error instanceof Error
           ? error.message
@@ -137,6 +143,7 @@ export default function LoginPage() {
                   text='Sign In'
                   type='submit'
                   fullWidth={true}
+                  disabled={loading}
                 />
               </div>
               <Link

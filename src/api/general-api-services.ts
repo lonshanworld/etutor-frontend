@@ -1,16 +1,22 @@
+"use server";
+
+import { cookies } from "next/headers";
+
 async function fetchData(
   method: string,
   apiString?: string,
   body?: any
 ): Promise<any> {
-  const token = "2|rD8VLynd5qWR1SJEVN1XqZEBURwOy7c2HsyuCkIE80436565";
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get("sessionToken")?.value;
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/${apiString}`,
     {
       method: method,
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "Application/json",
+        ...(sessionToken && { Authorization: `Bearer ${sessionToken}` }),
       },
       body: body ? JSON.stringify(body) : undefined,
     }
@@ -24,43 +30,10 @@ async function fetchData(
   return response.json();
 }
 
-export function GetRequest(apiString?: string): Promise<any> {
-  return fetchData("GET", apiString);
+export async function GetRequest(apiString?: string): Promise<any> {
+  return fetchData("GET", apiString, undefined);
 }
 
-export function PostRequest(body: any, apiString?: string): Promise<any> {
+export async function PostRequest(body: any, apiString?: string): Promise<any> {
   return fetchData("POST", apiString, body);
 }
-// async function fetchData(
-//   method: string,
-//   apiString?: string,
-//   body?: any,
-//   token?: string
-// ): Promise<any> {
-//   const response = await fetch(
-//     `${process.env.NEXT_PUBLIC_API_URL}/${apiString}`,
-//     {
-//       method: method,
-//       headers: {
-//         "Content-Type": "Application/json",
-//         ...(token && { Authorization: `Bearer ${token}` }),
-//       },
-//       credentials: "include",
-//       body: body ? JSON.stringify(body) : undefined,
-//     }
-//   );
-
-//   return response.json();
-// }
-
-// export function GetRequest(apiString?: string, token?: string): Promise<any> {
-//   return fetchData("GET", apiString, undefined, token);
-// }
-
-// export function PostRequest(
-//   body: any,
-//   apiString?: string,
-//   token?: string
-// ): Promise<any> {
-//   return fetchData("POST", apiString, body, token);
-// }
