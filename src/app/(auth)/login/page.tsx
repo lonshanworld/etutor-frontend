@@ -1,10 +1,12 @@
 "use client";
 
+import { getProfile } from "@/api/services/getProfile";
+import { login } from "@/api/services/authService";
 import desktopImage from "@/assets/images/desktop-login-icon.png";
 import mobileImage from "@/assets/images/mobile-login-icon.png";
 import Button from "@/components/buttons/Button";
 import ErrorPopup from "@/components/ErrorPopup";
-import InputField from "@/components/inputfields/InputField";
+import FormInputField from "@/components/inputfields/FormInputField";
 import LogoBox from "@/components/LogoBox";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
@@ -30,40 +32,51 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  // Test API
-  async function testLogin(
-    email: string,
-    password: string
-  ): Promise<{ email: string; name: string } | null> {
-    return new Promise((resolve, reject) => {
-      const testUser = {
-        email: "test@gmail.com",
-        password: "123456",
-        name: "John Doe",
-      };
-
-      if (email === testUser.email && password === testUser.password) {
-        resolve({ email: testUser.email, name: testUser.name });
-      } else {
-        reject(new Error("Incorrect email or password"));
-      }
-    });
-  }
-
   async function handleLogin(data: LoginFormData) {
     try {
-      const user = await testLogin(data.email, data.password);
-      if (!user) {
-        throw new Error("Incorrect email or password");
+      const response = await login(data.email, data.password);
+
+      const { message, token, errorMessage } = response;
+
+      if (message === "success" && token) {
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 7);
+
+        sessionStorage.setItem(
+          "authToken",
+          JSON.stringify({ token, expiration: expirationDate.getTime() }) // Store expiration as timestamp
+        );
+
+        // console.log("Token", token);
+
+        // Check role
+        const user = await getProfile(token);
+        // console.log("User", user);
+
+        if (user?.role === "admin") {
+          router.push(AppRouter.staffDashboard);
+        } else if (user?.role === "staff") {
+          router.push(AppRouter.staffDashboard);
+        } else if (user?.role === "student") {
+          router.push(AppRouter.studentDashboard);
+        } else if (user?.role === "tutor") {
+          router.push(AppRouter.tutorDashboard);
+        }
+        return;
       }
-      console.log("Login successful", user);
-      router.push(AppRouter.introPage);
+
+      if (errorMessage) {
+        setError(errorMessage);
+        return;
+      }
+
+      throw new Error("An unknown error occurred. Please try again.");
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message || "Login failed. Please try again.");
-      } else {
-        setError("An unknown error occurred. Please try again.");
-      }
+      const errorMsg =
+        error instanceof Error
+          ? error.message
+          : "An unknown error occurred. Please try again.";
+      setError(errorMsg);
     }
   }
 
@@ -101,7 +114,7 @@ export default function LoginPage() {
               className='w-full mt-1 flex flex-col'
             >
               <div className='mt-3.5 space-y-2'>
-                <InputField
+                <FormInputField
                   id='email'
                   label='Email'
                   type='email'
@@ -110,7 +123,7 @@ export default function LoginPage() {
                   error={errors.email?.message}
                 />
 
-                <InputField
+                <FormInputField
                   id='password'
                   label='Password'
                   type='password'
@@ -119,9 +132,12 @@ export default function LoginPage() {
                   error={errors.password?.message}
                 />
               </div>
-
               <div className='flex justify-center mt-4'>
-                <Button text='Sign In' type='submit' fullWidth={true} />
+                <Button
+                  text='Sign In'
+                  type='submit'
+                  fullWidth={true}
+                />
               </div>
               <Link
                 href='/forget-password'

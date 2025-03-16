@@ -25,9 +25,6 @@ export async function createStudent(body: any): Promise<any> {
 }
 
 export async function updateStudent(body: any, id: number): Promise<any> {
-  const response = await PostRequest(
-    body,
-    `${APIS.GET.getStudentList}/${id}/${APIS.PATCH.updateUser}`
-  );
+  const response = await PostRequest(body, APIS.PATCH.updateStudent(id));
   return response;
 }

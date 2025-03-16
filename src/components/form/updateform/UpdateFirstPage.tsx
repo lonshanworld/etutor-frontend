@@ -31,21 +31,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
   useEffect(() => {
     if (selectedUser && !isUpdateFormModified) {
       setUpdateFormData(selectedUser);
-      // setUpdateFormData({
-      //   firstName: selectedUser?.firstName ?? "",
-      //   middleName: selectedUser?.middleName ?? undefined,
-      //   lastName: selectedUser?.lastName ?? "",
-      //   address: selectedUser?.address ?? undefined,
-      //   nationality: selectedUser?.nationality ?? undefined,
-      //   gender: selectedUser?.gender ?? "",
-      //   dob: selectedUser?.dob ?? "",
-      //   passportNo: selectedUser?.passport ?? undefined,
-      //   phoneNo: selectedUser?.phoneNo ?? "",
-      //   email: selectedUser?.email ?? "",
-      //   password: "",
-      //   confirmPassword: "",
-      //   role: Number(selectedUser.role) ?? undefined,
-      // });
     }
   }, [selectedUser, setUpdateFormData]);
 
@@ -93,9 +78,11 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("changed");
     setUpdateFormModified(true);
     const { name, value } = e.target;
     setUpdateFormData({ [name]: value });
+    console.log(name, value);
   };
 
   return (

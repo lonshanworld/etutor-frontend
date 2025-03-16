@@ -17,14 +17,14 @@ export default function Toast({ message, type }: ToastProps) {
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 10); // Ensures animation runs
 
-    // Animate the progress bar smoothly over 5s
+    // Animate the progress bar smoothly over 3s
     const progressInterval = setInterval(() => {
       setProgress((prev) => Math.max(prev - 1, 0));
-    }, 50); // 50ms * 100 = 5000ms (5s)
+    }, 30); // 30ms * 100 = 3000ms (3s)
 
     const timeout = setTimeout(() => {
       handleClose();
-    }, 5000);
+    }, 3000);
 
     return () => {
       clearInterval(progressInterval);

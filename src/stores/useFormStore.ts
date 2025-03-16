@@ -183,7 +183,7 @@ export const useFormStore = create<State & Action>((set) => ({
     });
     set({
       staffData: {
-        emgContactName: "string",
+        emgContactName: "",
         emgContactPhone: "",
         accessLevel: "",
         startDate: null,

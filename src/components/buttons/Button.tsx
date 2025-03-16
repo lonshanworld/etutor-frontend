@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Spinner from "../Spinner";
 
 interface Props {
   text: string;
   type: "submit" | "button";
+  ariaLabel?: string;
   fullWidth?: boolean;
   disabled?: boolean;
   onClick?: (event: React.FormEvent) => void;
@@ -14,6 +14,7 @@ interface Props {
 export default function CustomButton({
   text,
   type,
+  ariaLabel,
   fullWidth = false,
   disabled,
   onClick,
@@ -21,6 +22,7 @@ export default function CustomButton({
   return (
     <button
       type={type}
+      aria-label={ariaLabel}
       onClick={onClick}
       className={`${fullWidth ? "w-full" : "w-auto"} ${
         disabled

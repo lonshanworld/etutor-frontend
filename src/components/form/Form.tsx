@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { FiArrowLeft } from "react-icons/fi";
 import FirstPage from "./createform/FirstPage";
-import StudentPage from "./createform/secondpage/StudentPage";
+import StudentPage from "./secondpage/StudentPage";
 import { useFormStore } from "@/stores/useFormStore";
-import TutorPage from "./createform/secondpage/TutorPage";
-import StaffPage from "./createform/secondpage/StaffPage";
+import TutorPage from "./secondpage/TutorPage";
+import StaffPage from "./secondpage/StaffPage";
 import { UserRole } from "@/model/user";
 import UpdateFirstPage from "./updateform/UpdateFirstPage";
 

@@ -3,6 +3,10 @@ export const APIS = {
     getStudentList: "students",
     getTutorList: "tutors",
     getStaffList: "staffs",
+    getMyProfile: "user/profile", // get own user profile
+    getProfile: (id: string) => `user/${id}/profile`, // get user profile by id
+    checkEmail: "check-email",
+    confirmOtp: "confirm-otp",
   },
   POST: {
     login: "auth/login",
@@ -12,7 +16,19 @@ export const APIS = {
     createStaff: "staffs/account/create",
   },
   PATCH: {
-    updateUser: "account/update",
+    updatePassword: "update-password", // reset password
+
+    createStudent: "students/account/create",
+    updateStudent: (id: number) => `students/${id}/account/update`,
+    deactivateStudent: "students/account/deactivate",
+
+    createTutor: "tutors/account/create",
+    updateTutor: (id: number) => `tutors/${id}/account/update`,
+    deactivateTutor: "tutors/account/deactivate",
+
+    createStaff: "staffs/account/create",
+    updateStaff: (id: number) => `staffs/${id}/account/update`,
+    deactivateStaff: "staffs/account/deactivate",
   },
   DELETE: {},
 };

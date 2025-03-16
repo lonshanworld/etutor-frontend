@@ -1,47 +1,46 @@
-import InputField from "../../../inputfields/FormInputField";
+import InputField from "../../inputfields/FormInputField";
 import { Label } from "@/components/ui/label";
-import CustomButton from "../../../buttons/Button";
+import CustomButton from "../../buttons/Button";
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormStore } from "@/stores/useFormStore";
-import { DayPicker } from "../../../daypicker/DayPicker";
+import { DayPicker } from "../../daypicker/DayPicker";
 
 type Props = {
   setPageForm: (page: number) => void;
 };
 
-const TutorSchema = z.object({
-  qualifications: z
-    .string()
-    .min(1, { message: "Qualifications field is required." }),
-  experience: z.number().min(1, { message: "Experience is required." }),
+const StaffSchema = z.object({
+  emgContactName: z.string().optional(),
+  emgContactPhone: z.string().optional(),
   startDate: z.string().min(1, { message: "Start Date is required." }),
 });
 
-type TutorSchemaType = z.infer<typeof TutorSchema>;
+type StaffSchemaType = z.infer<typeof StaffSchema>;
 
-export default function TutorPage({ setPageForm }: Props) {
+export default function StaffPage({ setPageForm }: Props) {
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
-  } = useForm<TutorSchemaType>({
-    resolver: zodResolver(TutorSchema),
+  } = useForm<StaffSchemaType>({
+    resolver: zodResolver(StaffSchema),
     mode: "onBlur",
+    defaultValues: {},
   });
-  const { setShowForm, setTutorData } = useFormStore();
+  const { setShowForm, formData, staffData, setStaffData } = useFormStore();
 
-  const onSubmit: SubmitHandler<TutorSchemaType> = (data, e: any) => {
+  const onSubmit: SubmitHandler<StaffSchemaType> = (data, e: any) => {
     e.preventDefault();
-    setTutorData(data);
+    setStaffData(data);
     setShowForm();
     setPageForm(1);
-
-    // post request
   };
+
+  console.log(errors);
 
   return (
     <div>
@@ -50,41 +49,45 @@ export default function TutorPage({ setPageForm }: Props) {
           <div className="grid-2">
             <div>
               <InputField
-                id="qualifications"
-                label="Qualifications"
+                id="emgContactName"
+                label="Emergency Contact Name"
                 type="text"
-                register={register("qualifications")}
+                register={register("emgContactName")}
                 error={{
-                  name: errors.qualifications ? "qualifications" : null,
-                  message: errors?.qualifications?.message,
+                  name: errors.emgContactName ? "emgContactName" : null,
+                  message: errors?.emgContactName?.message,
                 }}
               />
             </div>
             <div>
               <InputField
-                id="experience"
-                label="Experience"
-                type="number"
-                register={register("experience")}
+                id="emgContactPhone"
+                label="Emergency Contact Phone"
+                type="text"
+                register={register("emgContactPhone")}
                 error={{
-                  name: errors.experience ? "experience" : null,
-                  message: errors?.experience?.message,
+                  name: errors.emgContactPhone ? "emgContactPhone" : null,
+                  message: errors?.emgContactPhone?.message,
                 }}
               />
             </div>
           </div>
           <div className="grid-2">
             <div>
-              <Label>Start Date</Label>
+              <Label>Join Date</Label>
               <DayPicker
-                watch={watch}
+                input="startDate"
+                watch={watch("startDate")}
                 setValue={setValue}
-                register={register("startDate")}
+                register={register("startDate", {
+                  required: "startDate is required",
+                })}
                 error={errors.startDate && errors.startDate.message}
               />
               {errors.startDate && (
                 <p className="text-red-500">{errors.startDate.message}</p>
               )}
+              <div></div>
             </div>
           </div>
 

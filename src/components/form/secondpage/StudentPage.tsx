@@ -1,15 +1,15 @@
 "use client";
-import InputField from "../../../inputfields/FormInputField";
+import InputField from "../../inputfields/FormInputField";
 import { Label } from "@/components/ui/label";
-import CustomButton from "../../../buttons/Button";
+import CustomButton from "../../buttons/Button";
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SelectBox from "../../../selectbox/SelectBox";
+import SelectBox from "../../selectbox/SelectBox";
 import { useFormStore } from "@/stores/useFormStore";
 import { createStudent, updateStudent } from "@/api/services/students";
 import { useEffect, useState } from "react";
-import CustomToast from "../../../customtoast/CustomToast";
+import CustomToast from "../../customtoast/CustomToast";
 import { useToast } from "@/stores/useToast";
 import { useSelectedUser } from "@/stores/useSelectedUser";
 
@@ -33,17 +33,11 @@ export default function StudentPage({ setPageForm }: Props) {
     setStudentData,
     isUpdateFormRendered,
     isUpdateFormModified,
+    resetFormData,
   } = useFormStore();
   const { selectedUser } = useSelectedUser();
 
   const { toast, showToast } = useToast();
-
-  // useEffect(() => {
-  //   if (selectedUser && !isUpdateFormModified) {
-  //     // setUpdateFormData(selectedUser);
-  //     // setUpdateStudentData()
-  //   }
-  // }, [selectedUser, setUpdateFormData]);
 
   const {
     register,
@@ -91,6 +85,9 @@ export default function StudentPage({ setPageForm }: Props) {
         console.log("status", response.status);
         if (response.message === "success") {
           showToast("Student account created successfully", "success");
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
         }
       } catch (error: any) {
         showToast(error.message, "error");
@@ -107,6 +104,9 @@ export default function StudentPage({ setPageForm }: Props) {
           console.log("status", response.status);
           if (response.message === "success") {
             showToast("Student data update successfully", "success");
+            setTimeout(() => {
+              location.reload();
+            }, 4000);
           }
         } catch (error: any) {
           showToast(error.message, "error");
@@ -169,7 +169,7 @@ export default function StudentPage({ setPageForm }: Props) {
             </div>
           </div>
 
-          <CustomButton text="Create Account" type="submit" fullWidth={true} />
+          <CustomButton text="Update Account" type="submit" fullWidth={true} />
         </div>
       </form>
 

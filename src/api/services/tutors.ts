@@ -1,4 +1,4 @@
-import { GetRequest } from "../general-api-services";
+import { GetRequest, PostRequest } from "../general-api-services";
 import { APIS } from "../api-constants";
 
 export async function getTutors(
@@ -15,5 +15,15 @@ export async function getTutors(
   };
   const URL = geturl();
   const response = await GetRequest(URL);
+  return response;
+}
+
+export async function createTutor(body: any): Promise<any> {
+  const response = await PostRequest(body, APIS.POST.createTutor);
+  return response;
+}
+
+export async function updateTutor(body: any, id: number): Promise<any> {
+  const response = await PostRequest(body, APIS.PATCH.updateTutor(id));
   return response;
 }
