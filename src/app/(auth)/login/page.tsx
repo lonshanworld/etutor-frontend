@@ -128,7 +128,6 @@ export default function LoginPage() {
                   register={register("email")}
                   error={errors.email?.message}
                 />
-
                 <FormInputField
                   id='password'
                   label='Password'
