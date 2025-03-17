@@ -1,14 +1,15 @@
 import { create } from "zustand";
 import { User } from "@/model/user";
+import { Profile } from "@/model/profile";
 
 type State = {
-  user: User | null;
+  user: Profile | null;
   showOption: boolean;
   showDetail: boolean;
 };
 
 type Action = {
-  login: (user: User) => void;
+  login: (user: Profile) => void;
   logout: () => void;
   setShowDetail: (value: boolean) => void;
 };

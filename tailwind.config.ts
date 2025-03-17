@@ -19,6 +19,7 @@ export default {
         font: "var(--font-color)",
         popup: "var(--popup)",
         cusGray: "#818181",
+        errorMessage: "var(--error-message)",
         login: "#363333",
         inputBackground: "var(--input-background)",
         inputBorder: "var(--input-border)",

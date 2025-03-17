@@ -4,13 +4,13 @@ import { AppRouter } from "./router";
 import { cookies } from "next/headers";
 
 const roleRoutes = {
-  staff : [
+  staff: [
     AppRouter.staffDashboard,
     AppRouter.staffDashboardStudents,
     AppRouter.staffDashboardTutors,
     AppRouter.staffDashboardStaff,
     AppRouter.staffDashboardAllocate,
-    
+
     AppRouter.studentDashboard,
     AppRouter.studentChat,
     AppRouter.studentBoard,
@@ -26,15 +26,15 @@ const roleRoutes = {
     AppRouter.tutorPeople,
     AppRouter.tutorAllocatedStudents,
   ],
-  student : [
+  student: [
     AppRouter.studentDashboard,
     AppRouter.studentChat,
     AppRouter.studentBoard,
     AppRouter.studentMeeting,
     AppRouter.studentNote,
-    AppRouter.studentPeople
+    AppRouter.studentPeople,
   ],
-  tutor : [
+  tutor: [
     AppRouter.tutorBoard,
     AppRouter.tutorChat,
     AppRouter.tutorDashboard,
@@ -42,8 +42,8 @@ const roleRoutes = {
     AppRouter.tutorNote,
     AppRouter.tutorPeople,
     AppRouter.tutorAllocatedStudents,
-  ]
-}
+  ],
+};
 
 export async function middleware(req: NextRequest) {
   const cookieStore = await cookies();
@@ -52,35 +52,42 @@ export async function middleware(req: NextRequest) {
 
   console.log("Middleware: Checking sessionToken:", sessionToken); // Debugging
 
-  if (req.nextUrl.pathname.startsWith("/_next/") || 
-    req.nextUrl.pathname.startsWith("/static/") || 
-    req.nextUrl.pathname.startsWith("/api/") || 
-    req.nextUrl.pathname === "/favicon.ico") {
+  if (
+    req.nextUrl.pathname.startsWith("/_next/") ||
+    req.nextUrl.pathname.startsWith("/static/") ||
+    req.nextUrl.pathname.startsWith("/api/") ||
+    req.nextUrl.pathname === "/favicon.ico"
+  ) {
     return NextResponse.next();
   }
 
   if (!sessionToken) {
-    return NextResponse.redirect(new URL(AppRouter.loginPage, req.nextUrl.origin));
-  }else{
-     // If the role is missing or not recognized, redirect to login
+    return NextResponse.redirect(
+      new URL(AppRouter.loginPage, req.nextUrl.origin)
+    );
+  } else {
+    // If the role is missing or not recognized, redirect to login
     if (!role || !(role in roleRoutes)) {
-      return NextResponse.redirect(new URL(AppRouter.loginPage, req.nextUrl.origin));
+      return NextResponse.redirect(
+        new URL(AppRouter.loginPage, req.nextUrl.origin)
+      );
     }
 
     // Allow role-specific routes only
     const allowedRoutes = roleRoutes[role as keyof typeof roleRoutes];
     if (!allowedRoutes.includes(req.nextUrl.pathname)) {
-      return NextResponse.redirect(new URL(AppRouter.unauthorized, req.nextUrl.origin));
+      return NextResponse.redirect(
+        new URL(AppRouter.unauthorized, req.nextUrl.origin)
+      );
     }
   }
-
- 
 
   return NextResponse.next(); // Allow request to continue
 }
 
-
 // ✅ Apply middleware to all routes EXCEPT "/"
 export const config = {
-  matcher: ["/((?!login|forget-password|verify-otp|unauthorized|reset-password|$).*)"],
+  matcher: [
+    "/((?!login|forget-password|confirm-otp|unauthorized|reset-password|$).*)",
+  ],
 };

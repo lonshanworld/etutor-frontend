@@ -1,24 +1,26 @@
 "use client";
 
+import { login as loginAuth } from "@/api/services/authService";
 import { getProfile } from "@/api/services/getProfile";
-import { login } from "@/api/services/authService";
 import desktopImage from "@/assets/images/desktop-login-icon.png";
 import mobileImage from "@/assets/images/mobile-login-icon.png";
 import Button from "@/components/buttons/Button";
 import ErrorPopup from "@/components/ErrorPopup";
-import FormInputField from "@/components/inputfields/FormInputField";
+import InputFieldType1 from "@/components/inputfields/InputFieldType1";
 import LogoBox from "@/components/LogoBox";
+import ToggleTheme from "@/components/ToggleTheme";
+import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
+import { useUserStore } from "@/stores/userStore";
 import { loginSchema } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
-import { useState } from "react";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -26,6 +28,7 @@ export default function LoginPage() {
   const { isError, setError } = errorStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { login } = useUserStore();
 
   const {
     register,
@@ -35,54 +38,45 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  async function handleLogin(data: LoginFormData) {
+  async function handleLogin(inputData: LoginFormData) {
     setLoading(true);
     try {
+      const response = await loginAuth(inputData.email, inputData.password);
 
-      const response = await login(data.email, data.password);
+      if (response.token) {
+        // Store token in cookie
+        await storeTokenInCookie(response.token);
 
-      const { message, token, errorMessage } = response;
-
-      if (message === "success" && token) {
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 7);
-
-       
-        await storeTokenInCookie(token);
-        // const sessionToken = await getToken();
-        // console.log("stored session token", sessionToken); 
-
-        // Check role
         const user = await getProfile();
-        await storeRoleInCookie(user.role);
-        setLoading(false);
-        if (user?.role === "admin") {
+        login(user); // Store user in store
 
+        const role = user.role;
+        await storeRoleInCookie(role);
+
+        // Redirect user to dashboard based on role
+        if (role === "admin") {
           router.push(AppRouter.staffDashboard);
-        } else if (user?.role === "staff") {
+        } else if (role === "staff") {
           router.push(AppRouter.staffDashboard);
-        } else if (user?.role === "student") {
+        } else if (role === "student") {
           router.push(AppRouter.studentDashboard);
-        } else if (user?.role === "tutor") {
+        } else if (role === "tutor") {
           router.push(AppRouter.tutorDashboard);
+        } else {
+          throw new Error("Invalid user role");
         }
-        return;
-      }
-
-      if (errorMessage) {
-        setLoading(false);
-        setError(errorMessage);
         return;
       }
 
       throw new Error("An unknown error occurred. Please try again.");
     } catch (error) {
-      setLoading(false);
-      const errorMsg =
+      setError(
         error instanceof Error
           ? error.message
-          : "An unknown error occurred. Please try again.";
-      setError(errorMsg);
+          : "An unknown error occurred. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -112,6 +106,10 @@ export default function LoginPage() {
 
           {/* Middle Section */}
           <div className='flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-5 py-6 mx-5 sm:shadow-none shadow-lg rounded-lg'>
+            <div className='hidden sm:block absolute top-6 right-8'>
+              <ToggleTheme />
+            </div>
+
             <h2 className='text-3xl font-semibold text-font text-left'>
               Login
             </h2>
@@ -120,19 +118,21 @@ export default function LoginPage() {
               className='w-full mt-1 flex flex-col'
             >
               <div className='mt-3.5 space-y-2'>
-                <FormInputField
+                <InputFieldType1
                   id='email'
                   label='Email'
                   type='email'
+                  ariaLabel='Enter your email here'
                   placeholder='Enter Your Email'
                   register={register("email")}
                   error={errors.email?.message}
                 />
 
-                <FormInputField
+                <InputFieldType1
                   id='password'
                   label='Password'
                   type='password'
+                  ariaLabel='Enter your password here'
                   placeholder='Enter Your Password'
                   register={register("password")}
                   error={errors.password?.message}
@@ -142,6 +142,7 @@ export default function LoginPage() {
                 <Button
                   text='Sign In'
                   type='submit'
+                  ariaLabel='Sign in button'
                   fullWidth={true}
                   disabled={loading}
                 />
@@ -156,7 +157,10 @@ export default function LoginPage() {
           </div>
 
           {/* Bottom Section */}
-          <div className='flex justify-end items-center w-full sm:w-auto p-6 sm:p-4 sm:absolute sm:top-0 sm:left:0'>
+          <div className='flex justify-between items-center w-full sm:w-auto p-6 sm:p-4 sm:absolute sm:top-0 sm:left:0'>
+            <div className='sm:hidden'>
+              <ToggleTheme />
+            </div>
             <LogoBox />
           </div>
         </div>

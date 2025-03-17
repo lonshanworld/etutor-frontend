@@ -3,119 +3,101 @@
 import { resetPassword } from "@/api/services/authService";
 import resetPasswordImg from "@/assets/images/reset-password.png";
 import Button from "@/components/buttons/Button";
-import ErrorPopup from "@/components/ErrorPopup";
-import FormInputField from "@/components/inputfields/FormInputField";
+import InputFieldType1 from "@/components/inputfields/InputFieldType1";
+import ForgetLayout from "@/components/resetpassword/ForgetLayout";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
-import Image from "next/image";
-import Link from "next/link";
+import { useToast } from "@/stores/useToast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
-import { RxCross1 } from "react-icons/rx";
+import { useState } from "react";
 
 const ResetPasswordPage = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
-  const [password, setPassword] = useState("");
-  const [repassword, setRepassword] = useState("");
+  const [formData, setFormData] = useState({
+    password: "",
+    repassword: "",
+  });
   const [passwordError, setPasswordError] = useState("");
-  const { isError, setError, message } = errorStore();
+  const [isSubmitting, setSubmitting] = useState(false);
+  const { setError } = errorStore();
+  const { showToast } = useToast();
+  const router = useRouter();
 
-  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setPassword(e.target.value);
+  // Handle input changes dynamically
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
     setPasswordError("");
   }
 
-  function handleRePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setRepassword(e.target.value);
-    setPasswordError("");
-  }
+  // Validate password inputs
+  const validatePasswords = () => {
+    const { password, repassword } = formData;
+    if (password.length < 6) return "Password must be at least 6 characters.";
+    if (password !== repassword) return "Passwords do not match.";
+    return "";
+  };
 
   const handleSubmit = async () => {
-    // Check password
-    if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters.");
-      return;
-    }
-
-    if (password !== repassword) {
-      setPasswordError("Passwords do not match.");
+    const validationError = validatePasswords();
+    if (validationError) {
+      setPasswordError(validationError);
       return;
     }
 
     try {
-      const response = await resetPassword(email, password);
-      console.log(response); // log
-      if (response.message == "success") {
-        console.log("Password changed success"); // log
-        router.push(AppRouter.loginPage);
-      } else {
-        setError("An unknown error occurred. Please try again.");
-      }
+      setSubmitting(true);
+      await resetPassword(email, formData.password);
+
+      router.push(AppRouter.loginPage);
+      return;
     } catch (error) {
-      const errorMsg =
+      setError(
         error instanceof Error
           ? error.message
-          : "An unknown error occurred. Please try again.";
-      setError(errorMsg);
+          : "An unknown error occurred. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const router = useRouter();
   return (
-    <>
-      {isError && <ErrorPopup />}
-      <div className='flex justify-center items-start sm:items-center w-full min-h-screen  bg-theme'>
-        <div className='w-[90%] sm:w-[500px] h-auto flex flex-col items-center bg-secondaryBackground p-6 sm:py-9 mt-10 sm:mt-0 rounded-xl shadow-2xl'>
-          <div className='w-full flex justify-between'>
-            <h2 className='text-font font-bold text-2xl'>Reset Password</h2>
-            <Link
-              href='/login'
-              className='text-theme text-3xl'
-            >
-              <RxCross1 />
-            </Link>
-          </div>
-          <Image
-            src={resetPasswordImg}
-            alt='OTP Verification Illustration'
-            className='h-[140px] w-auto object-contain my-6'
-          />
-          <div className='flex flex-col w-full '>
-            <div className='space-y-3'>
-              <FormInputField
-                id='new-password'
-                label='New Password'
-                type='password'
-                onChange={handlePasswordChange}
-              />
-              <FormInputField
-                id='confirm-new-password'
-                label='Re-enter New Password'
-                type='password'
-                onChange={handleRePasswordChange}
-                error={passwordError}
-              />
-            </div>
-            <div className='mt-5'></div>
-            <Button
-              onClick={handleSubmit}
-              type='button'
-              text='Reset Password'
-            />
-          </div>
-        </div>
+    <ForgetLayout
+      type='2'
+      backUrl='/login'
+      mainHeader='Reset Password'
+      img={resetPasswordImg}
+      imgAlt='Reset Password Illustration'
+    >
+      <div className='space-y-3'>
+        <InputFieldType1
+          id='password'
+          label='New Password'
+          type='password'
+          ariaLabel='Enter your new password'
+          onChange={handleInputChange}
+        />
+        <InputFieldType1
+          id='repassword'
+          label='Re-enter New Password'
+          type='password'
+          ariaLabel='Re enter your new password again'
+          onChange={handleInputChange}
+          error={passwordError}
+        />
       </div>
-    </>
+      <div className='mt-5'></div>
+      <Button
+        disabled={isSubmitting}
+        onClick={handleSubmit}
+        type='button'
+        text='Reset Password'
+        ariaLabel='Reset password button'
+      />
+    </ForgetLayout>
   );
 };
 
-export default function ResetPage() {
-  return (
-    <Suspense
-    fallback={<div>Loading...</div>}>
-      <ResetPasswordPage />
-    </Suspense>
-  );
-}
-
+export default ResetPasswordPage;

@@ -23,6 +23,7 @@
   --message-bg: #e2e2e2;
   --profile-heading: #181818;
   --detail-background: #e3e3e3;
+  --error-message: #f87171;
 }
 
 .dark {
@@ -45,6 +46,7 @@
   --message-bg: #4b4b4b;
   --profile-heading: #ffffff;
   --detail-background: #454545;
+  --error-message: #f87171;
 }
 
 body {
