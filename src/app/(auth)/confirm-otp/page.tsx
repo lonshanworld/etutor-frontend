@@ -6,7 +6,7 @@ import Button from "@/components/buttons/Button";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import ForgetLayout from "@/components/resetpassword/ForgetLayout";
 
 const OTP_LENGTH = 6;
@@ -98,7 +98,7 @@ const ConfirmOtpPage = () => {
   };
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <ForgetLayout
         type='1'
         backUrl='/forget-password'
@@ -140,7 +140,7 @@ const ConfirmOtpPage = () => {
           ariaLabel='Verify OTP button'
         />
       </ForgetLayout>
-    </>
+    </Suspense>
   );
 };
 
