@@ -64,42 +64,46 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ForgetLayout
-        type='2'
-        backUrl='/login'
-        mainHeader='Reset Password'
-        img={resetPasswordImg}
-        imgAlt='Reset Password Illustration'
-      >
-        <div className='space-y-3'>
-          <InputFieldType1
-            id='password'
-            label='New Password'
-            type='password'
-            ariaLabel='Enter your new password'
-            onChange={handleInputChange}
-          />
-          <InputFieldType1
-            id='repassword'
-            label='Re-enter New Password'
-            type='password'
-            ariaLabel='Re enter your new password again'
-            onChange={handleInputChange}
-            error={passwordError}
-          />
-        </div>
-        <div className='mt-5'></div>
-        <Button
-          disabled={isSubmitting}
-          onClick={handleSubmit}
-          type='button'
-          text='Reset Password'
-          ariaLabel='Reset password button'
+    <ForgetLayout
+      type='2'
+      backUrl='/login'
+      mainHeader='Reset Password'
+      img={resetPasswordImg}
+      imgAlt='Reset Password Illustration'
+    >
+      <div className='space-y-3'>
+        <InputFieldType1
+          id='password'
+          label='New Password'
+          type='password'
+          ariaLabel='Enter your new password'
+          onChange={handleInputChange}
         />
-      </ForgetLayout>
-    </Suspense>
+        <InputFieldType1
+          id='repassword'
+          label='Re-enter New Password'
+          type='password'
+          ariaLabel='Re enter your new password again'
+          onChange={handleInputChange}
+          error={passwordError}
+        />
+      </div>
+      <div className='mt-5'></div>
+      <Button
+        disabled={isSubmitting}
+        onClick={handleSubmit}
+        type='button'
+        text='Reset Password'
+        ariaLabel='Reset password button'
+      />
+    </ForgetLayout>
   );
 };
 
-export default ResetPasswordPage;
+export default function ResetPwPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordPage />
+    </Suspense>
+  );
+}

@@ -98,50 +98,52 @@ const ConfirmOtpPage = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ForgetLayout
-        type='1'
-        backUrl='/forget-password'
-        mainHeader='Verify OTP'
-        img={verifyOtp}
-        imgAlt='Verify OTP Illustration'
-        txt=' We have sent a verification code to your email.'
-        txtCenter={true}
+    <ForgetLayout
+      type='1'
+      backUrl='/forget-password'
+      mainHeader='Verify OTP'
+      img={verifyOtp}
+      imgAlt='Verify OTP Illustration'
+      txt=' We have sent a verification code to your email.'
+      txtCenter={true}
+    >
+      <div
+        className='flex justify-center sm:gap-4 gap-2 w-full mt-6'
+        onPaste={handlePaste}
       >
-        <div
-          className='flex justify-center sm:gap-4 gap-2 w-full mt-6'
-          onPaste={handlePaste}
-        >
-          {otp.map((digit, index) => (
-            <input
-              key={index}
-              ref={(el) => {
-                inputRefs.current[index] = el;
-              }}
-              type='text'
-              value={digit}
-              maxLength={1}
-              className='text-gray-900 w-[45px] sm:w-[60px] h-[50px] sm:h-[65px] text-center text-2xl border border-gray-500 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-theme transition'
-              onChange={(e) => handleChange(e, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              aria-label={`OTP digit ${index + 1}`}
-            />
-          ))}
-        </div>
-        {otpError && (
-          <p className='text-errorMessage text-sm mt-2'>{otpError}</p>
-        )}
-        <div className='mt-5'></div>
-        <Button
-          disabled={isSubmitting}
-          onClick={handleSubmit}
-          type='button'
-          text='Verify OTP'
-          ariaLabel='Verify OTP button'
-        />
-      </ForgetLayout>
-    </Suspense>
+        {otp.map((digit, index) => (
+          <input
+            key={index}
+            ref={(el) => {
+              inputRefs.current[index] = el;
+            }}
+            type='text'
+            value={digit}
+            maxLength={1}
+            className='text-gray-900 w-[45px] sm:w-[60px] h-[50px] sm:h-[65px] text-center text-2xl border border-gray-500 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-theme transition'
+            onChange={(e) => handleChange(e, index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+            aria-label={`OTP digit ${index + 1}`}
+          />
+        ))}
+      </div>
+      {otpError && <p className='text-errorMessage text-sm mt-2'>{otpError}</p>}
+      <div className='mt-5'></div>
+      <Button
+        disabled={isSubmitting}
+        onClick={handleSubmit}
+        type='button'
+        text='Verify OTP'
+        ariaLabel='Verify OTP button'
+      />
+    </ForgetLayout>
   );
 };
 
-export default ConfirmOtpPage;
+export default function ConfirmPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmOtpPage />
+    </Suspense>
+  );
+}
