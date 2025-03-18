@@ -10,7 +10,7 @@ export default function ProfileImageBox() {
         fill={true}
         alt="Profile"
         className="absolute object-cover"
-        sizes="44px"
+   
       />
     </div>
   );

@@ -17,6 +17,7 @@ const roleRoutes = {
     AppRouter.studentMeeting,
     AppRouter.studentNote,
     AppRouter.studentPeople,
+    AppRouter.studentChatBox,
 
     AppRouter.tutorBoard,
     AppRouter.tutorChat,
@@ -33,6 +34,7 @@ const roleRoutes = {
     AppRouter.studentMeeting,
     AppRouter.studentNote,
     AppRouter.studentPeople,
+    AppRouter.studentChatBox,
   ],
   tutor: [
     AppRouter.tutorBoard,
@@ -50,7 +52,6 @@ export async function middleware(req: NextRequest) {
   const sessionToken = cookieStore.get("sessionToken")?.value;
   const role = cookieStore.get("role")?.value;
 
-  console.log("Middleware: Checking sessionToken:", sessionToken); // Debugging
 
   if (
     req.nextUrl.pathname.startsWith("/_next/") ||
