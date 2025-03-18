@@ -31,11 +31,12 @@ export default function CustomButton({
       }  text-white text-lg py-1.5 px-4 rounded-lg  transition text-center`}
       disabled={disabled}
     >
-      {text}
-      {disabled && (
+      {disabled ? (
         <span className='pl-1.5'>
           <Spinner />
         </span>
+      ) : (
+        text
       )}
     </button>
   );
