@@ -10,6 +10,7 @@ import InputFieldType1 from "@/components/inputfields/InputFieldType1";
 import LogoBox from "@/components/LogoBox";
 import ToggleTheme from "@/components/ToggleTheme";
 import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
+import { isErrorModel } from "@/model/ErrorModel";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
 import { useUserStore } from "@/stores/userStore";
@@ -42,13 +43,16 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const response = await loginAuth(inputData.email, inputData.password);
-
+     
       if (response.token) {
         // Store token in cookie
         await storeTokenInCookie(response.token);
 
         const user = await getProfile();
-        login(user); // Store user in store
+        if(user instanceof Error){
+          throw new Error("Invalid user");
+        }else{
+          login(user); // Store user in store
 
         const role = user.role;
         await storeRoleInCookie(role);
@@ -66,15 +70,18 @@ export default function LoginPage() {
           throw new Error("Invalid user role");
         }
         return;
+        }
       }
-
+      console.log("first here");
       throw new Error("An unknown error occurred. Please try again.");
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred. Please try again."
-      );
+    } catch (error : any) {
+      // console.log("sec here", error);
+      // setError(
+      //   error instanceof Error
+      //     ? error.errorText.toString()
+      //     : "An unknown error occurred. Please try again."
+      // );
+      setError(error.errorText || "An unknown error occurred. Please try again.")
     } finally {
       setLoading(false);
     }

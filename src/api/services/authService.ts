@@ -1,7 +1,10 @@
+
+
 import { GetRequest, PostRequest } from "../general-api-services";
 import { APIS } from "../api-constants";
 import { Login, loginFromJson } from "@/model/login";
 import { otpFromJson, resetPasswordFromJson } from "@/model/resetPassword";
+import { isErrorModel } from "@/model/ErrorModel";
 
 export async function login(email: string, password: string): Promise<Login> {
   const response = await PostRequest(
@@ -11,6 +14,10 @@ export async function login(email: string, password: string): Promise<Login> {
     },
     APIS.POST.login
   );
+
+  if (isErrorModel(response)) {
+    throw response;
+  }
 
   const data = loginFromJson(response);
   return data;

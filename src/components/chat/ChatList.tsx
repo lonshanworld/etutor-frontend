@@ -7,9 +7,9 @@ import MessageBox from "./MessageBox";
 export default function ChatList(){
     return (
         <div
-        className="flex flex-col h-[87%] w-full relative">
+        className="flex flex-col h-[88%] w-full relative">
             <div
-            className="absolute left-0 right-0 top-0 bottom-14 py-4 flex flex-col-reverse gap-2 overflow-y-auto scrollbar-none">
+            className="absolute left-0 right-0 top-0 bottom-12 py-4 flex flex-col-reverse gap-2 overflow-y-auto scrollbar-none">
                 <MessageBox 
                 isMine={true}
                 txt="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."/>

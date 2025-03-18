@@ -4,7 +4,7 @@ export type Login = {
   token?: string;
 };
 
-export function loginFromJson(jsonData: any) {
+export function loginFromJson(jsonData: any) : Login {
   const login: Login = {
     message: jsonData.message,
     errorMessage: jsonData.errorMessage,

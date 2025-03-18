@@ -30,4 +30,5 @@ export const AppRouter = {
   tutorNote: "/dashboard/tutor/note",
   tutorPeople: "/dashboard/tutor/people",
   tutorAllocatedStudents: "/dashboard/tutor/allocatedstudent",
+  tutorChatBox : "/dashboard/tutor/chat/chatbox",
 };
