@@ -46,7 +46,7 @@ export default function DashboardTemplate({
             ></div>
           )}
         </div>
-        <div className="bg-secondaryBackground w-full overflow-y-scroll mb-10 md:rounded-tl-3xl sm:py-8 py-5 pb-10 sm:px-4 text-font">
+        <div className="bg-secondaryBackground w-full overflow-clip md:rounded-tl-3xl sm:py-4 py-2 px-4 text-font h-full">
           {children}
         </div>
       </div>

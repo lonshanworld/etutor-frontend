@@ -23,6 +23,7 @@
   --message-bg: #e2e2e2;
   --profile-heading: #181818;
   --detail-background: #e3e3e3;
+
 }
 
 .dark {
@@ -45,6 +46,7 @@
   --message-bg: #4b4b4b;
   --profile-heading: #ffffff;
   --detail-background: #454545;
+
 }
 
 body {
@@ -139,3 +141,15 @@ body {
 .label {
   @apply group-focus:text-theme group-focus:-top-2.5 group-placeholder-shown:top-3 group-placeholder-shown:text-label absolute px-2 left-2 -top-3 text-theme text-sm transition-300 bg-formBackground;
 } */
+
+@layer utilities {
+  .custom-scrollbar {
+    @apply [&::-webkit-scrollbar]:w-1.5
+           [&::-webkit-scrollbar-track]:rounded-full
+           [&::-webkit-scrollbar-track]:bg-gray-100
+           [&::-webkit-scrollbar-thumb]:rounded-full
+           [&::-webkit-scrollbar-thumb]:bg-theme
+           dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+           dark:[&::-webkit-scrollbar-thumb]:bg-theme;
+  }
+}

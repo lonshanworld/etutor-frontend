@@ -21,6 +21,7 @@ export const AppRouter = {
   studentMeeting: "/dashboard/student/meeting",
   studentNote: "/dashboard/student/note",
   studentPeople: "/dashboard/student/people",
+  studentChatBox : "/dashboard/student/chat/chatbox",
 
   tutorDashboard: "/dashboard/tutor",
   tutorChat: "/dashboard/tutor/chat",

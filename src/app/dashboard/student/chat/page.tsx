@@ -1,5 +1,8 @@
+import MainChat from "@/components/chat/MainChat";
+
+
 export default function ChatPage(){
     return (
-        <>This is just chat page</>
+       <MainChat />
     );
 }

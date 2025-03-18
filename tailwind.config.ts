@@ -19,6 +19,7 @@ export default {
         font: "var(--font-color)",
         popup: "var(--popup)",
         cusGray: "#818181",
+        cusGray2 : "#777777",
         login: "#363333",
         inputBackground: "var(--input-background)",
         inputBorder: "var(--input-border)",
@@ -85,6 +86,9 @@ export default {
       boxShadow: {
         left: "-7px 0 10px rgba(0, 0, 0, 0.5)",
       },
+      fontSize : {
+        xss : "0.65rem"
+      }
     },
   },
   plugins: [
