@@ -27,26 +27,29 @@ export default function DashboardTemplate({
 
   return (
     <>
-      <div className="py-3 pr-4 hidden md:block">
+      <div className='py-3 pr-4 hidden md:block'>
         <DashboardAppbar />
       </div>
-      <div className="px-4 py-2 block md:hidden">
+      <div className='px-4 py-2 block md:hidden'>
         <DashboardAppbarMobile onClickMenu={openSidebar} />
       </div>
-      <div className="flex flex-row w-full h-full">
-        <div className="w-56 h-full hidden flex-col gap-2 items-start pr-5 bg-opacity-50 md:flex">
+      <div className='flex flex-row w-full h-full'>
+        <div className='w-56 h-full hidden flex-col gap-2 items-start pr-5 bg-opacity-50 md:flex'>
           <SideBarContainer />
         </div>
         <div>
-          <MobileSideBar style={sidebarStyle} onBackClick={closeSidebar} />
+          <MobileSideBar
+            style={sidebarStyle}
+            onBackClick={closeSidebar}
+          />
           {showMobileSidebar && (
             <div
-              className="fixed top-0 left-0 w-screen h-screen bg-black/30 z-[15]"
+              className='fixed top-0 left-0 w-screen h-screen bg-black/30 z-[15]'
               onClick={closeSidebar}
             ></div>
           )}
         </div>
-        <div className="bg-secondaryBackground w-full overflow-y-scroll mb-10 md:rounded-tl-3xl sm:py-8 py-5 pb-10 sm:px-4 text-font">
+        <div className='bg-secondaryBackground w-full mb-10 md:rounded-tl-3xl sm:py-8 py-5 pb-10 sm:px-4 text-font'>
           {children}
         </div>
       </div>
