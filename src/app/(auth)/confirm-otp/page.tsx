@@ -122,7 +122,7 @@ const ConfirmOtpPage = () => {
             type='text'
             value={digit}
             maxLength={1}
-            className='text-gray-900 w-[45px] sm:w-[60px] h-[50px] sm:h-[65px] text-center text-2xl border border-gray-500 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-theme transition'
+            className='text-gray-900 w-[45px] sm:w-[60px] h-[50px] sm:h-[65px] text-center text-2xl border border-gray-500 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition'
             onChange={(e) => handleChange(e, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             aria-label={`OTP digit ${index + 1}`}

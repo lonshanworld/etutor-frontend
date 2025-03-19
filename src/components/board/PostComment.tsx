@@ -9,8 +9,8 @@ interface Props {
 }
 const PostComment = ({ username, profilePic, time, comment }: Props) => {
   return (
-    <div className='my-3'>
-      <div className='flex gap-2 items-center'>
+    <div className='py-3'>
+      <div className='flex gap-4'>
         <div className='w-10 h-10 rounded-full overflow-hidden'>
           <Image
             src={profilePic || placeholderProfile}
@@ -20,11 +20,14 @@ const PostComment = ({ username, profilePic, time, comment }: Props) => {
             className='object-cover'
           />
         </div>
-        <p className='font-semibold text-sm'>{username}</p>
-        <p className='text-xs'>{time}</p>
-      </div>
-      <div className='ml-11 w-10/12 flex'>
-        <div className='bg-white p-2 rounded-sm text-sm'>{comment}</div>
+
+        <div className='w-10/12 flex flex-col'>
+          <div className='flex gap-2 items-center pb-3'>
+            <p className='font-semibold text-sm'>{username}</p>
+            <p className='text-xs'>{time}</p>
+          </div>
+          <div className='bg-boardFile p-2 rounded-sm text-sm'>{comment}</div>
+        </div>
       </div>
     </div>
   );

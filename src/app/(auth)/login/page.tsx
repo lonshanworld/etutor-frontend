@@ -83,10 +83,10 @@ export default function LoginPage() {
   return (
     <>
       {isError && <ErrorPopup />}
-      <div className='h-screen flex items-center justify-center bg-login sm:px-4'>
-        <div className='flex flex-col sm:flex-row justify-between bg-theme sm:bg-secondaryBackground sm:shadow-lg sm:rounded-3xl h-screen w-screen sm:w-full sm:max-w-[800px] sm:h-[583px] relative'>
+      <div className='h-svh w-svw overflow-clip flex items-center justify-center bg-login sm:px-4'>
+        <div className='flex flex-col sm:flex-row justify-between bg-theme sm:bg-secondaryBackground sm:shadow-xl sm:rounded-3xl h-full w-full sm:w-full sm:max-w-[800px] sm:h-[583px] relative'>
           {/* Top Section */}
-          <div className='flex flex-col items-center justify-center w-full sm:w-1/2 bg-theme sm:rounded-l-3xl sm:p-6 sm:rounded-tr-[100px]'>
+          <div className='flex flex-col items-center justify-center w-full sm:w-1/2 bg-theme sm:rounded-l-3xl sm:p-6'>
             {/* Mobile Image */}
             <Image
               src={mobileImage}
@@ -99,25 +99,22 @@ export default function LoginPage() {
             <Image
               src={desktopImage}
               alt='Login Illustration'
-              loading='lazy'
               className='w-[80%] object-contain hidden sm:block'
             />
           </div>
 
           {/* Middle Section */}
-          <div className='flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-5 py-6 mx-5 sm:shadow-none shadow-lg rounded-lg'>
+          <div className='flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-6 py-7 sm:px-2 mx-5 sm:shadow-none shadow-cusShadow rounded-lg'>
             <div className='hidden sm:block absolute top-6 right-8'>
               <ToggleTheme />
             </div>
 
-            <h2 className='text-3xl font-semibold text-font text-left'>
-              Login
-            </h2>
+            <h2 className='text-4xl font-semibold text-primaryText'>Login</h2>
             <form
               onSubmit={handleSubmit(handleLogin)}
               className='w-full mt-1 flex flex-col'
             >
-              <div className='mt-3.5 space-y-2'>
+              <div className='mt-3.5 flex flex-col gap-3'>
                 <InputFieldType1
                   id='email'
                   label='Email'
@@ -138,7 +135,7 @@ export default function LoginPage() {
                   error={errors.password?.message}
                 />
               </div>
-              <div className='flex justify-center mt-4'>
+              <div className='flex justify-center mt-6'>
                 <Button
                   text='Sign In'
                   type='submit'

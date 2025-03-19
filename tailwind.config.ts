@@ -40,8 +40,9 @@ export default {
         profileHeading: "var(--profile-heading)",
         profileText: "#A0A0A0",
         detailBg: "var(--detail-background)",
-        boardText: "var(--board-text)",
-        boardReaction: "var(--board-reaction)",
+        primaryText: "var(--primary-text)",
+        secondaryText: "var(--secondary-text)",
+        boardFile: "var(--board-file)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -88,6 +89,8 @@ export default {
       },
       boxShadow: {
         left: "-7px 0 10px rgba(0, 0, 0, 0.5)",
+        cusShadow:
+          "0px 6px 12px -2px rgba(50,50,93,0.25), 0px 3px 7px -3px rgba(0,0,0,0.3)",
       },
       fontSize: {
         xss: "0.65rem",

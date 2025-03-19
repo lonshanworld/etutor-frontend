@@ -24,8 +24,9 @@
   --profile-heading: #181818;
   --detail-background: #e3e3e3;
   --error-message: #f87171;
-  --board-text: #222;
-  --board-reaction: #2c2c2c;
+  --primary-text: #222;
+  --secondary-text: #2c2c2c;
+  --board-file: #eeeeee;
 }
 
 .dark {
@@ -49,8 +50,9 @@
   --profile-heading: #ffffff;
   --detail-background: #454545;
   --error-message: #f87171;
-  --board-text: rgba(255, 255, 255, 0.9);
-  --board-reaction: #C5C5C5;
+  --primary-text: rgba(255, 255, 255, 0.9);
+  --secondary-text: #C5C5C5;
+  --board-file: #333;
 }
 
 body {

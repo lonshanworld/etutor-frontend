@@ -8,6 +8,7 @@ import { BiCommentDetail } from "react-icons/bi";
 import { FiFileText } from "react-icons/fi";
 import { VscOpenPreview } from "react-icons/vsc";
 import ImageModal from "./ImageModal";
+import HorizontalDivider from "../dividers/HorizontalDivider";
 
 interface Props {
   viewDetail: boolean;
@@ -16,7 +17,7 @@ interface Props {
   time: string;
   title: string;
   content: string;
-  contentToggle: boolean;
+  contentToggle?: boolean;
   imageUrls?: string[];
   documentUrls?: string[];
   likeCount: string;
@@ -24,7 +25,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const MAX_CONTENT_LENGTH = 130;
+const MAX_CONTENT_LENGTH = 300;
 
 const Post = ({
   viewDetail = false,
@@ -90,7 +91,7 @@ const Post = ({
 
   return (
     <div
-      className={`bg-background py-4 md:rounded-lg rounded-xl
+      className={`bg-background pt-4 md:rounded-lg rounded-xl
     ${viewDetail ? "" : "shadow"}
     `}
     >
@@ -107,18 +108,18 @@ const Post = ({
             />
           </div>
           <div>
-            <p className='font-semibold text-boardText'>{username}</p>
+            <p className='font-semibold text-primaryText'>{username}</p>
             <p className='text-xs text-gray-500'>{time}</p>
           </div>
         </div>
-        <button className='text-boardText'>
+        <button className='text-primaryText'>
           <BsThreeDotsVertical size={20} />
         </button>
       </div>
 
       {/* Post Content */}
       <div className='mb-2'>
-        <div className='mx-4 text-boardText'>
+        <div className='mx-4 text-primaryText'>
           {/* Title */}
           {title && <h3 className='text-lg font-semibold pb-1'>{title}</h3>}
 
@@ -157,9 +158,7 @@ const Post = ({
                     imageUrls.length === 3 && index === 0 ? "col-span-2" : ""
                   }`}
                   onClick={() => {
-                    if (index === 3) {
-                      onClick;
-                    } else {
+                    if (index !== 3) {
                       setSelectedImageIndex(index);
                     }
                   }}
@@ -178,7 +177,10 @@ const Post = ({
                   />
 
                   {index === 3 && imageUrls.length > 4 && (
-                    <div className='absolute z-2 inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-2xl font-semibold'>
+                    <div
+                      className='absolute z-2 inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-2xl font-semibold'
+                      onClick={onClick}
+                    >
                       +{imageUrls.length - 4}
                     </div>
                   )}
@@ -207,15 +209,15 @@ const Post = ({
           </div>
         )}
 
-        {/* File */}
+        {/* Attachments */}
         {documentUrls.length > 0 && (
           <div className='mx-4 py-2'>
-            <p className='text-boardText pb-2'>Attachments</p>
+            <p className='text-secondaryText pb-2 font-semibold'>Attachments</p>
             <div className='grid grid-cols-2 gap-5'>
               {documentUrls.map((doc, index) => (
                 <div
                   key={index}
-                  className='bg-secondaryBackground rounded-sm p-3 flex items-center justify-between gap-3 border border-gray-300 cursor-pointer h-12'
+                  className='bg-boardFile shadow-sm rounded-sm p-3 flex items-center justify-between gap-3 border cursor-pointer h-12'
                 >
                   <div className='flex gap-2 min-w-0 items-center'>
                     <FiFileText
@@ -226,7 +228,10 @@ const Post = ({
                       {doc}
                     </div>
                   </div>
-                  <BsThreeDots className='flex-shrink-0' />
+                  <BsThreeDots
+                    color='gray'
+                    className='flex-shrink-0'
+                  />
                 </div>
               ))}
             </div>
@@ -236,7 +241,7 @@ const Post = ({
 
       {/* Like and comment counts */}
       <div className='mx-4 mb-2'>
-        <div className='flex items-center justify-between text-sm text-boardText'>
+        <div className='flex items-center justify-between text-sm text-primaryText'>
           <div className='flex items-center hover:underline cursor-pointer'>
             <AiOutlineLike />
             <span className='pl-1'>{likeCount}</span>
@@ -251,18 +256,19 @@ const Post = ({
         </div>
       </div>
 
-      <div className='bg-secondaryBackgroundOpposite opacity-20 h-[0.5px]'></div>
+      {/* <div className='bg-secondaryBackgroundOpposite opacity-20 h-[0.5px]'></div> */}
+      <HorizontalDivider />
 
       {/* Like and comment button */}
-      <div className='flex pt-3 justify-between mx-4'>
+      <div className='flex py-3 justify-between mx-4'>
         <div className='flex gap-10'>
           {/* Like */}
-          <div className='flex items-center gap-1 cursor-pointer text-boardReaction '>
+          <div className='flex items-center gap-1 cursor-pointer text-secondaryText'>
             <AiOutlineLike size={20} />
             <span className='font-semibold'>Like</span>
           </div>
           {/* Comment */}
-          <div className='flex items-center gap-1 cursor-pointer text-boardReaction '>
+          <div className='flex items-center gap-1 cursor-pointer text-secondaryText'>
             <BiCommentDetail size={20} />
             <span className='font-semibold'>Comment</span>
           </div>
@@ -270,7 +276,7 @@ const Post = ({
 
         {viewDetail === false && (
           <div
-            className='flex items-center gap-1 cursor-pointer text-boardReaction '
+            className='flex items-center gap-1 cursor-pointer text-secondaryText'
             onClick={onClick}
           >
             <VscOpenPreview size={20} />
@@ -279,6 +285,7 @@ const Post = ({
         )}
       </div>
 
+      {viewDetail && <HorizontalDivider />}
       <ImageModal
         imageUrls={imageUrls}
         selectedIndex={selectedImageIndex}

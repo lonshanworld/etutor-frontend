@@ -1,6 +1,50 @@
 export const feedData = [
   {
     id: 1,
+    profilePic: "https://i.pravatar.cc/300?img=18",
+    username: "Newt Scamander",
+    time: "15 min ago",
+    imageUrls: [],
+    title: "The Magic of Creatures",
+    content:
+      "Dogs remind me so much of magical creatures—loyal, intelligent, and always full of surprises. If you observe them closely, you’ll see a depth of emotion in their eyes, an unbreakable bond of trust, and an instinctive understanding of human emotions that even some wizards lack. I’ve traveled far and wide, encountering all sorts of fascinating creatures, but there is something truly special about the companionship of a dog. Their ability to comfort in times of sorrow, their enthusiasm for the smallest joys, and their unwavering courage in protecting those they love make them some of the most remarkable beings on this planet. If more people took the time to understand the creatures around them, magical or not, the world would be a much kinder place.",
+    documentUrls: [],
+    likeCount: "32",
+    commentCount: "0",
+    comments: [],
+  },
+  // Text + Attachment (Modified)
+  {
+    id: 2,
+    profilePic: "https://i.pravatar.cc/300?img=22",
+    username: "Sirius Black",
+    time: "20 min ago",
+    imageUrls: [],
+    title: "A Dog’s Perspective",
+    content:
+      "Ever wondered what life looks like from a dog’s eyes? It’s all about loyalty, adventure, and chasing after what truly matters.",
+    documentUrls: ["life-as-a-dog.pdf"],
+    likeCount: "45",
+    commentCount: "0",
+    comments: [],
+  },
+  // Text + Photo (Modified)
+  {
+    id: 3,
+    profilePic: "https://i.pravatar.cc/300?img=25",
+    username: "Luna Lovegood",
+    time: "30 min ago",
+    imageUrls: ["https://placedog.net/600/400?id=31"],
+    title: "Mystical Dogs",
+    content:
+      "Did you know some believe that dogs can sense energies beyond what we see? Maybe they really do guard us from unseen forces!",
+    documentUrls: [],
+    likeCount: "28",
+    commentCount: "0",
+    comments: [],
+  },
+  {
+    id: 4,
     profilePic: "https://i.pravatar.cc/300?img=12",
     username: "Albus Dumbledore",
     time: "10 min ago",
@@ -8,7 +52,6 @@ export const feedData = [
     title: "The Wisdom of Dogs",
     content:
       "Dogs are not just pets; they are family. Their loyalty, love, and joy are reminders of the simple pleasures in life. Never underestimate the power of a wagging tail.",
-    contentToggle: true,
     documentUrls: ["dog-care-guide.docx"],
     likeCount: "25",
     commentCount: "2",
@@ -30,7 +73,7 @@ export const feedData = [
     ],
   },
   {
-    id: 2,
+    id: 5,
     profilePic: "https://i.pravatar.cc/300?img=5",
     username: "Harry Potter",
     time: "20 min ago",
@@ -63,7 +106,7 @@ export const feedData = [
     ],
   },
   {
-    id: 3,
+    id: 6,
     profilePic: "https://i.pravatar.cc/300?img=11",
     username: "Hermione Granger",
     time: "1 hour ago",
@@ -75,7 +118,6 @@ export const feedData = [
     title: "Dogs and Reading 📚",
     content:
       "Dogs are always there to keep us company while we read. I think I’ve read more books with my dog by my side than without! It’s amazing how they just sit there quietly, waiting for you to finish.",
-    contentToggle: true,
     documentUrls: ["dog-friendly-books.pdf"],
     likeCount: "30",
     commentCount: "2",
@@ -97,7 +139,7 @@ export const feedData = [
     ],
   },
   {
-    id: 4,
+    id: 7,
     profilePic: "https://i.pravatar.cc/300?img=4",
     username: "Ron Weasley",
     time: "3 hours ago",
@@ -110,7 +152,6 @@ export const feedData = [
     title: "Best Dog Moment Ever!",
     content:
       "I finally taught my dog to fetch the newspaper. It’s the little things that make me proud. Next step: teaching him how to cook breakfast! 🥞",
-    contentToggle: true,
     documentUrls: ["dog-training-tips.pdf"],
     likeCount: "15",
     commentCount: "2",
@@ -132,7 +173,7 @@ export const feedData = [
     ],
   },
   {
-    id: 5,
+    id: 8,
     profilePic: "https://i.pravatar.cc/300?img=14",
     username: "Hagrid",
     time: "5 hours ago",
@@ -146,7 +187,6 @@ export const feedData = [
     title: "My Love for Big Dogs",
     content:
       "There's nothin' better than a big ol' dog to keep ya company. Fang is the best boy ever! Loyal, brave, and always ready for an adventure!",
-    contentToggle: true,
     documentUrls: ["big-dog-care.pdf"],
     likeCount: "50",
     commentCount: "2",

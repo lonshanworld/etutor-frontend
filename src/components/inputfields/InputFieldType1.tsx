@@ -27,7 +27,7 @@ export default function InputFieldType1({
       {label && (
         <label
           htmlFor={id}
-          className='block text-sm font-medium text-font'
+          className='block text-base font-medium text-font'
         >
           {label}
         </label>
@@ -35,7 +35,7 @@ export default function InputFieldType1({
       <input
         id={id}
         type={type}
-        className='mt-2 h-10 w-full px-4 border border-gray-400 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 text-md'
+        className='mt-1 h-10 w-full px-3 border border-gray-400 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-md'
         placeholder={placeholder}
         aria-label={ariaLabel}
         onChange={onChange}
