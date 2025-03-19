@@ -10,11 +10,18 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "fakeimg.pl",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+      },
+      {
+        protocol: "https",
+        hostname: "placedog.net",
       },
     ],
   },
-
 };
 
 export default nextConfig;

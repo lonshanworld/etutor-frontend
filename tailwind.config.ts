@@ -20,7 +20,7 @@ export default {
         popup: "var(--popup)",
         cusGray: "#818181",
         errorMessage: "var(--error-message)",
-        cusGray2 : "#777777",
+        cusGray2: "#777777",
         login: "#363333",
         inputBackground: "var(--input-background)",
         inputBorder: "var(--input-border)",
@@ -40,6 +40,8 @@ export default {
         profileHeading: "var(--profile-heading)",
         profileText: "#A0A0A0",
         detailBg: "var(--detail-background)",
+        boardText: "var(--board-text)",
+        boardReaction: "var(--board-reaction)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -87,9 +89,9 @@ export default {
       boxShadow: {
         left: "-7px 0 10px rgba(0, 0, 0, 0.5)",
       },
-      fontSize : {
-        xss : "0.65rem"
-      }
+      fontSize: {
+        xss: "0.65rem",
+      },
     },
   },
   plugins: [

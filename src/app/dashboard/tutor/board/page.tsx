@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { FiEdit } from "react-icons/fi";
-import Post from "@/components/feed/Post";
+import Post from "@/components/board/Post";
 import logo from "@/assets/images/unilogo-without-text.png";
 import Image from "next/image";
-import PostComment from "@/components/feed/PostComment";
-import CommentInputField from "@/components/feed/CommentInputField";
+import PostComment from "@/components/board/PostComment";
+import CommentInputField from "@/components/board/CommentInputField";
 
 const feedPage = () => {
   const [selectedPost, setSelectedPost] = useState<any>(null);
@@ -78,7 +78,10 @@ const feedPage = () => {
             </div>
           </div>
           <div className=''>
-            <Button size='lg' variant='default'>
+            <Button
+              size='lg'
+              variant='default'
+            >
               <FiEdit /> POST
             </Button>
           </div>
@@ -146,7 +149,10 @@ const feedPage = () => {
             </div>
           </>
         ) : (
-          <Image src={logo} alt='Logo' />
+          <Image
+            src={logo}
+            alt='Logo'
+          />
         )}
       </div>
     </div>
