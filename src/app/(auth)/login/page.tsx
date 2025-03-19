@@ -10,7 +10,6 @@ import InputFieldType1 from "@/components/inputfields/InputFieldType1";
 import LogoBox from "@/components/LogoBox";
 import ToggleTheme from "@/components/ToggleTheme";
 import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
-import { isErrorModel } from "@/model/ErrorModel";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
 import { useUserStore } from "@/stores/userStore";
@@ -43,45 +42,39 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const response = await loginAuth(inputData.email, inputData.password);
-     
-      if (response.token) {
-        // Store token in cookie
-        await storeTokenInCookie(response.token);
 
-        const user = await getProfile();
-        if(user instanceof Error){
-          throw new Error("Invalid user");
-        }else{
-          login(user); // Store user in store
-
-        const role = user.role;
-        await storeRoleInCookie(role);
-
-        // Redirect user to dashboard based on role
-        if (role === "admin") {
-          router.push(AppRouter.staffDashboard);
-        } else if (role === "staff") {
-          router.push(AppRouter.staffDashboard);
-        } else if (role === "student") {
-          router.push(AppRouter.studentDashboard);
-        } else if (role === "tutor") {
-          router.push(AppRouter.tutorDashboard);
-        } else {
-          throw new Error("Invalid user role");
-        }
-        return;
-        }
+      if (!response?.token) {
+        throw new Error("An unknown error occurred. Please try again.");
       }
-      console.log("first here");
-      throw new Error("An unknown error occurred. Please try again.");
-    } catch (error : any) {
-      // console.log("sec here", error);
-      // setError(
-      //   error instanceof Error
-      //     ? error.errorText.toString()
-      //     : "An unknown error occurred. Please try again."
-      // );
-      setError(error.errorText || "An unknown error occurred. Please try again.")
+
+      await storeTokenInCookie(response.token);
+      const user = await getProfile();
+
+      if (!user || !user.role) {
+        throw new Error("Invalid user profile data");
+      }
+      login(user); // Store user in store
+      await storeRoleInCookie(user.role);
+
+      // Redirect user to dashboard based on role
+      if (user.role === "admin") {
+        router.push(AppRouter.staffDashboard);
+      } else if (user.role === "staff") {
+        router.push(AppRouter.staffDashboard);
+      } else if (user.role === "student") {
+        router.push(AppRouter.studentDashboard);
+      } else if (user.role === "tutor") {
+        router.push(AppRouter.tutorDashboard);
+      } else {
+        throw new Error("Invalid user role");
+      }
+      return;
+    } catch (error: any) {
+      setError(
+        error.errorText ||
+          error.message ||
+          "An unknown error occurred. Please try again."
+      );
     } finally {
       setLoading(false);
     }

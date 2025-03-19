@@ -84,13 +84,15 @@ const ConfirmOtpPage = () => {
       setSubmitting(true);
       await confirmOtp(email, fullOtp);
       router.push(
-        `${AppRouter.resetPassword}?email=${encodeURIComponent(email)}`
+        `${AppRouter.resetPassword}?email=${encodeURIComponent(
+          email
+        )}&otp=${encodeURIComponent(fullOtp)}`
       );
-    } catch (error) {
+    } catch (error: any) {
       setError(
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred. Please try again."
+        error.errorText ||
+          error.message ||
+          "An unknown error occurred. Please try again."
       );
     } finally {
       setSubmitting(false);

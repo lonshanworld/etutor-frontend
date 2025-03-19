@@ -22,21 +22,35 @@ const ForgetPasswordPage = () => {
     setEmailError("");
   }
 
+  function isValidEmail(email: string) {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  }
+
   const handleSendOtp = async () => {
     if (!email.trim()) {
       setEmailError("Email is required");
       return;
     }
+
+    if (!isValidEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+
     try {
       setSubmitting(true);
       const response = await checkEmailExists(email);
-      console.log("OTP", response.otp);
+      console.log("OTP", response?.otp);
       router.push(`${AppRouter.confirmOtp}?email=${encodeURIComponent(email)}`);
-    } catch (error) {
+    } catch (error: any) {
       setError(
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred. Please try again."
+        error.errorText ||
+          error.message ||
+          "An unknown error occurred. Please try again."
       );
     } finally {
       setSubmitting(false);

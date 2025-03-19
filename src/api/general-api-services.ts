@@ -27,9 +27,12 @@ async function fetchData(
     const responseData = await response.json();
     // return new Error(responseData.message || responseData.errorMessage || response.statusText);
     return {
-      errorCode : response.status,
-      errorText : responseData.message || responseData.errorMessage || response.statusText
-    }
+      errorCode: response.status,
+      errorText:
+        responseData.message ||
+        responseData.errorMessage ||
+        response.statusText,
+    };
   }
 
   return response.json();
