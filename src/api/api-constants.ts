@@ -14,6 +14,7 @@ export const APIS = {
     createStudent: "students/account/create",
     createTutor: "tutors/account/create",
     createStaff: "staffs/account/create",
+    changePassword: "user/change-password",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

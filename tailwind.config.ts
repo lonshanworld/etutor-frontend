@@ -38,6 +38,7 @@ export default {
         profileHeading: "var(--profile-heading)",
         profileText: "#A0A0A0",
         detailBg: "var(--detail-background)",
+        profileBg: "var(--profile-background)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

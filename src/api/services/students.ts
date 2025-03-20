@@ -28,3 +28,8 @@ export async function updateStudent(body: any, id: number): Promise<any> {
   const response = await PostRequest(body, APIS.PATCH.updateStudent(id));
   return response;
 }
+
+export async function deactivateStudent(body: any): Promise<any> {
+  const response = await PostRequest(body, APIS.PATCH.deactivateStudent);
+  return response;
+}

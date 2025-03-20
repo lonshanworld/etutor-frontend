@@ -27,6 +27,9 @@ async function fetchData(
     throw new Error(responseData.message || response.statusText);
   }
 
+  if (response.status === 204) {
+    return response;
+  }
   return response.json();
 }
 
@@ -34,6 +37,9 @@ export async function GetRequest(apiString?: string): Promise<any> {
   return fetchData("GET", apiString, undefined);
 }
 
-export async function PostRequest(body: any, apiString?: string): Promise<any> {
+export async function PostRequest(
+  body?: any,
+  apiString?: string
+): Promise<any> {
   return fetchData("POST", apiString, body);
 }

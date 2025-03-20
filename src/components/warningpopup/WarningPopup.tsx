@@ -1,11 +1,13 @@
 export default function WarningPopup({
-  username,
+  title,
+  message,
   setShowWarning,
-  setShowToast,
+  onContinue,
 }: {
-  username: string | null;
+  title: string;
+  message: string;
   setShowWarning: any;
-  setShowToast: any;
+  onContinue: () => void;
 }) {
   return (
     <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[350px] md:w-[500px] lg:w-[650px] bg-background z-20 rounded-lg">
@@ -13,14 +15,10 @@ export default function WarningPopup({
         <div className="flex items-center max-sm:gap-2 gap-4">
           <img src="/assets/svgs/warning.svg" alt="" />
           <h1 className="max-md:text-2xl text-3xl font-semibold text-headingColor">
-            Confirm Deactivation
+            {title}
           </h1>
         </div>
-        <p className="max-md:ms-0 ms-16 mt-3">
-          Are you sure you want to deactivate
-          <b className="text-theme">{" " + username}</b> account? This action
-          may effect related functionalities.
-        </p>
+        <p className="max-md:ms-0 ms-4 mt-3">{message}</p>
 
         <div className="flex gap-5 mt-7 justify-end">
           <button
@@ -31,12 +29,9 @@ export default function WarningPopup({
           </button>
           <button
             className="bg-red-500 text-white px-5 py-2 rounded-md font-bold"
-            onClick={() => {
-              setShowWarning(false);
-              setShowToast("User Deactivated Successfully", "error");
-            }}
+            onClick={onContinue}
           >
-            Deactivate
+            Continue
           </button>
         </div>
       </div>

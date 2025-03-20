@@ -7,9 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioButton } from "../../radioButton/RadioButton";
 import { useFormStore } from "@/stores/useFormStore";
 import { useEffect, useState } from "react";
-import { User, UserRole } from "@/model/user";
-import { UserRoleSchema } from "@/model/form";
-import { CreateFormSchema, CreateFormSchemaType } from "@/model/form";
+import { UserRole } from "@/model/user";
+import { UserRoleSchema } from "@/utils/validationSchema";
+import {
+  CreateFormSchema,
+  CreateFormSchemaType,
+} from "@/utils/validationSchema";
 
 type Props = {
   setPageForm: (page: number) => void;

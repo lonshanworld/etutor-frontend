@@ -34,7 +34,7 @@ const Form = () => {
   };
 
   const getSecondPage = () => {
-    switch (Number(role)) {
+    switch (role) {
       case UserRole.student:
         return <StudentPage setPageForm={setPageForm} />;
       case UserRole.tutor:

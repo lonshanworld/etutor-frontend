@@ -19,6 +19,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
 import { useState } from "react";
+import { useToast } from "@/stores/useToast";
+import Toast from "@/components/customtoast/CustomToast";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -26,6 +28,7 @@ export default function LoginPage() {
   const { isError, setError } = errorStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const {
     register,
@@ -38,7 +41,6 @@ export default function LoginPage() {
   async function handleLogin(data: LoginFormData) {
     setLoading(true);
     try {
-
       const response = await login(data.email, data.password);
 
       const { message, token, errorMessage } = response;
@@ -47,20 +49,18 @@ export default function LoginPage() {
         const expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 7);
 
-       
         await storeTokenInCookie(token);
         // const sessionToken = await getToken();
-        // console.log("stored session token", sessionToken); 
+        // console.log("stored session token", sessionToken);
 
         // Check role
         const user = await getProfile();
         await storeRoleInCookie(user.role);
         setLoading(false);
         if (user?.role === "admin") {
-
-          router.push(AppRouter.staffDashboard);
+          router.push(AppRouter.staffDashboardStaff);
         } else if (user?.role === "staff") {
-          router.push(AppRouter.staffDashboard);
+          router.push(AppRouter.staffDashboardStaff);
         } else if (user?.role === "student") {
           router.push(AppRouter.studentDashboard);
         } else if (user?.role === "tutor") {
@@ -89,66 +89,66 @@ export default function LoginPage() {
   return (
     <>
       {isError && <ErrorPopup />}
-      <div className='h-screen flex items-center justify-center bg-login sm:px-4'>
-        <div className='flex flex-col sm:flex-row justify-between bg-theme sm:bg-secondaryBackground sm:shadow-lg sm:rounded-3xl h-screen w-screen sm:w-full sm:max-w-[800px] sm:h-[583px] relative'>
+      <div className="h-screen flex items-center justify-center bg-login sm:px-4">
+        <div className="flex flex-col sm:flex-row justify-between bg-theme sm:bg-secondaryBackground sm:shadow-lg sm:rounded-3xl h-screen w-screen sm:w-full sm:max-w-[800px] sm:h-[583px] relative">
           {/* Top Section */}
-          <div className='flex flex-col items-center justify-center w-full sm:w-1/2 bg-theme sm:rounded-l-3xl sm:p-6 sm:rounded-tr-[100px]'>
+          <div className="flex flex-col items-center justify-center w-full sm:w-1/2 bg-theme sm:rounded-l-3xl sm:p-6 sm:rounded-tr-[100px]">
             {/* Mobile Image */}
             <Image
               src={mobileImage}
-              alt='Login Illustration'
-              loading='lazy'
-              className='object-contain sm:hidden'
+              alt="Login Illustration"
+              loading="lazy"
+              className="object-contain sm:hidden"
             />
 
             {/* Desktop Image */}
             <Image
               src={desktopImage}
-              alt='Login Illustration'
-              loading='lazy'
-              className='w-[80%] object-contain hidden sm:block'
+              alt="Login Illustration"
+              loading="lazy"
+              className="w-[80%] object-contain hidden sm:block"
             />
           </div>
 
           {/* Middle Section */}
-          <div className='flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-5 py-6 mx-5 sm:shadow-none shadow-lg rounded-lg'>
-            <h2 className='text-3xl font-semibold text-font text-left'>
+          <div className="flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-5 py-6 mx-5 sm:shadow-none shadow-lg rounded-lg">
+            <h2 className="text-3xl font-semibold text-font text-left">
               Login
             </h2>
             <form
               onSubmit={handleSubmit(handleLogin)}
-              className='w-full mt-1 flex flex-col'
+              className="w-full mt-1 flex flex-col"
             >
-              <div className='mt-3.5 space-y-2'>
+              <div className="mt-3.5 space-y-2">
                 <FormInputField
-                  id='email'
-                  label='Email'
-                  type='email'
-                  placeholder='Enter Your Email'
+                  id="email"
+                  label="Email"
+                  type="email"
+                  placeholder="Enter Your Email"
                   register={register("email")}
                   error={errors.email?.message}
                 />
 
                 <FormInputField
-                  id='password'
-                  label='Password'
-                  type='password'
-                  placeholder='Enter Your Password'
+                  id="password"
+                  label="Password"
+                  type="password"
+                  placeholder="Enter Your Password"
                   register={register("password")}
                   error={errors.password?.message}
                 />
               </div>
-              <div className='flex justify-center mt-4'>
+              <div className="flex justify-center mt-4">
                 <Button
-                  text='Sign In'
-                  type='submit'
+                  text="Sign In"
+                  type="submit"
                   fullWidth={true}
                   disabled={loading}
                 />
               </div>
               <Link
-                href='/forget-password'
-                className='pt-2 text-xs text-center text-theme cursor-pointer hover:underline'
+                href="/forget-password"
+                className="pt-2 text-xs text-center text-theme cursor-pointer hover:underline"
               >
                 Forgot password?
               </Link>
@@ -156,10 +156,11 @@ export default function LoginPage() {
           </div>
 
           {/* Bottom Section */}
-          <div className='flex justify-end items-center w-full sm:w-auto p-6 sm:p-4 sm:absolute sm:top-0 sm:left:0'>
+          <div className="flex justify-end items-center w-full sm:w-auto p-6 sm:p-4 sm:absolute sm:top-0 sm:left:0">
             <LogoBox />
           </div>
         </div>
+        <Toast message={toast?.message} type={toast?.type} />
       </div>
     </>
   );

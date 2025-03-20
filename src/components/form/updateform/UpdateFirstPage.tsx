@@ -9,7 +9,10 @@ import { useFormStore } from "@/stores/useFormStore";
 import { useEffect } from "react";
 import { UserRole } from "@/model/user";
 import { useSelectedUser } from "@/stores/useSelectedUser";
-import { UpdateFormSchema, UpdateFormSchemaType } from "@/model/form";
+import {
+  UpdateFormSchema,
+  UpdateFormSchemaType,
+} from "@/utils/validationSchema";
 import { set } from "date-fns";
 
 type Props = {
@@ -259,7 +262,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
               type="hidden"
               id="userRole"
               {...register("role")}
-              value={Number(role)}
+              value={role}
             />
             {/* )} */}
           </div>

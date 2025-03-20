@@ -2,6 +2,7 @@ import { GetRequest, PostRequest } from "../general-api-services";
 import { APIS } from "../api-constants";
 import { Login, loginFromJson } from "@/model/login";
 import { otpFromJson, resetPasswordFromJson } from "@/model/resetPassword";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export async function login(email: string, password: string): Promise<Login> {
   const response = await PostRequest(
@@ -16,9 +17,9 @@ export async function login(email: string, password: string): Promise<Login> {
   return data;
 }
 
-export async function logout(token: string): Promise<any> {
-  const response = await PostRequest({}, APIS.POST.logout);
-
+export async function logout(): Promise<any> {
+  console.log("hit logout");
+  const response = await PostRequest(null, APIS.POST.logout);
   return response; // server response 204 with no body if success
 }
 

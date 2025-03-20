@@ -115,10 +115,6 @@ export default function StudentPage({ setPageForm }: Props) {
     }
   };
 
-  useEffect(() => {
-    console.log("toast", toast);
-  }, [toast]);
-
   useEffect(() => {});
 
   return (
@@ -172,8 +168,6 @@ export default function StudentPage({ setPageForm }: Props) {
           <CustomButton text="Update Account" type="submit" fullWidth={true} />
         </div>
       </form>
-
-      {toast && <CustomToast message={toast.message} type={toast.type} />}
     </div>
   );
 }

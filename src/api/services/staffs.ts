@@ -27,3 +27,8 @@ export async function updateStaff(body: any, id: number): Promise<any> {
   const response = await PostRequest(body, APIS.PATCH.updateStaff(id));
   return response;
 }
+
+export async function deactivateStaff(body: any): Promise<any> {
+  const response = await PostRequest(body, APIS.PATCH.deactivateStaff);
+  return response;
+}
