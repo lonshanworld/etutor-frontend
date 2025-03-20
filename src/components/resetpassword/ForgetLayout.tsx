@@ -35,11 +35,11 @@ export default function ForgetLayout({
   return (
     <>
       {isError && <ErrorPopup />}
-      <div className='flex justify-center items-start sm:items-center w-full min-h-screen  bg-theme'>
+      <div className='flex justify-center items-center w-full h-svh bg-theme'>
         <div className='absolute top-6 right-8'>
           <ToggleTheme />
         </div>
-        <div className='w-[90%] sm:w-[500px] h-auto flex flex-col items-center bg-secondaryBackground p-6 sm:py-9 mt-20 sm:mt-0 rounded-xl shadow-2xl'>
+        <div className='w-[90%] sm:w-[500px] h-auto flex flex-col items-center bg-secondaryBackground p-6 sm:py-9 sm:mt-0 rounded-xl shadow-cusShadow'>
           {type === "1" ? (
             <div className='w-full flex gap-3 items-center'>
               <Link

@@ -28,7 +28,7 @@ export default function CustomButton({
         disabled
           ? "bg-gray-400 cursor-not-allowed"
           : "bg-theme w-auto hover:bg-teal-700"
-      }  text-white text-lg py-1.5 px-4 rounded-lg  transition text-center`}
+      }  text-white text-lg py-1.5 px-4 rounded-md h-10 transition duration-200 text-center`}
       disabled={disabled}
     >
       {disabled ? (

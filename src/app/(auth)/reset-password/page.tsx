@@ -14,6 +14,7 @@ import { Suspense, useState } from "react";
 const ResetPasswordPage = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const otp = searchParams.get("otp") || "";
   const [formData, setFormData] = useState({
     password: "",
     repassword: "",
@@ -34,7 +35,13 @@ const ResetPasswordPage = () => {
   // Validate password inputs
   const validatePasswords = () => {
     const { password, repassword } = formData;
-    if (password.length < 6) return "Password must be at least 6 characters.";
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!password) return "Password is required.";
+    if (!strongPasswordRegex.test(password)) {
+      return "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.";
+    }
     if (password !== repassword) return "Passwords do not match.";
     return "";
   };
@@ -48,15 +55,15 @@ const ResetPasswordPage = () => {
 
     try {
       setSubmitting(true);
-      await resetPassword(email, formData.password);
+      await resetPassword(email, formData.password, formData.repassword, otp);
 
       router.push(AppRouter.loginPage);
       return;
-    } catch (error) {
+    } catch (error: any) {
       setError(
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred. Please try again."
+        error.errorText ||
+          error.message ||
+          "An unknown error occurred. Please try again."
       );
     } finally {
       setSubmitting(false);

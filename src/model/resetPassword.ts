@@ -1,17 +1,21 @@
+// check email exist
 export type OTP = {
   message: string;
+  status?: boolean;
   otp?: string;
 };
 
 export function otpFromJson(jsonData: any) {
   const otp: OTP = {
     message: jsonData.message,
+    status: jsonData.data.status,
     otp: jsonData.data.otp,
   };
 
   return otp;
 }
 
+// confirm otp
 export type ConfirmOtp = {
   message: string;
   status?: boolean;
