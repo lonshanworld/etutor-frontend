@@ -4,7 +4,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-screen h-screen bg-background md:pl-5 flex flex-col overflow-clip">
+    <div className="w-screen h-svh bg-background md:pl-5 flex flex-col overflow-clip">
       {children}
     </div>
   );

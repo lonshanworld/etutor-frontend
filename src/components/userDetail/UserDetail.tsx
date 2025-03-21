@@ -20,7 +20,7 @@ export default function UserDetail({
 
   const [activeTab, setActiveTab] = useState(1);
   return (
-    <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[90%] md:w-[500px] bg-background z-20 sm:rounded-lg min-h-[600px] max-sm:w-screen max-sm:h-screen">
+    <div className="fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[90%] md:w-[500px] bg-background z-20 sm:rounded-lg min-h-[600px] max-sm:w-screen max-sm:h-svh">
       <div className="h-[80px] bg-theme w-full sm:rounded-t-lg"></div>
       {!user && <div className="text-2xl">User Not Found</div>}
       {user && (

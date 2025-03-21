@@ -17,14 +17,14 @@ const FeedPage = () => {
   const data = feedData;
 
   return (
-    <div className='flex gap-3 h-screen'>
+    <div className='flex gap-3 h-svh'>
       {/* <NewPostPopup
         profileUrl='https://i.pravatar.cc/300?img=19'
         username='Username'
       /> */}
       {/* Main Feed */}
       <div
-        className={`md:basis-1/2 md:px-4 md:border md:border-r-gray-100 border-r-2 overflow-y-auto h-screen scrollbar-none 
+        className={`md:basis-1/2 md:px-4 md:border md:border-r-gray-100 border-r-2 overflow-y-auto h-svh scrollbar-none 
           ${selectedPost ? "hidden md:block" : "flex-1"}
         `}
       >
@@ -69,7 +69,7 @@ const FeedPage = () => {
 
       {/* Post Details */}
       <div
-        className={`fixed top-0 left-0 w-full h-screen bg-white z-10 p-4 overflow-y-auto transition-opacity duration-500 ease-in-out md:relative md:basis-1/2 md:block 
+        className={`fixed top-0 left-0 w-full h-svh bg-white z-10 p-4 overflow-y-auto transition-opacity duration-500 ease-in-out md:relative md:basis-1/2 md:block 
     ${
       selectedPost
         ? "translate-x-0 opacity-100"

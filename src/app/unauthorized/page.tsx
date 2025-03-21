@@ -8,7 +8,7 @@ export default function UnAuthorizedPage(){
 
     return (
         <div
-        className="w-screen h-screen flex flex-col justify-center items-center gap-4">
+        className="w-screen h-svh flex flex-col justify-center items-center gap-4">
             <span className="text-2xl font-bold text-font capitalize">you are not authenticated to view this page.</span>
             <button
             onClick={()=> router.replace(AppRouter.loginPage)}

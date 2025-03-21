@@ -269,7 +269,7 @@ export default function TableDemo({
       {/* popup background */}
       {(showWarning || showDetail) && (
         <div
-          className="fixed bg-black/70 z-10 top-0 left-0 w-screen h-screen"
+          className="fixed bg-black/70 z-10 top-0 left-0 w-screen h-svh"
           onClick={() => {
             setShowWarning(false);
             setShowDetail(false);

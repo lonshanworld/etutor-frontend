@@ -32,7 +32,7 @@ export default async function StudentListPage({
   }
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto min-h-screen">
+    <div className="w-full sm:w-[97%] mx-auto min-h-svh">
       <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
         <SearchBar
           placeholder="Search Students"

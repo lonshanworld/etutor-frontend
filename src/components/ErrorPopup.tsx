@@ -18,7 +18,7 @@ export default function ErrorPopup() {
           Ok
         </button>
       </div>
-      <div className='bg-black opacity-30 fixed w-screen h-screen z-10 top-0 left-0'></div>
+      <div className='bg-black opacity-30 fixed w-screen h-svh z-10 top-0 left-0'></div>
     </div>
   );
 }
