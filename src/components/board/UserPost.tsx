@@ -1,17 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { AiOutlineLike } from "react-icons/ai";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiCommentDetail } from "react-icons/bi";
 import { FiFileText } from "react-icons/fi";
 import { VscOpenPreview } from "react-icons/vsc";
-import ImageModal from "./ImageModal";
+import ImageModal from "./modals/ImageModal";
 import HorizontalDivider from "../dividers/HorizontalDivider";
+import CommentSection from "./comment/CommentSection";
+import ImageWithSkeleton from "./loadingskeleton/ImageWithSkeleton";
+import PostOptionsMenu from "./modals/PostOptionMenu";
 
 interface Props {
-  viewDetail: boolean;
+  isDetail: boolean;
   profilePic: string;
   username: string;
   time: string;
@@ -20,15 +23,19 @@ interface Props {
   contentToggle?: boolean;
   imageUrls?: string[];
   documentUrls?: string[];
-  likeCount: string;
-  commentCount: string;
-  onClick?: () => void;
+  isLiked: boolean;
+  likeCount: number;
+  commentCount: number;
+  comments?: [];
+  viewDetail?: () => void;
+  handleLike: () => void; // Fix: change the prop type for handleLike
+  viewLike?: () => void;
 }
 
 const MAX_CONTENT_LENGTH = 300;
 
-const Post = ({
-  viewDetail = false,
+const UserPost = ({
+  isDetail = false,
   profilePic,
   username,
   time,
@@ -37,17 +44,23 @@ const Post = ({
   contentToggle = true,
   imageUrls = [],
   documentUrls = [],
+  isLiked,
   likeCount,
   commentCount,
-  onClick,
+  comments = [],
+  viewDetail,
+  handleLike,
+  viewLike,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
   );
 
+  // To toggle content expansion
   const toggleContent = () => setIsExpanded(!isExpanded);
 
+  // Truncate content if necessary
   const contentToDisplay = contentToggle
     ? isExpanded
       ? content
@@ -56,7 +69,7 @@ const Post = ({
         }`
     : content;
 
-  // Function to navigate images
+  // Image navigation functions
   const prevImage = () => {
     if (selectedImageIndex !== null && selectedImageIndex > 0) {
       setSelectedImageIndex(selectedImageIndex - 1);
@@ -91,9 +104,9 @@ const Post = ({
 
   return (
     <div
-      className={`bg-background pt-4 md:rounded-lg rounded-xl
-    ${viewDetail ? "" : "shadow"}
-    `}
+      className={`bg-background pt-4 ${
+        isDetail ? "" : "shadow md:rounded-lg rounded-xl"
+      }`}
     >
       {/* Header Section */}
       <div className='flex justify-between pb-3 mx-4'>
@@ -112,9 +125,10 @@ const Post = ({
             <p className='text-xs text-gray-500'>{time}</p>
           </div>
         </div>
-        <button className='text-primaryText'>
-          <BsThreeDotsVertical size={20} />
-        </button>
+        <PostOptionsMenu
+          onEdit={() => undefined}
+          onDelete={() => undefined}
+        />
       </div>
 
       {/* Post Content */}
@@ -129,7 +143,7 @@ const Post = ({
             {contentToggle && content.length > MAX_CONTENT_LENGTH && (
               <button
                 onClick={toggleContent}
-                className='text-theme ml-1 text-sm'
+                className='text-theme ml-1 text-sm hover:underline'
               >
                 {isExpanded ? "Show Less" : "Read More"}
               </button>
@@ -138,7 +152,7 @@ const Post = ({
         </div>
 
         {/* Image Gallery */}
-        {!viewDetail ? (
+        {!isDetail ? (
           imageUrls.length > 0 && (
             <div
               className={`sm:mx-4 grid gap-1 mb-3 ${
@@ -156,30 +170,26 @@ const Post = ({
                   key={index}
                   className={`cursor-pointer overflow-hidden md:rounded-md relative ${
                     imageUrls.length === 3 && index === 0 ? "col-span-2" : ""
-                  }`}
-                  onClick={() => {
-                    if (index !== 3) {
-                      setSelectedImageIndex(index);
-                    }
-                  }}
-                >
-                  <Image
-                    src={image}
-                    alt={`Post image ${index + 1}`}
-                    loading='lazy'
-                    width={600}
-                    height={400}
-                    className={`object-cover w-full h-full ${
+                  }
+                    ${
                       imageUrls.length > 2
                         ? "md:h-[250px] h-[200px]"
                         : "md:h-[400px] h-[300px]"
                     }`}
+                  onClick={() => {
+                    if (imageUrls.length > 4 && index === 3) return;
+                    setSelectedImageIndex(index);
+                  }}
+                >
+                  <ImageWithSkeleton
+                    src={image}
+                    alt={`Post image ${index + 1}`}
                   />
 
                   {index === 3 && imageUrls.length > 4 && (
                     <div
                       className='absolute z-2 inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-2xl font-semibold'
-                      onClick={onClick}
+                      onClick={viewDetail}
                     >
                       +{imageUrls.length - 4}
                     </div>
@@ -189,7 +199,7 @@ const Post = ({
             </div>
           )
         ) : (
-          <div className='grid grid-cols-1 gap-2'>
+          <div className='grid grid-cols-1 gap-1'>
             {imageUrls.map((image, index) => (
               <div
                 key={index}
@@ -240,52 +250,74 @@ const Post = ({
       </div>
 
       {/* Like and comment counts */}
-      <div className='mx-4 mb-2'>
+      <div className='mx-4 mb-2 select-none'>
         <div className='flex items-center justify-between text-sm text-primaryText'>
-          <div className='flex items-center hover:underline cursor-pointer'>
-            <AiOutlineLike />
-            <span className='pl-1'>{likeCount}</span>
+          <div
+            className='flex items-center hover:underline cursor-pointer'
+            onClick={viewLike}
+          >
+            <AiOutlineLike size={20} />
+            <div className='pl-1'>
+              {isLiked
+                ? likeCount === 1
+                  ? "You"
+                  : `You and ${likeCount - 1} others`
+                : likeCount}
+            </div>
           </div>
 
           <div className='flex items-center hover:underline cursor-pointer'>
             <span>
-              {commentCount}{" "}
-              {parseInt(commentCount) > 1 ? "Comments" : "Comment"}
+              {commentCount} {commentCount > 1 ? "Comments" : "Comment"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* <div className='bg-secondaryBackgroundOpposite opacity-20 h-[0.5px]'></div> */}
       <HorizontalDivider />
 
       {/* Like and comment button */}
-      <div className='flex py-3 justify-between mx-4'>
+      <div className='flex py-3 justify-between mx-4 select-none'>
         <div className='flex gap-10'>
-          {/* Like */}
-          <div className='flex items-center gap-1 cursor-pointer text-secondaryText'>
-            <AiOutlineLike size={20} />
+          {/* Like btn */}
+          <div
+            className='flex items-center gap-1 cursor-pointer text-secondaryText'
+            onClick={handleLike}
+          >
+            {isLiked ? (
+              <AiFillLike
+                color='teal'
+                size={20}
+              />
+            ) : (
+              <AiOutlineLike size={20} />
+            )}
             <span className='font-semibold'>Like</span>
           </div>
-          {/* Comment */}
-          <div className='flex items-center gap-1 cursor-pointer text-secondaryText'>
+          {/* Comment btn */}
+          <div
+            className='flex items-center gap-1 cursor-pointer text-secondaryText'
+            onClick={isDetail ? undefined : viewDetail}
+          >
             <BiCommentDetail size={20} />
             <span className='font-semibold'>Comment</span>
           </div>
         </div>
 
-        {viewDetail === false && (
+        {!isDetail && (
           <div
             className='flex items-center gap-1 cursor-pointer text-secondaryText'
-            onClick={onClick}
+            onClick={viewDetail}
           >
             <VscOpenPreview size={20} />
-            <span className=' font-semibold'>View Full Post</span>
+            <span className='font-semibold'>View Full Post</span>
           </div>
         )}
       </div>
+      {isDetail && <HorizontalDivider />}
 
-      {viewDetail && <HorizontalDivider />}
+      {isDetail && <CommentSection comments={comments} />}
+
       <ImageModal
         imageUrls={imageUrls}
         selectedIndex={selectedImageIndex}
@@ -297,4 +329,4 @@ const Post = ({
   );
 };
 
-export default Post;
+export default UserPost;

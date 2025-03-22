@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import placeholderProfile from "@/assets/images/placeholder-profile.png";
 
@@ -7,7 +9,7 @@ interface Props {
   time: string;
   comment: string;
 }
-const PostComment = ({ username, profilePic, time, comment }: Props) => {
+const CommentCard = ({ username, profilePic, time, comment }: Props) => {
   return (
     <div className='py-3'>
       <div className='flex gap-4'>
@@ -26,11 +28,13 @@ const PostComment = ({ username, profilePic, time, comment }: Props) => {
             <p className='font-semibold text-sm'>{username}</p>
             <p className='text-xs'>{time}</p>
           </div>
-          <div className='bg-boardFile p-2 rounded-sm text-sm'>{comment}</div>
+          <div className='bg-boardFile p-2 rounded-sm text-sm break-words'>
+            {comment}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default PostComment;
+export default CommentCard;

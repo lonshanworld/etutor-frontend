@@ -2,7 +2,7 @@
 
 import Board from "@/components/board/Board";
 
-const StudentBoardPage = () => {
+const StaffBoardPage = () => {
   return (
     <>
       <Board />
@@ -10,4 +10,4 @@ const StudentBoardPage = () => {
   );
 };
 
-export default StudentBoardPage;
+export default StaffBoardPage;

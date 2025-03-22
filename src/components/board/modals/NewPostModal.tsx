@@ -1,20 +1,22 @@
-import React from "react";
-import InputFieldType1 from "../inputfields/InputFieldType1";
+"use client";
+
+import InputFieldType1 from "../../inputfields/InputFieldType1";
 import { CgAttachment } from "react-icons/cg";
 import { MdOutlineInsertPhoto } from "react-icons/md";
 import { TfiVideoClapper } from "react-icons/tfi";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { RxCross1 } from "react-icons/rx";
 import Image from "next/image";
 
 interface Props {
   profileUrl: string;
   username: string;
+  onClose: () => void;
 }
 
-const NewPostPopup = ({ profileUrl, username }: Props) => {
+const NewPostModal = ({ profileUrl, username, onClose }: Props) => {
   return (
-    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center z-50'>
+    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50'>
       <div className='bg-white w-[600px] h-[400px] p-4 flex flex-col'>
         <button className='flex justify-between'>
           <div className='flex items-center gap-2'>
@@ -32,10 +34,15 @@ const NewPostPopup = ({ profileUrl, username }: Props) => {
               <p className='text-xs text-gray-500'>{}</p>
             </div>
           </div>
-          <RxCross1
-            color='teal'
-            size={20}
-          />
+          <div
+            className='rounded-full p-1 cursor-pointer hover:bg-gray-300'
+            onClick={onClose}
+          >
+            <RxCross1
+              color='teal'
+              size={20}
+            />
+          </div>
         </button>
         <div>
           <InputFieldType1
@@ -48,6 +55,14 @@ const NewPostPopup = ({ profileUrl, username }: Props) => {
             type='text'
             placeholder='Title'
           />
+          <div className='max-w-md'>
+            <textarea
+              id='comment'
+              rows={4}
+              placeholder='Write something...'
+              className='w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-300 resize-none bg-white transition-all duration-300 placeholder-gray-400'
+            ></textarea>
+          </div>
         </div>
 
         <div className='flex gap-1 justify-end items-center pt-5'>
@@ -72,4 +87,4 @@ const NewPostPopup = ({ profileUrl, username }: Props) => {
   );
 };
 
-export default NewPostPopup;
+export default NewPostModal;

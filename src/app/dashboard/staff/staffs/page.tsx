@@ -82,26 +82,26 @@ export default async function StaffListPage({
 
   const response = await getStaffs(page, name);
 
-  const staffData: User[] = response?.data.map(userFromJson);
+  const staffData = staffs;
   const pageCount = response.meta.last_page;
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto min-h-screen">
-      <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
+    <div className='w-full sm:w-[97%] mx-auto min-h-screen'>
+      <div className='flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3'>
         <SearchBar
-          placeholder="Search Staffs"
+          placeholder='Search Staffs'
           url={AppRouter.staffDashboardStaff}
         />
-        <div className="flex items-center w-[200px]">
-          <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
+        <div className='flex items-center w-[200px]'>
+          <BiFilterAlt className='text-cusGray ms-2 -me-6 z-10' />
           <FilterBox
-            placeholder="Filter Users"
+            placeholder='Filter Users'
             options={["Name", "Email"]}
-            className="ps-8"
+            className='ps-8'
           />
         </div>
       </div>
-      <div className="mt-5">
+      <div className='mt-5'>
         <TableDemo
           users={staffData}
           currentPage={page}
@@ -110,7 +110,7 @@ export default async function StaffListPage({
         />
       </div>
 
-      <div className="mt-5 flex justify-end">
+      <div className='mt-5 flex justify-end'>
         <CreateFormButton role={UserRole.staff} />
       </div>
       <Form />
