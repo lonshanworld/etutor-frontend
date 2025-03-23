@@ -58,7 +58,7 @@ export default async function UserHomePage({
           users={studentData}
           currentPage={page}
           pageCount={pageCount}
-          role={0}
+          role={UserRole.student}
         />
       </div>
 

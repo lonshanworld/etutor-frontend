@@ -12,7 +12,6 @@ import ToggleTheme from "@/components/ToggleTheme";
 import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
-import { useUserStore } from "@/stores/userStore";
 import { loginSchema } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";

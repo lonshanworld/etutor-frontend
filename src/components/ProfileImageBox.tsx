@@ -1,6 +1,7 @@
+"use client";
 import { useUserStore } from "@/stores/useUserStore";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 export default function ProfileImageBox() {
   const { user, profilePopup, setProfilePopup, setIsProfileClicked } =
@@ -23,7 +24,6 @@ export default function ProfileImageBox() {
         fill={true}
         alt="Profile"
         className="absolute object-cover"
-   
       />
     </div>
   );
