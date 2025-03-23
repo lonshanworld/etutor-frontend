@@ -1,5 +1,7 @@
 "use client";
 
+import { ConvexClientProvider } from "@/provider/ConvexClientProvider";
+
 export default function MainTemplate({
   children,
 }: Readonly<{
@@ -24,7 +26,9 @@ export default function MainTemplate({
                     >
                 Layout
             </div> */}
+      <ConvexClientProvider>
       {children}
+      </ConvexClientProvider>
     </>
   );
 }
