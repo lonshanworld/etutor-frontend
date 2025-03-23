@@ -40,6 +40,7 @@ export default {
         profileHeading: "var(--profile-heading)",
         profileText: "#A0A0A0",
         detailBg: "var(--detail-background)",
+        profileBg: "var(--profile-background)",
         primaryText: "var(--primary-text)",
         secondaryText: "var(--secondary-text)",
         boardFile: "var(--board-file)",

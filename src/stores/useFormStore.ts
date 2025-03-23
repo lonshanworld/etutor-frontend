@@ -4,50 +4,64 @@ import { create } from "zustand";
 
 type State = {
   showForm: boolean;
-  page: number;
+  createPage: number;
+  updatePage: number;
   role: UserRole;
   isUpdateFormRendered: boolean;
   isUpdateFormModified: boolean;
+  selectedMajor: string;
   formData: FormData;
+  isBackClicked: boolean;
+  updatedData: any;
   studentData?: {
     emgContactName?: string;
     emgContactPhone?: string;
-    majorId?: number | null;
+    majorId?: number | undefined;
   };
   tutorData?: {
     qualifications?: string;
-    experience?: number | null;
-    startDate?: string | null;
+    experience?: number | undefined;
+    subject?: string | undefined;
   };
   staffData?: {
     emgContactName?: string;
     emgContactPhone?: string;
     accessLevel?: string;
-    startDate?: string | null;
+    startDate?: string;
   };
 };
 
 type Action = {
-  setPageForm: (page: number) => void;
+  setCreatePage: (page: number) => void;
+  setUpdatePage: (page: number) => void;
   setShowForm: () => void;
   setRole: (role: UserRole) => void;
   setUpdateFormRendered: (value: boolean) => void;
   setUpdateFormModified: (value: boolean) => void;
+  setSelectedMajor: (value: string) => void;
   setFormData: (data: any) => void;
   setStudentData: (data: State["studentData"]) => void;
   setTutorData: (data: State["tutorData"]) => void;
   setStaffData: (data: State["staffData"]) => void;
   setUpdateFormData: (data: any) => void;
   setUpdateStudentData: (data: any) => void;
+  setUpdateStaffData: (data: any) => void;
+  setUpdateTutorData: (data: any) => void;
   resetFormData: () => void;
+  setIsBackClick: (value: boolean) => void;
+  setUpdatedData: (data: any) => void;
 };
 
 export const useFormStore = create<State & Action>((set) => ({
   showForm: false,
-  page: 1,
+  createPage: 1,
+  updatePage: 1,
   role: UserRole.student,
   isUpdateFormRendered: false,
   isUpdateFormModified: false,
+  selectedMajor: "",
+  isBackClicked: false,
+  updatedData: null,
   formData: {
     firstName: "",
     middleName: "",
@@ -66,18 +80,18 @@ export const useFormStore = create<State & Action>((set) => ({
   studentData: {
     emgContactName: "",
     emgContactPhone: "",
-    majorId: null,
+    majorId: undefined,
   },
   tutorData: {
     qualifications: "",
-    experience: null,
-    startDate: null,
+    experience: undefined,
+    startDate: undefined,
   },
   staffData: {
-    emgContactName: "string",
+    emgContactName: "",
     emgContactPhone: "",
     accessLevel: "",
-    startDate: null,
+    startDate: undefined,
   },
   setUpdateFormRendered: (value) => {
     set({ isUpdateFormRendered: value });
@@ -85,8 +99,17 @@ export const useFormStore = create<State & Action>((set) => ({
   setUpdateFormModified: (value) => {
     set({ isUpdateFormModified: value });
   },
-  setPageForm: (page) => {
-    set({ page });
+  setIsBackClick: (value) => {
+    set({ isBackClicked: value });
+  },
+  setSelectedMajor: (value) => {
+    set({ selectedMajor: value });
+  },
+  setCreatePage: (page) => {
+    set({ createPage: page });
+  },
+  setUpdatePage: (page) => {
+    set({ updatePage: page });
   },
   setShowForm: () =>
     set((state) => {
@@ -128,7 +151,7 @@ export const useFormStore = create<State & Action>((set) => ({
       tutorData: {
         qualifications: data?.qualifications,
         experience: data?.experience,
-        startDate: data?.startDate,
+        subject: data?.subject,
       },
     });
     console.log("tutor", data);
@@ -146,8 +169,17 @@ export const useFormStore = create<State & Action>((set) => ({
   setUpdateFormData: (data) => {
     set((state) => ({ formData: { ...state.formData, ...data } }));
   },
+  setUpdatedData: (data) => {
+    set((state) => ({ updatedData: { ...state.updatedData, ...data } }));
+  },
   setUpdateStudentData: (data) => {
     set((state) => ({ studentData: { ...state.studentData, ...data } }));
+  },
+  setUpdateStaffData: (data) => {
+    set((state) => ({ staffData: { ...state.studentData, ...data } }));
+  },
+  setUpdateTutorData: (data) => {
+    set((state) => ({ tutorData: { ...state.studentData, ...data } }));
   },
   resetFormData: () => {
     set({
@@ -171,14 +203,14 @@ export const useFormStore = create<State & Action>((set) => ({
       studentData: {
         emgContactName: "",
         emgContactPhone: "",
-        majorId: null,
+        majorId: undefined,
       },
     });
     set({
       tutorData: {
         qualifications: "",
-        experience: null,
-        startDate: null,
+        experience: undefined,
+        subject: undefined,
       },
     });
     set({
@@ -186,7 +218,7 @@ export const useFormStore = create<State & Action>((set) => ({
         emgContactName: "",
         emgContactPhone: "",
         accessLevel: "",
-        startDate: null,
+        startDate: undefined,
       },
     });
   },

@@ -22,7 +22,7 @@ export default function SideBarBox({
         isSelected
           ? "bg-secondaryBackground text-theme"
           : "text-cusGray hover:bg-secondaryBackground"
-      } flex flex-row gap-3 justify-start items-center w-full h-min py-2 px-6 transition-300`}
+      } flex flex-row gap-3 justify-start items-center w-full h-min py-2 pl-8 transition-300`}
     >
       <Image
         src={isSelected ? selectedIcon : icon}

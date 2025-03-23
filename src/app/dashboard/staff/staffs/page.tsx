@@ -10,64 +10,6 @@ import { User, userFromJson, UserRole } from "@/model/user";
 import { getStaffs } from "@/api/services/staffs";
 import { AppRouter } from "@/router";
 
-const staffs = [
-  {
-    id: 1,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    profileImagePath: "/assets/images/Profile.png",
-    phoneNo: "09756042421",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-  {
-    id: 2,
-    firstName: "Aung",
-    middleName: "Min",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042422",
-    profileImagePath: "",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-  {
-    id: 3,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042421",
-    profileImagePath: "/assets/images/Profile.png",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-  {
-    id: 4,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042421",
-    profileImagePath: "",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-  {
-    id: 5,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    phoneNo: "09756042421",
-    profileImagePath: "",
-    activityStatus: "active",
-    role: UserRole.staff,
-  },
-];
-
 export default async function StaffListPage({
   searchParams,
 }: {
@@ -79,20 +21,24 @@ export default async function StaffListPage({
   const params = await searchParams;
   const page = Number(params.page) || 1;
   const name = params.name || "";
-
-  const response = await getStaffs(page, name);
-
-  const staffData: User[] = response?.data.map(userFromJson);
-  const pageCount = response.meta.last_page;
+  let staffData: User[] = [];
+  let pageCount: number = 1;
+  try {
+    const response = await getStaffs(page, name);
+    staffData = response?.data.map(userFromJson);
+    pageCount = response.meta.last_page;
+  } catch (error) {
+    console.error("Failed to fetch staffs:", error);
+  }
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto min-h-svh">
-      <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
+    <div className="w-full sm:w-[97%] mx-auto">
+      <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Staffs"
           url={AppRouter.staffDashboardStaff}
         />
-        <div className="flex items-center w-[200px]">
+        <div className="flex items-center sm:w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
             placeholder="Filter Users"
@@ -106,7 +52,7 @@ export default async function StaffListPage({
           users={staffData}
           currentPage={page}
           pageCount={pageCount}
-          role={2}
+          role={UserRole.staff}
         />
       </div>
 

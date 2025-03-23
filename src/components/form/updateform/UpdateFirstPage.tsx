@@ -9,8 +9,12 @@ import { useFormStore } from "@/stores/useFormStore";
 import { useEffect } from "react";
 import { UserRole } from "@/model/user";
 import { useSelectedUser } from "@/stores/useSelectedUser";
-import { UpdateFormSchema, UpdateFormSchemaType } from "@/model/form";
+import {
+  UpdateFormSchema,
+  UpdateFormSchemaType,
+} from "@/utils/validationSchema";
 import { set } from "date-fns";
+import { checkUpdatedValue } from "@/utils/checkUpdatedValues";
 
 type Props = {
   setPageForm: (page: number) => void;
@@ -21,10 +25,13 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
   const {
     formData,
     setUpdateFormData,
+    setFormData,
     role,
     isUpdateFormRendered,
     isUpdateFormModified,
     setUpdateFormModified,
+    updatePage,
+    setUpdatedData,
   } = useFormStore();
   const { selectedUser } = useSelectedUser();
 
@@ -55,8 +62,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
       passportNo: formData?.passportNo ?? undefined,
       phoneNo: formData?.phoneNo ?? "",
       email: formData?.email ?? "",
-      password: formData?.password ?? undefined,
-      confirmPassword: formData?.confirmPassword ?? undefined,
       role: formData?.role ?? undefined,
     },
   });
@@ -73,16 +78,17 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
 
   const onSubmit: SubmitHandler<any> = (data, e: any) => {
     e.preventDefault();
-    console.log("updated data", formData);
+
+    const updatedFields = checkUpdatedValue(data, selectedUser);
+    setUpdateFormData(updatedFields);
+    setUpdatedData(updatedFields);
     setPageForm(2);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("changed");
     setUpdateFormModified(true);
     const { name, value } = e.target;
     setUpdateFormData({ [name]: value });
-    console.log(name, value);
   };
 
   return (
@@ -97,7 +103,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                 type="text"
                 register={register("firstName")}
                 error={{
-                  name: errors.firstName ? "firstName" : null,
+                  name: errors.firstName ? "firstName" : "",
                   message: errors?.firstName?.message,
                 }}
                 value={formData.firstName}
@@ -110,7 +116,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                 label="Middle Name"
                 register={register("middleName", { required: false })}
                 type="text"
-                value={formData.middleName}
+                value={formData.middleName || ""}
                 onChange={handleChange}
               />
             </div>
@@ -121,7 +127,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                 type="text"
                 register={register("lastName") ?? ""}
                 error={{
-                  name: errors.lastName ? "lastName" : null,
+                  name: errors.lastName ? "lastName" : "",
                   message: errors?.lastName?.message,
                 }}
                 value={formData.lastName}
@@ -136,7 +142,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
               label="Address"
               register={register("address", { required: false })}
               type="text"
-              value={formData.address}
+              value={formData.address ?? ""}
               onChange={handleChange}
             />
             <InputField
@@ -144,7 +150,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
               label="Nationality"
               type="text"
               register={register("nationality", { required: false })}
-              value={formData.nationality}
+              value={formData.nationality ?? ""}
               onChange={handleChange}
             />
           </div>
@@ -174,7 +180,10 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                 register={register("dob", {
                   required: "DOB is required",
                 })}
-                error={errors.dob && errors.dob.message}
+                error={{
+                  name: errors.dob ? "dob" : null,
+                  message: errors?.dob?.message,
+                }}
               />
               {errors.dob && (
                 <p className="text-red-500">{errors.dob.message}</p>
@@ -187,7 +196,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                 label="Passport No"
                 type="text"
                 register={register("passportNo", { required: false })}
-                value={formData.passportNo}
+                value={formData.passportNo ?? ""}
                 onChange={handleChange}
               />
             </div>
@@ -204,7 +213,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                   name: errors.phoneNo ? "phoneNo" : null,
                   message: errors?.phoneNo?.message,
                 }}
-                value={formData.phoneNo}
+                value={formData.phoneNo ?? ""}
                 onChange={handleChange}
               />
             </div>
@@ -219,56 +228,18 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                   name: errors.email ? "email" : null,
                   message: errors?.email?.message,
                 }}
-                value={formData.email}
+                value={formData.email ?? ""}
                 onChange={handleChange}
               />
             </div>
           </div>
 
-          <div className="grid-2">
-            <div>
-              <InputField
-                type="text"
-                label="Password"
-                id="password"
-                register={register("password")}
-                error={{
-                  name: errors.password ? "password" : null,
-                  message: errors?.password?.message,
-                }}
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputField
-                type="text"
-                label="Confirm Password"
-                id="confirmPassword"
-                register={register("confirmPassword")}
-                error={{
-                  name: errors.confirmPassword ? "confirmPassword" : null,
-                  message: errors?.confirmPassword?.message,
-                }}
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-            </div>
-            {/* {role && ( */}
-            <input
-              type="hidden"
-              id="userRole"
-              {...register("role")}
-              value={Number(role)}
-            />
-            {/* )} */}
-          </div>
-          {isUpdateFormRendered && (
-            <p className="text-gray-500 text-sm -mt-5">
-              Please note that this password will overwrite the user's current
-              password.
-            </p>
-          )}
+          <input
+            type="hidden"
+            id="userRole"
+            {...register("role")}
+            value={role}
+          />
 
           <CustomButton text="Next" type="submit" fullWidth={true} />
         </div>

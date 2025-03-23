@@ -1,3 +1,5 @@
+import { get } from "http";
+
 export const APIS = {
   GET: {
     getStudentList: "students",
@@ -7,6 +9,9 @@ export const APIS = {
     getProfile: (id: string) => `user/${id}/profile`, // get user profile by id
     checkEmail: "check-email",
     confirmOtp: "confirm-otp",
+    getMajors: "majors",
+    getSubjects: "subjects",
+    getMajorsWithSubjects: "majors-with-subjects",
   },
   POST: {
     login: "auth/login",
@@ -14,6 +19,7 @@ export const APIS = {
     createStudent: "students/account/create",
     createTutor: "tutors/account/create",
     createStaff: "staffs/account/create",
+    changePassword: "user/change-password",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

@@ -2,9 +2,7 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -15,14 +13,13 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
 import { PaginationDemo } from "../pagination/Pagination";
-import Link from "next/link";
 import { useSearchStore } from "@/stores/useSearchStore";
 import NoResultFound from "../searchbar/NoResultFound";
 import { User, UserRole } from "@/model/user";
 import WarningPopup from "../warningpopup/WarningPopup";
 import CustomToast from "../customtoast/CustomToast";
-import { useUserStore } from "@/stores/userStore";
-import UserDetail from "../userDetail/UserDetail";
+import { useUserStore } from "@/stores/useUserStore";
+import UserProfile from "../userProfile/UserProfile";
 import { FaUserCircle } from "react-icons/fa";
 import StatusIcon from "../statusicon/StatusIcon";
 import UserIcon from "@/assets/svgs/user.svg";
@@ -31,6 +28,10 @@ import { useFormStore } from "@/stores/useFormStore";
 import { useSelectedUser } from "@/stores/useSelectedUser";
 import { AppRouter } from "@/router";
 import { useToast } from "@/stores/useToast";
+import { Profile } from "@/model/profile";
+import { deactivateStudent } from "@/api/services/students";
+import { deactivateTutor } from "@/api/services/tutors";
+import { deactivateStaff } from "@/api/services/staffs";
 
 export default function TableDemo({
   users,
@@ -41,12 +42,13 @@ export default function TableDemo({
   users: User[];
   pageCount: number;
   currentPage: number;
-  role: number;
+  role: UserRole;
 }) {
   const { activeRowId, position, setActiveRow, closeOptionBox } =
     useOptionBoxStore();
 
-  const { showDetail, setShowDetail } = useUserStore();
+  const { user, showDetail, setShowDetail, setProfileDetailPopup } =
+    useUserStore();
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
   const { selectedUser, setSelectedUser } = useSelectedUser();
@@ -54,20 +56,13 @@ export default function TableDemo({
   const { setShowForm, setRole, setUpdateFormRendered, setUpdateFormModified } =
     useFormStore();
 
-  // const [showToast, setShowToast] = useState(false);
+  const [userProfile, setUserProfile] = useState<Profile | null>(null);
+
   const optionRef = useRef<HTMLDivElement | null>(null);
 
   const { toast, showToast } = useToast();
 
-  const [page, setPage] = useState(1);
-
   const activeDays = 0;
-
-  useEffect(() => {
-    if (data) {
-      console.log("data is here", isSearch);
-    }
-  }, [data, isSearch]);
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -76,17 +71,42 @@ export default function TableDemo({
   }, []);
 
   useEffect(() => {
-    console.log("taost", toast);
+    console.log("toast", toast?.message, toast?.type);
   }, [toast]);
 
+  useEffect(() => {
+    if (selectedUser) {
+      console.log("selectedUser", selectedUser);
+      setUserProfile({
+        id: selectedUser.id,
+        firstName: selectedUser.firstName,
+        middleName: selectedUser.middleName,
+        lastName: selectedUser.lastName,
+        dateOfBirth: selectedUser.dob,
+        email: selectedUser.email,
+        nationality: selectedUser.nationality,
+        gender: selectedUser.gender,
+        address: selectedUser.address,
+        phoneNumber: selectedUser.phoneNo,
+        profileImagePath: selectedUser.profileImagePath,
+        passport: selectedUser.passport,
+        status: selectedUser.status,
+        roleID: selectedUser.roleID,
+        role: selectedUser.role ?? undefined,
+        info: selectedUser.info,
+      });
+    }
+  }, [selectedUser]);
+
   const getSelectedUser = (id: number) => {
+    console.log("current users", users);
     const currentUser = users.filter((user) => user.id === id);
     setSelectedUser(currentUser[0]);
   };
 
   const showUserDetail = (id: number) => {
+    user?.id === id ? setProfileDetailPopup(true) : setShowDetail(true);
     getSelectedUser(id);
-    setShowDetail(true);
   };
 
   const handleMenuClick = (id: number) => {
@@ -112,24 +132,44 @@ export default function TableDemo({
     setRole(role);
     setUpdateFormRendered(true);
     setUpdateFormModified(false);
+    setActiveRow(null, null);
   };
 
   const getUrl = () => {
     switch (role) {
-      case 0:
+      case UserRole.student:
         return AppRouter.staffDashboardStudents;
-      case 1:
+      case UserRole.tutor:
         return AppRouter.staffDashboardTutors;
-      case 2:
+      case UserRole.staff:
         return AppRouter.staffDashboardStaff;
-      default:
-        return AppRouter.staffDashboardStudents;
+    }
+  };
+
+  const handleDeactivate = async () => {
+    try {
+      let response: any;
+      if (selectedUser?.role === UserRole.student) {
+        response = await deactivateStudent({ user_id: selectedUser.id });
+      } else if (selectedUser?.role === UserRole.tutor) {
+        response = await deactivateTutor({ user_id: selectedUser.id });
+      } else if (selectedUser?.role === UserRole.staff) {
+        response = await deactivateStaff({ user_id: selectedUser.id });
+      }
+      console.log("deactivate", response);
+      if (response.message === "success") {
+        showToast("User Deactivated Successfully", "success");
+        setShowWarning(false);
+        setActiveRow(null, null);
+      }
+    } catch (error) {
+      showToast("Error occurred while deactivating the user", "error");
     }
   };
 
   return (
-    <div className="sm:rounded-t-xl">
-      <Table className="border-collapse w-full bg-background rounded-t-lg overflow-hidden">
+    <div className="sm:rounded-t-xl overflow-hidden">
+      <Table className="border-collapse w-full bg-background sm:rounded-t-lg !overflow-hidden">
         <TableHeader className="bg-theme py-3 rounded-lg ">
           <TableRow className="">
             <TableHead className="max-sm:text-sm w-[70px] ps-5 lg:w-[100px] lg:ps-8 sm:rounded-tl-md text-left">
@@ -140,8 +180,13 @@ export default function TableDemo({
             <TableHead className="max-sm:hidden ps-10 text-left">
               Activity Status
             </TableHead>
-            <TableHead className="max-sm:hidden">View</TableHead>
-            <TableHead className="max-sm:text-sm sm:rounded-tr-md">
+            <TableHead className="max-md:hidden">View</TableHead>
+            <TableHead
+              className={twMerge(
+                "max-sm:text-sm sm:rounded-tr-md",
+                user?.role === role && "md:hidden"
+              )}
+            >
               Action
             </TableHead>
           </TableRow>
@@ -168,7 +213,7 @@ export default function TableDemo({
                     <p className="truncate">
                       {user.firstName +
                         " " +
-                        user.middleName +
+                        (user.middleName ?? "") +
                         " " +
                         user.lastName}
                     </p>
@@ -177,11 +222,11 @@ export default function TableDemo({
                 <TableCell>{user.email}</TableCell>
                 <TableCell className="ps-10 text-center max-sm:hidden">
                   <div className="flex justify-left items-center gap-3">
-                    <StatusIcon activeDays={activeDays} />
+                    <StatusIcon status={user.status} activeDays={activeDays} />
                     <div>{user.status}</div>
                   </div>
                 </TableCell>
-                <TableCell className="text-center max-sm:hidden">
+                <TableCell className="text-center max-md:hidden">
                   <button
                     className="bg-theme p-2 px-4 text-white rounded-md"
                     onClick={() => showUserDetail(user.id)}
@@ -189,7 +234,12 @@ export default function TableDemo({
                     View Profile
                   </button>
                 </TableCell>
-                <TableCell className="flex justify-center items-center mt-1 h-[70px]">
+                <TableCell
+                  className={twMerge(
+                    "flex justify-center items-center mt-1 h-[70px]",
+                    role === UserRole.staff && "md:hidden"
+                  )}
+                >
                   <button
                     ref={(el) => {
                       if (menuRefs) menuRefs.current[user.id] = el;
@@ -223,7 +273,7 @@ export default function TableDemo({
         >
           <ul>
             <li
-              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
+              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2 md:hidden"
               onClick={() => showUserDetail(activeRowId)}
             >
               <img src={UserIcon.src} className="w-5 h-5" alt="" />
@@ -232,15 +282,18 @@ export default function TableDemo({
             <li
               className={twMerge(
                 "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
-                selectedUser?.role === 2 ? "hidden" : ""
+                selectedUser?.role === UserRole.staff ? "hidden" : ""
               )}
               onClick={() => showEditForm(activeRowId)}
             >
-              <FiEdit className="text-xl" />
+              <FiEdit className="text-xl text-theme" />
               <span>Edit</span>
             </li>
             <li
-              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
+              className={twMerge(
+                "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
+                user?.id !== activeRowId && role === UserRole.staff && "hidden"
+              )}
               onClick={showWarningPopup}
             >
               <IoMdCloseCircleOutline className="text-xl text-red-500" />
@@ -259,27 +312,29 @@ export default function TableDemo({
       {showWarning && (
         <div>
           <WarningPopup
-            username={`${selectedUser?.firstName} ${selectedUser?.middleName} ${selectedUser?.lastName}`}
+            title="Confirm Deactivation"
+            message={`Are you sure you want to deactivate 
+            ${selectedUser?.firstName} ${selectedUser?.middleName} ${selectedUser?.lastName} account? This action
+            may effect related functionalities.`}
             setShowWarning={setShowWarning}
-            setShowToast={showToast}
+            onContinue={handleDeactivate}
           />
         </div>
       )}
 
       {/* popup background */}
-      {(showWarning || showDetail) && (
+      {showWarning && (
         <div
-          className="fixed bg-black/70 z-10 top-0 left-0 w-screen h-svh"
+          className="fixed bg-black/70 z-10 top-0 left-0 w-svh h-svh"
           onClick={() => {
             setShowWarning(false);
-            setShowDetail(false);
           }}
         ></div>
       )}
 
       {/* user profile detail */}
       {showDetail && (
-        <UserDetail user={selectedUser} setShowDetail={setShowDetail} />
+        <UserProfile user={userProfile} setShowDetail={setShowDetail} />
       )}
 
       <div className="flex justify-end mt-3">
@@ -298,6 +353,9 @@ export default function TableDemo({
           />
         )}
       </div>
+
+      {/* Toast Container */}
+      {toast && <CustomToast message={toast.message} type={toast.type} />}
     </div>
   );
 }

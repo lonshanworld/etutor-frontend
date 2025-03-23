@@ -29,18 +29,18 @@ export default function SearchBar({ placeholder, url }: Props) {
   return (
     <div>
       <form action="" onSubmit={handleSearch}>
-        <div className="flex items-center">
+        <div className="flex items-center max-sm:w-full">
           <input
             id="searchbar"
             type="text"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setValue(e.target.value)
             }
-            className={`w-full min-w-[250px] px-5 py-2.5 border bg-inputBackground border[1px] border-inputBorder border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-md `}
+            className={`w-full sm:min-w-[250px] px-5 py-2 sm:py-2.5 border bg-inputBackground border[1px] border-inputBorder border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 max-sm:text-sm `}
             placeholder={placeholder}
           />
           <div className="-ms-10 z-10 cursor-pointer" onClick={handleSearch}>
-            <IoIosSearch className="text-2xl text-cusGray" />
+            <IoIosSearch className="text-lg sm:text-2xl text-cusGray" />
           </div>
         </div>
       </form>

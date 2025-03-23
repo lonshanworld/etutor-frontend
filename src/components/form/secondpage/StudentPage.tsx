@@ -9,17 +9,24 @@ import SelectBox from "../../selectbox/SelectBox";
 import { useFormStore } from "@/stores/useFormStore";
 import { createStudent, updateStudent } from "@/api/services/students";
 import { useEffect, useState } from "react";
-import CustomToast from "../../customtoast/CustomToast";
 import { useToast } from "@/stores/useToast";
 import { useSelectedUser } from "@/stores/useSelectedUser";
+import { useMajor } from "@/stores/useMajor";
+import { twMerge } from "tailwind-merge";
+import { checkUpdatedValue } from "@/utils/checkUpdatedValues";
+import { User } from "@/model/user";
 
 type Props = {
   setPageForm: (page: number) => void;
 };
 
 const StudentSchema = z.object({
-  emgContactName: z.string().optional(),
-  emgContactPhone: z.string().optional(),
+  emgContactName: z
+    .string()
+    .min(2, { message: "Emergency Contact Name is required." }),
+  emgContactPhone: z
+    .string()
+    .min(9, { message: "This is not a valid phone number" }),
   major: z.string().min(1, { message: "Major is required." }),
 });
 
@@ -31,39 +38,63 @@ export default function StudentPage({ setPageForm }: Props) {
     formData,
     studentData,
     setStudentData,
+    setUpdateStudentData,
     isUpdateFormRendered,
     isUpdateFormModified,
+    setUpdateFormModified,
     resetFormData,
+    setSelectedMajor,
+    updatedData,
   } = useFormStore();
   const { selectedUser } = useSelectedUser();
-
-  const { toast, showToast } = useToast();
 
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
+    watch,
+    clearErrors,
+    reset,
     formState: { errors },
-  } = !isUpdateFormRendered
-    ? useForm<StudentSchemaType>({
-        resolver: zodResolver(StudentSchema),
-        mode: "onBlur",
-      })
-    : useForm<StudentSchemaType>({
-        resolver: zodResolver(StudentSchema),
-        mode: "onBlur",
-        defaultValues: {
-          emgContactName: "",
-          emgContactPhone: "",
-          major: "",
-        },
-      });
+  } = useForm<StudentSchemaType>({
+    resolver: zodResolver(StudentSchema),
+    mode: "onBlur",
+    defaultValues: studentData,
+  });
+
+  const getInfoFields = (selectedUser: User) => {
+    return {
+      emgContactName: selectedUser.info.emergency_contact_name,
+      emgContactPhone: selectedUser.info.emergency_contact_phone,
+      majorId: selectedUser.info.major_id,
+    };
+  };
+
+  useEffect(() => {
+    if (selectedUser && !isUpdateFormModified) {
+      const infoData = getInfoFields(selectedUser);
+      setUpdateStudentData(infoData);
+      setSelectedMajor(selectedUser.info.major_id);
+      reset(infoData);
+    }
+  }, [selectedUser, setUpdateStudentData]);
+
+  useEffect(() => {
+    if (studentData?.majorId) {
+      setValue("major", String(studentData.majorId)); // ✅ Set value on load
+      clearErrors("major"); // ✅ Clear error if any, since we have a value
+    }
+  }, [studentData?.majorId]);
+
+  const { majors } = useMajor();
+
+  const { showToast } = useToast();
 
   const onSubmit: SubmitHandler<StudentSchemaType> = async (data, e: any) => {
     e.preventDefault();
     setStudentData(data);
-    console.log("formdata", data);
+    errors && console.log(errors);
+
     setShowForm();
     setPageForm(1);
     const studentData = {
@@ -74,52 +105,83 @@ export default function StudentPage({ setPageForm }: Props) {
       date_of_birth: formData.dob,
       nationality: formData.nationality,
       gender: formData.gender,
+      passport: formData.passportNo,
+      address: formData.address,
+      phone_number: formData.phoneNo,
       password: formData.password,
       password_confirmation: formData.confirmPassword,
+      major_id: data.major,
+      emergency_contact_name: data.emgContactName,
+      emergency_contact_phone: data.emgContactPhone,
     };
-    console.log(studentData);
 
     if (!isUpdateFormRendered) {
       try {
         const response = await createStudent(studentData);
-        console.log("status", response.status);
         if (response.message === "success") {
           showToast("Student account created successfully", "success");
           setTimeout(() => {
             location.reload();
           }, 3000);
+        } else {
+          showToast(response.errorText, "error");
         }
       } catch (error: any) {
         showToast(error.message, "error");
       }
     } else {
-      const { password, password_confirmation, ...studentUpdateData } =
-        studentData;
       if (selectedUser) {
-        try {
-          const response = await updateStudent(
-            studentUpdateData,
-            selectedUser.id
-          );
-          console.log("status", response.status);
-          if (response.message === "success") {
-            showToast("Student data update successfully", "success");
-            setTimeout(() => {
-              location.reload();
-            }, 4000);
+        const updatedInfo = {
+          emgContactName: selectedUser.info.emergency_contact_name,
+          emgContactPhone: selectedUser.info.emergency_contact_phone,
+          major: selectedUser.info.major_id,
+        };
+        const updatedFields = checkUpdatedValue(data, updatedInfo);
+        const allUpdatedFields = { ...updatedData, ...updatedFields };
+        const finalUpdatedData = Object.fromEntries(
+          Object.entries({
+            first_name: allUpdatedFields.firstName,
+            middle_name: allUpdatedFields.middleName,
+            last_name: allUpdatedFields.lastName,
+            email: allUpdatedFields.email,
+            date_of_birth: allUpdatedFields.dob,
+            nationality: allUpdatedFields.nationality,
+            gender: allUpdatedFields.gender,
+            passport: allUpdatedFields.passportNo,
+            address: allUpdatedFields.address,
+            phone_number: allUpdatedFields.phoneNo,
+            major_id: allUpdatedFields.major,
+            emergency_contact_name: allUpdatedFields.emgContactName,
+            emergency_contact_phone: allUpdatedFields.emgContactPhone,
+          }).filter(([_, value]) => value !== null && value !== undefined)
+        );
+
+        console.log("updating student data...", finalUpdatedData);
+        if (Object.keys(finalUpdatedData).length > 0) {
+          try {
+            const response = await updateStudent(
+              finalUpdatedData,
+              selectedUser.id
+            );
+            if (response.message === "success") {
+              showToast("Student account updated successfully", "success");
+              setTimeout(() => {
+                location.reload();
+              }, 3000);
+            } else {
+              console.log("res error", response.errorText);
+              showToast(response.errorText, "error");
+            }
+          } catch (error: any) {
+            console.log("catch error", error);
+            showToast(error.message, "error");
           }
-        } catch (error: any) {
-          showToast(error.message, "error");
+        } else {
+          showToast("No changes have been made!", "error");
         }
       }
     }
   };
-
-  useEffect(() => {
-    console.log("toast", toast);
-  }, [toast]);
-
-  useEffect(() => {});
 
   return (
     <div>
@@ -156,24 +218,26 @@ export default function StudentPage({ setPageForm }: Props) {
               <Label>Major</Label>
               <SelectBox
                 placeholder="Select Major"
-                options={["Level-4", "Level-5"]}
+                options={majors}
+                watch={watch}
                 className="mt-2"
                 name="major"
-                watch={watch}
                 setValue={setValue}
                 register={register}
+                selectedValue={watch("major") || String(studentData?.majorId)}
+                error={errors.major && errors.major.message}
+                clearErrors={clearErrors}
               />
-              {errors.major && (
-                <p className="text-red-500">{errors.major.message}</p>
-              )}
             </div>
           </div>
 
-          <CustomButton text="Update Account" type="submit" fullWidth={true} />
+          <CustomButton
+            text={isUpdateFormRendered ? "Update Account" : "Create Account"}
+            type="submit"
+            fullWidth={true}
+          />
         </div>
       </form>
-
-      {toast && <CustomToast message={toast.message} type={toast.type} />}
     </div>
   );
 }

@@ -38,7 +38,7 @@ const CreateFormButton = ({ role }: { role: UserRole }) => {
   return (
     <Button
       variant="default"
-      className="text-md font-semibold p-5 text-white"
+      className="max-sm:text-sm font-semibold p-3 sm:p-5 text-white max-sm:me-3"
       onClick={handleClick}
     >
       Create Account
