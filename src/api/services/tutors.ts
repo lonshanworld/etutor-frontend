@@ -27,3 +27,13 @@ export async function updateTutor(body: any, id: number): Promise<any> {
   const response = await PostRequest(body, APIS.PATCH.updateTutor(id));
   return response;
 }
+
+export async function deactivateTutor(body: any): Promise<any> {
+  const response = await PostRequest(body, APIS.PATCH.deactivateTutor);
+  return response;
+}
+
+export async function getSubjects(): Promise<any> {
+  const response = await GetRequest(APIS.GET.getSubjects);
+  return response;
+}

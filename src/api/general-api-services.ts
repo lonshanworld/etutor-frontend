@@ -27,11 +27,17 @@ async function fetchData(
     const responseData = await response.json();
     // return new Error(responseData.message || responseData.errorMessage || response.statusText);
     return {
-      errorCode : response.status,
-      errorText : responseData.message || responseData.errorMessage || response.statusText
-    }
+      errorCode: response.status,
+      errorText:
+        responseData.message ||
+        responseData.errorMessage ||
+        response.statusText,
+    };
   }
 
+  if (response.status === 204) {
+    return response;
+  }
   return response.json();
 }
 
@@ -39,6 +45,9 @@ export async function GetRequest(apiString?: string): Promise<any> {
   return fetchData("GET", apiString, undefined);
 }
 
-export async function PostRequest(body: any, apiString?: string): Promise<any> {
+export async function PostRequest(
+  body?: any,
+  apiString?: string
+): Promise<any> {
   return fetchData("POST", apiString, body);
 }

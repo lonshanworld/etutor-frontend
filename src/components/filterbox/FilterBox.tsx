@@ -20,7 +20,7 @@ export default function FilterBox({
   return (
     <Select>
       <SelectTrigger
-        className={`w-full min-w-[150px] h-[45px] border-[1px] border-inputBorder z-1 ${className}`}
+        className={`w-full min-w-[150px] h-[37.6px] sm:h-[45px] border-[1px] max-sm:text-sm border-inputBorder z-1 ${className}`}
       >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
@@ -30,12 +30,11 @@ export default function FilterBox({
         </SelectItem>
         {options.map((item, index) => {
           return (
-            <SelectItem value={item} key={index}>
+            <SelectItem className="max-sm:text-sm" value={item} key={index}>
               {item}
             </SelectItem>
           );
         })}
-        {/* <SelectItem value="system">Email</SelectItem> */}
       </SelectContent>
     </Select>
   );

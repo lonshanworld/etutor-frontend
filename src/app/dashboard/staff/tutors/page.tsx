@@ -12,72 +12,6 @@ import LoadingSpinner from "@/components/loadingspinner/LoadingSpinner";
 import { getTutors } from "@/api/services/tutors";
 import { AppRouter } from "@/router";
 
-const tutors = [
-  {
-    id: 1,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm123@gmail.com",
-    activityStatus: "Active",
-    phoneNo: "09756042421",
-  },
-  {
-    id: 2,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    activityStatus: "Active",
-    phoneNo: "09756042421",
-  },
-  {
-    id: 3,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    activityStatus: "Active",
-    phoneNo: "09756042421",
-  },
-  {
-    id: 4,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    activityStatus: "Active 2 days ago",
-    phoneNo: "09756042421",
-  },
-  {
-    id: 5,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    activityStatus: "Active",
-    phoneNo: "09756042421",
-  },
-  {
-    id: 6,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    activityStatus: "Active",
-    phoneNo: "09756042421",
-  },
-  {
-    id: 7,
-    firstName: "Aung",
-    middleName: "Kaung",
-    lastName: "Myat",
-    email: "akm@gmail.com",
-    activityStatus: "Active",
-    phoneNo: "09756042421",
-  },
-];
-
 export default async function TutorListPage({
   searchParams,
 }: {
@@ -90,13 +24,21 @@ export default async function TutorListPage({
   const page = Number(params.page) || 1;
   const name = params.name || "";
 
-  const response = await getTutors(page, name);
+  let tutorData: User[] = [];
+  let pageCount = 1;
 
-  const tutorData: User[] = response?.data.map(userFromJson);
-  const pageCount = response.meta.last_page;
+  try {
+    const response = await getTutors(page, name);
+    console.log("tutors", response);
+    tutorData = response?.data.map(userFromJson);
+    pageCount = response.meta.last_page;
+  } catch (error) {
+    console.error("Failed to fetch tutors:", error);
+  }
+
   return (
-    <div className="w-full sm:w-[97%] mx-auto min-h-screen">
-      <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
+    <div className="w-full sm:w-[97%] mx-auto">
+      <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Tutors"
           url={AppRouter.staffDashboardTutors}
@@ -115,7 +57,7 @@ export default async function TutorListPage({
           users={tutorData}
           currentPage={page}
           pageCount={pageCount}
-          role={1}
+          role={UserRole.tutor}
         />
       </div>
 

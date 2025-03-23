@@ -27,13 +27,14 @@ export default async function StudentListPage({
     const response = await getStudents(page, name);
     studentData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
+    console.log("response", response);
   } catch (error) {
     console.error("Failed to fetch students:", error);
   }
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto min-h-screen">
-      <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
+    <div className="w-full sm:w-[97%] mx-auto">
+      <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Students"
           url={AppRouter.staffDashboardStudents}
@@ -52,7 +53,7 @@ export default async function StudentListPage({
           users={studentData}
           currentPage={page}
           pageCount={pageCount}
-          role={0}
+          role={UserRole.student}
         />
       </div>
 
