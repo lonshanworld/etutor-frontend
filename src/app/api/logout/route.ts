@@ -1,4 +1,5 @@
 import { logout } from "@/api/services/authService";
+import { deleteTokensInCookie } from "@/lib/tokenCookies";
 import { NextResponse } from "next/server";
 
 export async function POST() {
@@ -8,8 +9,9 @@ export async function POST() {
     // Remove the cookies
     if (backendRespond.status === 204) {
       const response = NextResponse.json({ message: "Logout successful" });
-      response.cookies.set("sessionToken", "", { httpOnly: true, maxAge: -1 });
-      response.cookies.set("role", "", { httpOnly: true, maxAge: -1 });
+      deleteTokensInCookie();
+      // response.cookies.set("sessionToken", "", { httpOnly: true, maxAge: -1 });
+      // response.cookies.set("role", "", { httpOnly: true, maxAge: -1 });
       return response;
     }
   } catch (error) {

@@ -52,7 +52,6 @@ export async function middleware(req: NextRequest) {
   const sessionToken = cookieStore.get("sessionToken")?.value;
   const role = cookieStore.get("role")?.value;
 
-
   if (
     req.nextUrl.pathname.startsWith("/_next/") ||
     req.nextUrl.pathname.startsWith("/static/") ||

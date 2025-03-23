@@ -47,7 +47,7 @@ export default function SideBarContainer() {
   const isTutorDashboard = pathName.includes(AppRouter.tutorDashboard);
 
   return (
-    <div className="w-full flex flex-col gap-3">
+    <div className="w-full flex flex-col gap-3 pl-4">
       {isStaffDashboard && (
         <>
           <SideBarBox
