@@ -140,7 +140,7 @@ export default function UserProfile({
     <div>
       <div
         className={twMerge(
-          "fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]  bg-background z-20 sm:rounded-lg max-sm:w-screen max-sm:h-screen overflow-auto",
+          "fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]  bg-background z-20 sm:rounded-lg max-sm:w-svh max-sm:h-svh overflow-auto",
           showDetail
             ? "w-[90%] md:w-[500px] min-h-[600px]"
             : "w-[90%] lg:w-[800px] h-[500px]"
@@ -335,7 +335,7 @@ export default function UserProfile({
         </div>
       </div>
       <div
-        className="fixed bg-black/70 z-[15] top-0 left-0 w-screen h-screen"
+        className="fixed bg-black/70 z-[15] top-0 left-0 w-svh h-svh"
         onClick={() => {
           setProfileDetailPopup(false);
           setShowDetail(false);

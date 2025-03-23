@@ -66,7 +66,7 @@ const Form = () => {
     <div>
       <div
         className={twMerge(
-          "fixed top-0 w-full md:w-[750px]  min-h-screen h-screen overflow-y-auto max-lg:overflow-auto custom-scrollbar bg-formBackground p-14 z-20 transition-all duration-500 ease-in-out",
+          "fixed top-0 w-full md:w-[750px]  min-h-svh h-svh overflow-y-auto max-lg:overflow-auto bg-formBackground p-14 z-20 transition-all duration-500 ease-in-out",
           showForm ? "right-0" : "-right-[900px]"
         )}
       >
@@ -125,7 +125,7 @@ const Form = () => {
       </div>
       <div
         className={twMerge(
-          "bg-black/70 w-screen h-screen fixed top-0 left-0 z-10",
+          "bg-black/70 w-svh h-svh fixed top-0 left-0 z-10",
           !showForm && "hidden"
         )}
         // onClick={setShowForm}
