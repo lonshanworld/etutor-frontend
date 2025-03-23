@@ -3,26 +3,23 @@
 import { confirmOtp } from "@/api/services/authService";
 import verifyOtp from "@/assets/images/verify-otp.png";
 import Button from "@/components/buttons/Button";
-import ErrorPopup from "@/components/ErrorPopup";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useRef, useState } from "react";
-import { IoMdArrowBack } from "react-icons/io";
+import ForgetLayout from "@/components/resetpassword/ForgetLayout";
 
 const OTP_LENGTH = 6;
 
 const ConfirmOtpPage = () => {
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
   const [otpError, setOtpError] = useState("");
-  const { isError, setError, message } = errorStore();
+  const { setError } = errorStore();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const [isSubmitting, setSubmitting] = useState(false);
 
   // Handle OTP digit change
   const handleChange = (
@@ -83,88 +80,71 @@ const ConfirmOtpPage = () => {
     }
     setOtpError("");
 
-    console.log(email, fullOtp); // log
-
     try {
-      const response = await confirmOtp(email, fullOtp);
-      console.log("resp", response); // log
-      if (response.message === "OTP Confirmed") {
-        router.push(
-          `${AppRouter.resetPassword}?email=${encodeURIComponent(email)}`
-        );
-      } else if (response.message === "Invalid OTP") {
-        setError("The code you entered is invalid. Please try again.");
-      } else {
-        setError("An unknown error occurred. Please try again.");
-      }
-    } catch (error) {
-      const errorMsg =
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred. Please try again.";
-      setError(errorMsg);
+      setSubmitting(true);
+      await confirmOtp(email, fullOtp);
+      router.push(
+        `${AppRouter.resetPassword}?email=${encodeURIComponent(
+          email
+        )}&otp=${encodeURIComponent(fullOtp)}`
+      );
+    } catch (error: any) {
+      setError(
+        error.errorText ||
+          error.message ||
+          "An unknown error occurred. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <>
-      {isError && <ErrorPopup />}
-      <div className='flex justify-center items-center w-full min-h-screen bg-theme'>
-        <div className='w-[90%] sm:w-[500px] h-auto flex flex-col items-center bg-secondaryBackground p-6 sm:py-9 mt-10 sm:mt-0 rounded-xl shadow-2xl'>
-          <div className='w-full flex gap-3 items-center'>
-            <Link
-              className='text-theme text-3xl'
-              href='/forget-password'
-            >
-              <IoMdArrowBack />
-            </Link>
-            <h2 className='text-font font-bold text-2xl'>Verify OTP</h2>
-          </div>
-          <Image
-            src={verifyOtp}
-            alt='OTP Verification Illustration'
-            className='h-[180px] w-auto object-contain my-6'
+    <ForgetLayout
+      type='1'
+      backUrl='/forget-password'
+      mainHeader='Verify OTP'
+      img={verifyOtp}
+      imgAlt='Verify OTP Illustration'
+      txt=' We have sent a verification code to your email.'
+      txtCenter={true}
+    >
+      <div
+        className='flex justify-center sm:gap-4 gap-2 w-full mt-6'
+        onPaste={handlePaste}
+      >
+        {otp.map((digit, index) => (
+          <input
+            key={index}
+            ref={(el) => {
+              inputRefs.current[index] = el;
+            }}
+            type='text'
+            value={digit}
+            maxLength={1}
+            className='text-gray-900 w-[45px] sm:w-[60px] h-[50px] sm:h-[65px] text-center text-2xl border border-gray-500 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition'
+            onChange={(e) => handleChange(e, index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+            aria-label={`OTP digit ${index + 1}`}
           />
-          <p className='text-sm text-font text-center'>
-            We have sent a verification code to your email.
-          </p>
-          <div
-            className='flex justify-between w-full mt-6'
-            onPaste={handlePaste}
-          >
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                ref={(el) => {
-                  inputRefs.current[index] = el;
-                }}
-                type='text'
-                value={digit}
-                maxLength={1}
-                className='w-[45px] sm:w-[60px] h-[50px] sm:h-[65px] text-center text-2xl border border-gray-500 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-theme transition'
-                onChange={(e) => handleChange(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                aria-label={`OTP digit ${index + 1}`}
-              />
-            ))}
-          </div>
-          {otpError && <p className='text-red-500 text-sm mt-2'>{otpError}</p>}
-          <div className='mt-5'></div>
-          <Button
-            onClick={handleSubmit}
-            type='button'
-            text='Verify OTP'
-          />
-        </div>
+        ))}
       </div>
-    </>
+      {otpError && <p className='text-errorMessage text-sm mt-2'>{otpError}</p>}
+      <div className='mt-5'></div>
+      <Button
+        disabled={isSubmitting}
+        onClick={handleSubmit}
+        type='button'
+        text='Verify OTP'
+        ariaLabel='Verify OTP button'
+      />
+    </ForgetLayout>
   );
 };
 
-export default function ConformPage() {
+export default function ConfirmPage() {
   return (
-    <Suspense
-    fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>Loading...</div>}>
       <ConfirmOtpPage />
     </Suspense>
   );

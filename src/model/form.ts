@@ -1,12 +1,11 @@
-import { z } from "zod";
 import { UserRole } from "./user";
 
 export type FormData = {
   firstName: string;
   middleName?: string | null;
   lastName: string;
-  address?: string | null;
-  nationality: string | null;
+  address?: string;
+  nationality: string;
   gender: string;
   dob: string;
   passportNo?: string | null;

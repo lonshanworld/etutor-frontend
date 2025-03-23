@@ -41,7 +41,7 @@ export function getStaffInfo(user: Profile | null) {
 export function getStudentInfo(user: Profile | null) {
   return [
     { label: dataLabels.major, value: user?.info?.major_id },
-    ...getEmgContact(user),
+    // ...getEmgContact(user),
     { label: dataLabels.enrollmentDate, value: user?.info?.enrollment_date },
     { label: dataLabels.graduationDate, value: user?.info?.graduation_date },
     { label: dataLabels.currentYear, value: user?.info?.current_year },

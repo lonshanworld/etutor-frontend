@@ -25,8 +25,6 @@ export default function FormInputField({
   ariaLabel,
   register,
   error,
-  value,
-  onChange,
   className,
 }: Props) {
   return (
@@ -35,7 +33,6 @@ export default function FormInputField({
         id={id}
         name={id}
         type={type}
-        aria-label={ariaLabel}
         {...register}
         className={twMerge(
           error?.name === id
@@ -45,18 +42,16 @@ export default function FormInputField({
           "peer block w-full h-[45px] px-4 py-2.5 border bg-transparent rounded-lg focus:outline-none focus:ring-1 text-base"
         )}
         placeholder={placeholder ?? " "}
-        value={value ?? undefined}
-        onChange={onChange}
       />
       {label && (
         <label
           htmlFor={id}
           className={twMerge(
             error?.name === id
-              ? "peer-focus:text-red-500"
-              : "peer-focus:text-theme",
+              ? "peer-focus:text-red-500 text-red-500"
+              : "peer-focus:text-theme text-theme",
             className,
-            " text-theme absolute px-2 left-2 -top-3 peer-placeholder-shown:text-label peer-placeholder-shown:top-3 peer-focus:-top-3 text-sm transition-300 bg-formBackground"
+            "absolute px-2 left-2 -top-3 peer-placeholder-shown:text-label peer-placeholder-shown:top-3 peer-focus:-top-3 text-sm transition-300 bg-formBackground"
           )}
         >
           {label}

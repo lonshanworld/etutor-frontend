@@ -36,7 +36,7 @@ export type Profile = {
   phoneNumber?: string;
   profileImagePath?: string;
   passport?: string;
-  status?: string;
+  status: string;
   roleID?: string;
   role?: string;
   info: any;

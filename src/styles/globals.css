@@ -2,7 +2,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --background: #ffffff;
   --secondaryBackground: #e5e5e5;
@@ -24,6 +23,10 @@
   --profile-heading: #181818;
   --detail-background: #e3e3e3;
   --profile-background: #ffffff;
+  --error-message: #f87171;
+  --primary-text: #222;
+  --secondary-text: #2c2c2c;
+  --board-file: #eeeeee;
 }
 
 .dark {
@@ -47,6 +50,10 @@
   --profile-heading: #ffffff;
   --detail-background: #454545;
   --profile-background: #3e3e3e;
+  --error-message: #f87171;
+  --primary-text: rgba(255, 255, 255, 0.9);
+  --secondary-text: #c5c5c5;
+  --board-file: #333;
 }
 
 body {
@@ -141,3 +148,15 @@ body {
 .label {
   @apply group-focus:text-theme group-focus:-top-2.5 group-placeholder-shown:top-3 group-placeholder-shown:text-label absolute px-2 left-2 -top-3 text-theme text-sm transition-300 bg-formBackground;
 } */
+
+@layer utilities {
+  .custom-scrollbar {
+    @apply [&::-webkit-scrollbar]:w-1.5
+           [&::-webkit-scrollbar-track]:rounded-full
+           [&::-webkit-scrollbar-track]:bg-gray-100
+           [&::-webkit-scrollbar-thumb]:rounded-full
+           [&::-webkit-scrollbar-thumb]:bg-theme
+           dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+           dark:[&::-webkit-scrollbar-thumb]:bg-theme;
+  }
+}

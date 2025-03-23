@@ -6,7 +6,7 @@ export const AppRouter = {
   unauthorized: "/unauthorized",
 
   forgetPassword: "/forget-password",
-  confirmOtp: "/confirmOtp-otp",
+  confirmOtp: "/confirm-otp",
   resetPassword: "/reset-password",
 
   staffDashboard: "/dashboard/staff",
@@ -21,6 +21,7 @@ export const AppRouter = {
   studentMeeting: "/dashboard/student/meeting",
   studentNote: "/dashboard/student/note",
   studentPeople: "/dashboard/student/people",
+  studentChatBox : "/dashboard/student/chat/chatbox",
 
   tutorDashboard: "/dashboard/tutor",
   tutorChat: "/dashboard/tutor/chat",
@@ -29,4 +30,5 @@ export const AppRouter = {
   tutorNote: "/dashboard/tutor/note",
   tutorPeople: "/dashboard/tutor/people",
   tutorAllocatedStudents: "/dashboard/tutor/allocatedstudent",
+  tutorChatBox : "/dashboard/tutor/chat/chatbox",
 };

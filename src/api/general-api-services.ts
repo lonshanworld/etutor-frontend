@@ -1,12 +1,13 @@
 "use server";
 
+import { ErrorModel } from "@/model/ErrorModel";
 import { cookies } from "next/headers";
 
 async function fetchData(
   method: string,
   apiString?: string,
   body?: any
-): Promise<any> {
+): Promise<any | ErrorModel> {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get("sessionToken")?.value;
 
@@ -24,7 +25,14 @@ async function fetchData(
 
   if (!response.ok) {
     const responseData = await response.json();
-    throw new Error(responseData.message || response.statusText);
+    // return new Error(responseData.message || responseData.errorMessage || response.statusText);
+    return {
+      errorCode: response.status,
+      errorText:
+        responseData.message ||
+        responseData.errorMessage ||
+        response.statusText,
+    };
   }
 
   if (response.status === 204) {

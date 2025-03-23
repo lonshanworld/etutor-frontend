@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default function FirstPage({ setPageForm }: Props) {
-  const { setFormData, role } = useFormStore();
+  const { formData, setFormData, role } = useFormStore();
   const {
     register,
     handleSubmit,
@@ -31,13 +31,12 @@ export default function FirstPage({ setPageForm }: Props) {
   } = useForm<CreateFormSchemaType>({
     resolver: zodResolver(CreateFormSchema),
     mode: "onBlur",
+    defaultValues: formData,
   });
 
   const onSubmit: SubmitHandler<any> = (data, e: any) => {
     e.preventDefault();
-    console.log(data);
     setFormData(data);
-    console.log(data);
     setPageForm(2);
   };
 
@@ -49,9 +48,6 @@ export default function FirstPage({ setPageForm }: Props) {
     setValue("role", UserRoleSchema.parse(role));
   }, [role, setValue]);
 
-  useEffect(() => {
-    console.log("errors", errors);
-  }, [errors]);
   return (
     <div>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
@@ -97,6 +93,10 @@ export default function FirstPage({ setPageForm }: Props) {
               label="Address"
               register={register("address", { required: false })}
               type="text"
+              error={{
+                name: errors.address ? "address" : null,
+                message: errors?.address?.message,
+              }}
             />
             <InputField
               id="nationality"
@@ -135,11 +135,11 @@ export default function FirstPage({ setPageForm }: Props) {
                 register={register("dob", {
                   required: "DOB is required",
                 })}
-                error={errors.dob && errors.dob.message}
+                error={{
+                  name: errors.dob ? "dob" : null,
+                  message: errors?.dob?.message,
+                }}
               />
-              {errors.dob && (
-                <p className="text-red-500">{errors.dob.message}</p>
-              )}
             </div>
 
             <div className="lg:mt-6">
@@ -183,7 +183,7 @@ export default function FirstPage({ setPageForm }: Props) {
           <div className="grid-2">
             <div>
               <InputField
-                type="text"
+                type="password"
                 label="Password"
                 id="password"
                 register={register("password")}
@@ -195,7 +195,7 @@ export default function FirstPage({ setPageForm }: Props) {
             </div>
             <div>
               <InputField
-                type="text"
+                type="password"
                 label="Confirm Password"
                 id="confirmPassword"
                 register={register("confirmPassword")}

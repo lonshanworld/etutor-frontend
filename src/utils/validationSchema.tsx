@@ -14,10 +14,10 @@ export const UserRoleSchema: z.ZodNativeEnum<typeof UserRole> =
 
 export const CreateFormSchema = z
   .object({
-    firstName: z.string().min(1, { message: "First Name is required" }),
+    firstName: z.string().min(2, { message: "First Name is required" }),
     middleName: z.string().nullable(),
-    lastName: z.string().min(1, { message: "Last Name is required" }),
-    address: z.string().nullable(),
+    lastName: z.string().min(2, { message: "Last Name is required" }),
+    address: z.string().min(2, { message: "Address is required" }),
     nationality: z
       .string()
       .min(2, { message: "Nationality field is required" }),
@@ -52,33 +52,19 @@ export const CreateFormSchema = z
 
 export type CreateFormSchemaType = z.infer<typeof CreateFormSchema>;
 
-export const UpdateFormSchema = z
-  .object({
-    firstName: z.string().min(1, { message: "First Name is required" }),
-    middleName: z.string().nullable(),
-    lastName: z.string().min(1, { message: "Last Name is required" }),
-    address: z.string().nullable(),
-    nationality: z
-      .string()
-      .min(2, { message: "Nationality field is required" }),
-    gender: z.string().min(1, { message: "Gender is required" }),
-    dob: z.string().min(1, { message: "DOB is required" }),
-    passportNo: z.string().nullable(),
-    phoneNo: z.string().min(9, { message: "This is not a valid phone number" }),
-    email: z.string().email(),
-    password: z.string().nullable(),
-    confirmPassword: z.string().nullable(),
-    role: UserRoleSchema,
-  })
-  .refine(
-    (data) => {
-      return data.password === data.confirmPassword;
-    },
-    {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    }
-  );
+export const UpdateFormSchema = z.object({
+  firstName: z.string().min(2, { message: "First Name is required" }),
+  middleName: z.string().nullable(),
+  lastName: z.string().min(2, { message: "Last Name is required" }),
+  address: z.string().min(2, { message: "Address is required" }),
+  nationality: z.string().min(2, { message: "Nationality field is required" }),
+  gender: z.string().min(1, { message: "Gender is required" }),
+  dob: z.string().min(1, { message: "DOB is required" }),
+  passportNo: z.string().nullable(),
+  phoneNo: z.string().min(9, { message: "This is not a valid phone number" }),
+  email: z.string().email(),
+  role: UserRoleSchema,
+});
 
 export type UpdateFormSchemaType = z.infer<typeof UpdateFormSchema>;
 

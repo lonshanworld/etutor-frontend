@@ -19,6 +19,8 @@ export default {
         font: "var(--font-color)",
         popup: "var(--popup)",
         cusGray: "#818181",
+        errorMessage: "var(--error-message)",
+        cusGray2: "#777777",
         login: "#363333",
         inputBackground: "var(--input-background)",
         inputBorder: "var(--input-border)",
@@ -39,6 +41,9 @@ export default {
         profileText: "#A0A0A0",
         detailBg: "var(--detail-background)",
         profileBg: "var(--profile-background)",
+        primaryText: "var(--primary-text)",
+        secondaryText: "var(--secondary-text)",
+        boardFile: "var(--board-file)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -85,6 +90,11 @@ export default {
       },
       boxShadow: {
         left: "-7px 0 10px rgba(0, 0, 0, 0.5)",
+        cusShadow:
+          "0px 6px 12px -2px rgba(50,50,93,0.25), 0px 3px 7px -3px rgba(0,0,0,0.3)",
+      },
+      fontSize: {
+        xss: "0.65rem",
       },
     },
   },

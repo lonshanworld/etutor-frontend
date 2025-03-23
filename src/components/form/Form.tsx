@@ -15,11 +15,14 @@ import UpdateFirstPage from "./updateform/UpdateFirstPage";
 const Form = () => {
   const {
     showForm,
-    page,
+    createPage,
+    updatePage,
     setShowForm,
-    setPageForm,
+    setCreatePage,
+    setUpdatePage,
     role,
     isUpdateFormRendered,
+    setIsBackClick,
   } = useFormStore();
 
   useEffect(() => {
@@ -30,24 +33,40 @@ const Form = () => {
     }
   }, [showForm]);
   const handleBack = () => {
-    page === 2 ? setPageForm(1) : setShowForm();
+    setIsBackClick(true);
+    if (isUpdateFormRendered) {
+      updatePage === 2 ? setUpdatePage(1) : setShowForm();
+    } else {
+      createPage === 2 ? setCreatePage(1) : setShowForm();
+    }
   };
 
   const getSecondPage = () => {
-    switch (role) {
-      case UserRole.student:
-        return <StudentPage setPageForm={setPageForm} />;
-      case UserRole.tutor:
-        return <TutorPage setPageForm={setPageForm} />;
-      case UserRole.staff:
-        return <StaffPage setPageForm={setPageForm} />;
+    if (!isUpdateFormRendered) {
+      switch (role) {
+        case UserRole.student:
+          return <StudentPage setPageForm={setCreatePage} />;
+        case UserRole.tutor:
+          return <TutorPage setPageForm={setCreatePage} />;
+        case UserRole.staff:
+          return <StaffPage setPageForm={setCreatePage} />;
+      }
+    } else {
+      switch (role) {
+        case UserRole.student:
+          return <StudentPage setPageForm={setUpdatePage} />;
+        case UserRole.tutor:
+          return <TutorPage setPageForm={setUpdatePage} />;
+        case UserRole.staff:
+          return <StaffPage setPageForm={setUpdatePage} />;
+      }
     }
   };
   return (
     <div>
       <div
         className={twMerge(
-          "fixed top-0 w-full md:w-[750px]  min-h-screen h-screen overflow-y-auto max-lg:overflow-auto bg-formBackground p-14 z-20 transition-all duration-500 ease-in-out",
+          "fixed top-0 w-full md:w-[750px]  min-h-screen h-screen overflow-y-auto max-lg:overflow-auto custom-scrollbar bg-formBackground p-14 z-20 transition-all duration-500 ease-in-out",
           showForm ? "right-0" : "-right-[900px]"
         )}
       >
@@ -63,18 +82,22 @@ const Form = () => {
           </span>
           <hr
             className={`w-10 h-[1px] my-8 border-0 ${
-              page === 1 ? "bg-backgroundOpposite" : "bg-theme"
+              createPage === 1 || updatePage === 1
+                ? "bg-backgroundOpposite"
+                : "bg-theme"
             }`}
           ></hr>
           <span className="flex relative items-center justify-center">
-            {page === 1 ? (
+            {createPage === 1 || updatePage === 1 ? (
               <GiCircle className={`text-3xl text-backgroundOpposite`} />
             ) : (
               <FaCircle className="text-3xl text-theme" />
             )}
             <span
               className={`absolute ${
-                page === 1 ? "text-backgroundOpposite" : "text-white"
+                createPage === 1 || updatePage === 1
+                  ? "text-backgroundOpposite"
+                  : "text-white"
               }`}
             >
               2
@@ -87,12 +110,14 @@ const Form = () => {
           <div className="title text-[32px] font-[700] mb-5 text-headingColor">
             {isUpdateFormRendered ? "Update Account" : "Create Account"}
           </div>
-          {page === 1 ? (
-            isUpdateFormRendered ? (
-              <UpdateFirstPage role={role} setPageForm={setPageForm} />
+          {isUpdateFormRendered ? (
+            updatePage === 1 ? (
+              <UpdateFirstPage role={role} setPageForm={setUpdatePage} />
             ) : (
-              <FirstPage role={role} setPageForm={setPageForm} />
+              getSecondPage()
             )
+          ) : createPage === 1 ? (
+            <FirstPage role={role} setPageForm={setCreatePage} />
           ) : (
             getSecondPage()
           )}
@@ -103,7 +128,7 @@ const Form = () => {
           "bg-black/70 w-screen h-screen fixed top-0 left-0 z-10",
           !showForm && "hidden"
         )}
-        onClick={setShowForm}
+        // onClick={setShowForm}
       ></div>
     </div>
   );

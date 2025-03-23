@@ -71,6 +71,10 @@ export default function TableDemo({
   }, []);
 
   useEffect(() => {
+    console.log("toast", toast?.message, toast?.type);
+  }, [toast]);
+
+  useEffect(() => {
     if (selectedUser) {
       console.log("selectedUser", selectedUser);
       setUserProfile({
@@ -142,15 +146,15 @@ export default function TableDemo({
     }
   };
 
-  const handleDeactivate = () => {
+  const handleDeactivate = async () => {
     try {
       let response: any;
       if (selectedUser?.role === UserRole.student) {
-        response = deactivateStudent({ user_id: selectedUser.id });
+        response = await deactivateStudent({ user_id: selectedUser.id });
       } else if (selectedUser?.role === UserRole.tutor) {
-        response = deactivateTutor({ user_id: selectedUser.id });
+        response = await deactivateTutor({ user_id: selectedUser.id });
       } else if (selectedUser?.role === UserRole.staff) {
-        response = deactivateStaff({ user_id: selectedUser.id });
+        response = await deactivateStaff({ user_id: selectedUser.id });
       }
       console.log("deactivate", response);
       if (response.message === "success") {
@@ -164,8 +168,8 @@ export default function TableDemo({
   };
 
   return (
-    <div className="sm:rounded-t-xl">
-      <Table className="border-collapse w-full bg-background sm:rounded-t-lg overflow-hidden">
+    <div className="sm:rounded-t-xl overflow-hidden">
+      <Table className="border-collapse w-full bg-background sm:rounded-t-lg !overflow-hidden">
         <TableHeader className="bg-theme py-3 rounded-lg ">
           <TableRow className="">
             <TableHead className="max-sm:text-sm w-[70px] ps-5 lg:w-[100px] lg:ps-8 sm:rounded-tl-md text-left">
@@ -177,7 +181,12 @@ export default function TableDemo({
               Activity Status
             </TableHead>
             <TableHead className="max-md:hidden">View</TableHead>
-            <TableHead className="max-sm:text-sm sm:rounded-tr-md">
+            <TableHead
+              className={twMerge(
+                "max-sm:text-sm sm:rounded-tr-md",
+                user?.role === role && "md:hidden"
+              )}
+            >
               Action
             </TableHead>
           </TableRow>
@@ -204,7 +213,7 @@ export default function TableDemo({
                     <p className="truncate">
                       {user.firstName +
                         " " +
-                        user.middleName +
+                        (user.middleName ?? "") +
                         " " +
                         user.lastName}
                     </p>
@@ -213,7 +222,7 @@ export default function TableDemo({
                 <TableCell>{user.email}</TableCell>
                 <TableCell className="ps-10 text-center max-sm:hidden">
                   <div className="flex justify-left items-center gap-3">
-                    <StatusIcon activeDays={activeDays} />
+                    <StatusIcon status={user.status} activeDays={activeDays} />
                     <div>{user.status}</div>
                   </div>
                 </TableCell>
@@ -225,7 +234,12 @@ export default function TableDemo({
                     View Profile
                   </button>
                 </TableCell>
-                <TableCell className="flex justify-center items-center mt-1 h-[70px]">
+                <TableCell
+                  className={twMerge(
+                    "flex justify-center items-center mt-1 h-[70px]",
+                    role === UserRole.staff && "md:hidden"
+                  )}
+                >
                   <button
                     ref={(el) => {
                       if (menuRefs) menuRefs.current[user.id] = el;
@@ -276,7 +290,10 @@ export default function TableDemo({
               <span>Edit</span>
             </li>
             <li
-              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
+              className={twMerge(
+                "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
+                user?.id !== activeRowId && role === UserRole.staff && "hidden"
+              )}
               onClick={showWarningPopup}
             >
               <IoMdCloseCircleOutline className="text-xl text-red-500" />

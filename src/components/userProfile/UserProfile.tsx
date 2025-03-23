@@ -174,12 +174,18 @@ export default function UserProfile({
             >
               <div className="flex gap-5 items-center">
                 <h1 className="text-2xl text-profileHeading font-bold">
-                  {user.firstName + " " + user.middleName + " " + user.lastName}
+                  {user.firstName +
+                    " " +
+                    (user.middleName ?? "") +
+                    " " +
+                    user.lastName}
                 </h1>
                 {showDetail && (
                   <div className="flex gap-2 items-center mt-1">
-                    <StatusIcon activeDays={0} />
-                    <span className="font-bold text-gray-500">Active</span>
+                    <StatusIcon status={user.status} activeDays={0} />
+                    <span className="font-bold text-gray-500">
+                      {user.status}
+                    </span>
                   </div>
                 )}
               </div>

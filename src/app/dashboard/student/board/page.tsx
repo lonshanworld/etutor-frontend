@@ -3,100 +3,66 @@
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { FiEdit } from "react-icons/fi";
-import Post from "@/components/feed/Post";
+import Post from "@/components/board/Post";
 import logo from "@/assets/images/unilogo-without-text.png";
 import Image from "next/image";
-import PostComment from "@/components/feed/PostComment";
-import CommentInputField from "@/components/feed/CommentInputField";
+import PostComment from "@/components/board/PostComment";
+import CommentInputField from "@/components/board/CommentInputField";
+import { feedData } from "./data";
+import { IoArrowBack } from "react-icons/io5";
+import NewPostPopup from "@/components/board/NewPostPopup";
+import { RxCross1 } from "react-icons/rx";
+import CommentSection from "@/components/board/CommentSection";
 
-const feedPage = () => {
+const FeedPage = () => {
   const [selectedPost, setSelectedPost] = useState<any>(null);
-
-  const data = [
-    {
-      id: 1,
-      profilePic: "",
-      username: "User One",
-      time: "10 min ago",
-      imageUrl: "https://fakeimg.pl/600x400",
-      title: "Title One",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique atque doloremque asperiores amet illo nemo in culpa quibusdam deleniti repellat ipsa hic, aperiam dicta quo reiciendis inventore. Reiciendis numquam consequuntur tempora odio, laudantium dolorem veniam ullam? Nihil eaque culpa est ducimus! Debitis sunt eum dolorem sit itaque eaque recusandae deserunt?",
-      contentToggle: true,
-      document: "document1.docx",
-      likeCount: "5",
-      commentCount: "2",
-      comments: [
-        {
-          id: 1,
-          profilePic: "",
-          username: "User Three",
-          time: "10 min ago",
-          text: "Ask CDCR San Quintin State Prison 2008. We installed Purex dispensers throughout the prison to comba",
-        },
-        {
-          id: 2,
-          profilePic: "",
-          username: "User Three",
-          time: "10 min ago",
-          text: "This is comment",
-        },
-      ],
-    },
-    {
-      id: 2,
-      profilePic: "",
-      username: "User Two",
-      time: "20 min ago",
-      imageUrl: "https://fakeimg.pl/600x400",
-      title: "Title Two",
-      content:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero perspiciatis tempore quas assumenda magnam, qui et esse tenetur fugit nobis.",
-      contentToggle: false,
-      document: "document2.pdf",
-      likeCount: "3",
-      commentCount: "4",
-      comments: [
-        {
-          id: 1,
-          profilePic: "",
-          username: "User Three",
-          time: "10 min ago",
-          text: "This is comment",
-        },
-      ],
-    },
-  ];
+  const data = feedData;
 
   return (
-    <div className='flex gap-3 h-screen overflow-y-auto'>
-      <div className='md:basis-3/5 pb-24 md:px-4 md:border md:border-r-gray-100 border-r-2 overflow-y-auto h-screen scrollbar-none'>
-        <div className='flex items-center justify-between pb-5 pt-2 sticky bg-secondaryBackground top-0 z-1'>
+    <div className='flex gap-1 max-h-svh md:px-5 md:py-3 tracking-wide'>
+      {/* <NewPostPopup
+        profileUrl='https://i.pravatar.cc/300?img=19'
+        username='Username'
+      /> */}
+      {/* Main Board */}
+      <div
+        className={`md:basis-1/2 md:pr-1 overflow-y-auto max-h-svh scrollbar-none 
+          ${selectedPost ? "hidden md:block" : "flex-1"}
+        `}
+      >
+        <div className='flex items-end justify-between py-3 sticky bg-secondaryBackground top-0 z-10 px-1 max-md:px-4'>
           <div className='flex gap-4'>
-            <div className='border border-b-theme text-theme border-b-2 text-xl'>
-              Post
+            <div className='flex text-xl gap-4'>
+              <div className='p-1 cursor-pointer border-b-theme text-theme font-semibold border-b-2'>
+                Post
+              </div>
+              <div className='p-1 cursor-pointer text-secondaryText'>File</div>
             </div>
           </div>
-          <div className=''>
-            <Button size='lg' variant='default'>
+          <div>
+            <Button
+              size='lg'
+              variant='default'
+            >
               <FiEdit /> POST
             </Button>
           </div>
         </div>
 
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-5 pb-32 overflow-y-auto'>
           {/* Posts */}
           {data.map((post) => (
             <Post
               key={post.id}
+              viewDetail={false}
               profilePic={post.profilePic}
               username={post.username}
               time={post.time}
-              imageUrl={post.imageUrl}
+              imageUrls={post.imageUrls}
               title={post.title}
               content={post.content}
               contentToggle={true}
-              document={post.document}
+              documentUrls={post.documentUrls}
               likeCount={post.likeCount}
               commentCount={post.commentCount}
               onClick={() => setSelectedPost(post)}
@@ -105,52 +71,65 @@ const feedPage = () => {
         </div>
       </div>
 
+      {/* Post Details */}
       <div
-        className={`hidden pt-4 pb-24 md:flex basis-2/5 h-screen scrollbar-none ${
-          selectedPost
-            ? "flex-col  overflow-y-auto"
-            : "opacity-30 items-center justify-center"
-        }`}
+        className={`fixed max-md:top-[57px] left-0 w-full max-h-svh bg-background z-10 md:px-2.5 md:pt-2 pb-2.5 md:pb-20 overflow-y-auto scrollbar-none md:transition-opacity md:duration-500 ease-in-out md:relative md:basis-1/2 md:block transition-transform duration-200 transform translate-x-0
+    ${
+      selectedPost
+        ? "translate-x-0 opacity-100"
+        : "translate-x-full opacity-0 md:opacity-100 md:translate-x-0"
+    }`}
       >
         {selectedPost ? (
           <>
+            {/* Back button for mobile */}
+            <div className='max-md:sticky bg-background top-0 left-0 right-0 p-3'>
+              <button
+                className='flex items-center gap-2 text-gray-500 hover:text-gray-800'
+                onClick={() => setSelectedPost(null)}
+              >
+                <div className='flex gap-2 md:hidden'>
+                  <IoArrowBack size={24} /> <span>Back</span>
+                </div>
+                <div className='flex gap-2 items-center max-md:hidden'>
+                  <RxCross1 size={20} /> <span>Close</span>
+                </div>
+              </button>
+            </div>
+
+            {/* Post Content */}
             <Post
+              viewDetail={true}
               profilePic={selectedPost.profilePic}
               username={selectedPost.username}
               time={selectedPost.time}
-              imageUrl={selectedPost.imageUrl}
+              imageUrls={selectedPost.imageUrls}
               title={selectedPost.title}
               content={selectedPost.content}
               contentToggle={false}
-              document={selectedPost.document}
+              documentUrls={selectedPost.documentUrls}
               likeCount={selectedPost.likeCount}
               commentCount={selectedPost.commentCount}
             />
-            <div className='pt-2'>
-              {selectedPost.comments && selectedPost.comments.length > 0 ? (
-                selectedPost.comments.map((comment: any) => (
-                  <PostComment
-                    key={comment.id}
-                    profilePic={comment.profilePic}
-                    username={comment.username}
-                    time={comment.time}
-                    comment={comment.text}
-                  />
-                ))
-              ) : (
-                <p className='text-gray-500'>No comments yet.</p>
-              )}
-            </div>
-            <div className='sticky bottom-0'>
-              <CommentInputField />
-            </div>
+            <CommentSection comments={selectedPost.comments} />
           </>
         ) : (
-          <Image src={logo} alt='Logo' />
+          <div
+            className={`flex h-full ${
+              selectedPost
+                ? "flex-col  overflow-y-auto"
+                : "opacity-30 items-center justify-center"
+            } `}
+          >
+            <Image
+              src={logo}
+              alt='Logo'
+            />
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-export default feedPage;
+export default FeedPage;

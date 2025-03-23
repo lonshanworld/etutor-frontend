@@ -10,7 +10,7 @@ interface ToastProps {
 }
 
 export default function Toast({ message, type }: ToastProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
   const [progress, setProgress] = useState(100);
 
@@ -50,7 +50,7 @@ export default function Toast({ message, type }: ToastProps) {
 
   return (
     <div
-      className={`fixed top-[70px] right-0 w-[270px] md:w-[350px] bg-toastBg text-toastFont text-wrap p-0 rounded-lg shadow-lg overflow-hidden
+      className={`fixed top-[70px] right-0 sm:w-[350px] md:w-[400px] bg-toastBg text-toastFont text-wrap p-0 rounded-lg shadow-lg overflow-hidden
         transition-transform duration-300 ease-in-out z-20
         ${isVisible ? "translate-x-0 opacity-100" : "translate-x-80 opacity-0"} 
         ${isClosing ? "translate-x-full opacity-0" : ""}`}

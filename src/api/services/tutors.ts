@@ -32,3 +32,8 @@ export async function deactivateTutor(body: any): Promise<any> {
   const response = await PostRequest(body, APIS.PATCH.deactivateTutor);
   return response;
 }
+
+export async function getSubjects(): Promise<any> {
+  const response = await GetRequest(APIS.GET.getSubjects);
+  return response;
+}
