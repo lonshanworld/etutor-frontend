@@ -1,9 +1,17 @@
 import { useUserStore } from "@/stores/useUserStore";
 import { twMerge } from "tailwind-merge";
 import { UserType } from "./UserProfile";
+import { useMajor } from "@/stores/useMajor";
+import { dataLabels } from "./profileConstants";
 
 const DataComponent = ({ data }: { data: UserType[] | null }) => {
   const { showDetail } = useUserStore();
+  const { majors, subjects } = useMajor();
+
+  const getName = (data: any[], id: number) => {
+    const selectedItem = data.filter((item) => item.id === id);
+    return selectedItem[0].name;
+  };
   return (
     <div
       className={twMerge(
@@ -29,7 +37,13 @@ const DataComponent = ({ data }: { data: UserType[] | null }) => {
               {item.label}
             </p>
             <p className="text-sm text-gray-500 font-bold">
-              {item.value ? item.value : "-"}
+              {item.label === dataLabels.major
+                ? getName(majors, item.value)
+                : item.label === dataLabels.subject
+                ? getName(subjects, item.value)
+                : item.value
+                ? item.value
+                : "-"}
             </p>
           </div>
         ))}
