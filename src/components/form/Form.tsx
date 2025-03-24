@@ -125,7 +125,7 @@ const Form = () => {
       </div>
       <div
         className={twMerge(
-          "bg-black/70 w-svh h-svh fixed top-0 left-0 z-10",
+          "bg-black/70 w-svw h-svh fixed top-0 left-0 z-10",
           !showForm && "hidden"
         )}
         // onClick={setShowForm}
