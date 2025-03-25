@@ -58,7 +58,7 @@ export default function DashboardTemplate({
           <MobileSideBar style={sidebarStyle} onBackClick={closeSidebar} />
           {showMobileSidebar && (
             <div
-              className="fixed top-0 left-0 w-svh h-svh bg-black/30 z-[15]"
+              className="fixed top-0 left-0 w-svw h-svh bg-black/30 z-[15]"
               onClick={closeSidebar}
             ></div>
           )}

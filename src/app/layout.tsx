@@ -9,7 +9,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`w-svh h-svh bg-background overflow-clip`}>
+      <body className={`w-svw h-svh bg-background overflow-clip`}>
         {children}
       </body>
     </html>

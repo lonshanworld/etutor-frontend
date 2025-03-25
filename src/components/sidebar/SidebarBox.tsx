@@ -1,6 +1,9 @@
 "use client";
 
+import { AppRouter } from "@/router";
+import { useFormStore } from "@/stores/useFormStore";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function SideBarBox({
   icon,
@@ -15,9 +18,18 @@ export default function SideBarBox({
   isSelected: boolean;
   onClick: () => void;
 }) {
+  const { resetFormData } = useFormStore();
+  const pathName = usePathname();
+
+  const handleOnClick = () => {
+    onClick();
+    if (pathName.includes(AppRouter.staffDashboard)) {
+      resetFormData();
+    }
+  };
   return (
     <button
-      onClick={() => onClick()}
+      onClick={handleOnClick}
       className={`rounded-lg ${
         isSelected
           ? "bg-secondaryBackground text-theme"

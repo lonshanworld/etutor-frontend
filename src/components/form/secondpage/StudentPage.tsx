@@ -224,7 +224,12 @@ export default function StudentPage({ setPageForm }: Props) {
                 name="major"
                 setValue={setValue}
                 register={register}
-                selectedValue={watch("major") || String(studentData?.majorId)}
+                selectedValue={
+                  watch("major") ||
+                  (studentData?.majorId
+                    ? String(studentData?.majorId)
+                    : undefined)
+                }
                 error={errors.major && errors.major.message}
                 clearErrors={clearErrors}
               />

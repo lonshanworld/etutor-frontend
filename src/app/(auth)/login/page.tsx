@@ -162,7 +162,7 @@ export default function LoginPage() {
             <LogoBox />
           </div>
         </div>
-        <Toast message={toast?.message} type={toast?.type} />
+        {toast && <Toast message={toast?.message} type={toast?.type} />}
       </div>
     </>
   );
