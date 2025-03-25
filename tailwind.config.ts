@@ -82,6 +82,8 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        grayToggle : "var(--gray-toggle)",
+        iconGray : "#939393",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -27,6 +27,7 @@
   --primary-text: #222;
   --secondary-text: #2c2c2c;
   --board-file: #eeeeee;
+  --gray-toggle : #E2E2E2;
 }
 
 .dark {
@@ -54,6 +55,7 @@
   --primary-text: rgba(255, 255, 255, 0.9);
   --secondary-text: #c5c5c5;
   --board-file: #333;
+  --gray-toggle : #4B4B4B;
 }
 
 body {

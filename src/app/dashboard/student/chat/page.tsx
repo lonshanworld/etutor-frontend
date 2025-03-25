@@ -1,8 +1,5 @@
-import MainChat from "@/components/chat/MainChat";
-
-
 export default function ChatPage(){
     return (
-       <MainChat />
+        <p className="text-font text-xl capitalize w-full h-full flex justify-center items-center">Select a chat to start messaging.</p>
     );
 }

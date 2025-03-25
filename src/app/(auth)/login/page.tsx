@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/stores/useToast";
 import Toast from "@/components/customtoast/CustomToast";
+import { useUserStore } from "@/stores/useUserStore";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -30,6 +31,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const {setUser} = useUserStore();
 
   const {
     register,
@@ -50,6 +52,7 @@ export default function LoginPage() {
 
       await storeTokenInCookie(response.token);
       const user = await getProfile();
+      setUser(user);
 
       if (!user || !user.role) {
         throw new Error("Invalid user profile data");

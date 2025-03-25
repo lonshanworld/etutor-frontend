@@ -1,18 +1,17 @@
 import { create } from "zustand";
 
-type State = {
+// Define the type for the store
+interface LoadingStore {
   isLoading: boolean;
-};
+  showLoading: () => void;
+  hideLoading: () => void;
+}
 
-type Action = {
-  setLoading: (value: boolean) => void;
-};
-
-export const useLoading = create<State & Action>((set) => ({
+// Create the Zustand store with TypeScript support
+const useLoading = create<LoadingStore>((set) => ({
   isLoading: false,
-  setLoading: (value) => {
-    set((state) => ({
-      isLoading: state.isLoading,
-    }));
-  },
+  showLoading: () => set({ isLoading: true }),
+  hideLoading: () => set({ isLoading: false }),
 }));
+
+export default useLoading;

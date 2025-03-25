@@ -3,6 +3,7 @@ import MainChat from "@/components/chat/MainChat";
 
 export default function ChatPage(){
     return (
-       <MainChat />
+    //    <MainChat />
+        <div>hi</div>
     );
 }

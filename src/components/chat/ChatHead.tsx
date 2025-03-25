@@ -4,7 +4,13 @@ import { useRouter } from "next/navigation";
 import ProfileImageBox from "../ProfileImageBox";
 import { AppRouter } from "@/router";
 
-export default function ChatHead(){
+export default function ChatHead(
+    {
+        chat
+    } : {
+        chat : any
+    }
+){
     const router = useRouter();
 
     return (

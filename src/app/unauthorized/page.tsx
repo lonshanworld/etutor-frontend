@@ -7,7 +7,7 @@ export default function UnAuthorizedPage() {
   const router = useRouter();
 
   return (
-    <div className="w-svh h-svh flex flex-col justify-center items-center gap-4">
+    <div className="w-screen h-svh flex flex-col justify-center items-center gap-4">
       <span className="text-2xl font-bold text-font capitalize">
         you are not authenticated to view this page.
       </span>

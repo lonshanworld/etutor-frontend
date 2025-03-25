@@ -29,7 +29,7 @@ export default function DashboardLayout({
   }, []);
 
   return (
-    <div className="w-svh h-svh bg-background flex flex-col overflow-clip">
+    <div className="w-screen h-svh bg-background flex flex-col overflow-clip">
       {profilePopup && <ProfilePopup setProfilePopup={setProfilePopup} />}
 
       {profilePopup && (
@@ -39,7 +39,7 @@ export default function DashboardLayout({
         ></div>
       )}
       {profileDetailPopup && (
-        <UserDetail user={user} setShowDetail={setShowDetail} />
+        <UserDetail profileData={user} setShowDetail={setShowDetail} />
       )}
       {children}
     </div>

@@ -7,7 +7,7 @@ export default function ChatBoxPage(){
         <div
         className="w-full h-full relative">
             <div
-            className="absolute top-0 left-0 right-0 bottom-0 flex flex-col sm:py-4 py-2 px-4">
+            className="absolute top-0 left-0 right-0 bottom-0 flex flex-col pt-4 sm:pt-0 px-4 sm:pr-0">
                 <ChatProfle />
                 <div
                     className="py-3">

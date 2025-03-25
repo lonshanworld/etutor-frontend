@@ -30,6 +30,14 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePassword } from "@/api/services/getProfile";
 import { useToast } from "@/stores/useToast";
+import Image from "next/image";
+import MessageIcon from "@/assets/svgs/chat.svg";
+import { useRouter } from "next/navigation";
+import { AppRouter } from "@/router";
+import useLoading from "@/stores/useLoading";
+import { createConversation } from "../../../convex/chatRoom";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export type UserType = {
   label: string;
@@ -41,10 +49,10 @@ type ErrorType = {
 };
 
 export default function UserProfile({
-  user,
+  profileData,
   setShowDetail,
 }: {
-  user: Profile | null;
+  profileData: Profile | null;
   setShowDetail: any;
 }) {
   const { showDetail, setProfileDetailPopup } = useUserStore();
@@ -54,6 +62,9 @@ export default function UserProfile({
   const [tabs, setTabs] = useState<string[]>([]);
   const [about, setAbout] = useState<UserType[] | null>(null);
   const [info, setInfo] = useState<UserType[] | null>(null);
+  const router = useRouter();
+  const {showLoading, hideLoading} = useLoading();
+  const {user} = useUserStore();
 
   const {
     register,
@@ -64,12 +75,14 @@ export default function UserProfile({
     resolver: zodResolver(ChangePasswordSchema),
   });
 
-  const otherUserAbout: UserType[] = getOtherUserAbout(user);
-  const currentUserAbout: UserType[] = getCurrentUserAbout(user);
-  const emgContacts: UserType[] = getEmgContact(user);
-  const staffInfo: UserType[] = getStaffInfo(user);
-  const studentInfo: UserType[] = getStudentInfo(user);
-  const tutorInfo: UserType[] = getTutorInfo(user);
+  const otherUserAbout: UserType[] = getOtherUserAbout(profileData);
+  const currentUserAbout: UserType[] = getCurrentUserAbout(profileData);
+  const emgContacts: UserType[] = getEmgContact(profileData);
+  const staffInfo: UserType[] = getStaffInfo(profileData);
+  const studentInfo: UserType[] = getStudentInfo(profileData);
+  const tutorInfo: UserType[] = getTutorInfo(profileData);
+  const createConversation = useMutation(api.chatRoom.createConversation)
+  
 
   const getInfoName = (role: any) => {
     switch (role) {
@@ -87,7 +100,7 @@ export default function UserProfile({
   const tutorTabs = [tabLabels.aboutMe, tabLabels.tutorInfo];
   const profileTabs = [
     tabLabels.about,
-    getInfoName(user?.role) ?? "",
+    getInfoName(profileData?.role) ?? "",
     tabLabels.changePassword,
   ];
 
@@ -99,23 +112,23 @@ export default function UserProfile({
     } else {
       setAbout(otherUserAbout);
       setActiveTab(tabLabels.aboutMe);
-      if (user?.role === UserRole.staff) {
+      if (profileData?.role === UserRole.staff) {
         setTabs(staffTabs);
-      } else if (user?.role === UserRole.tutor) {
+      } else if (profileData?.role === UserRole.tutor) {
         setTabs(tutorTabs);
-      } else if (user?.role === UserRole.student) {
+      } else if (profileData?.role === UserRole.student) {
         setTabs(studentTabs);
       }
     }
 
-    if (user?.role === UserRole.staff) {
+    if (profileData?.role === UserRole.staff) {
       setInfo(staffInfo);
-    } else if (user?.role === UserRole.tutor) {
+    } else if (profileData?.role === UserRole.tutor) {
       setInfo(tutorInfo);
-    } else if (user?.role === UserRole.student) {
+    } else if (profileData?.role === UserRole.student) {
       setInfo(studentInfo);
     }
-  }, [user, showDetail]);
+  }, [profileData, showDetail]);
 
   const onSubmit: SubmitHandler<any> = async (data, e: any) => {
     const body = {
@@ -135,28 +148,72 @@ export default function UserProfile({
     }
   };
 
-  if (!user) return <div>Loading...</div>;
+  if (!profileData) return <div>Loading...</div>;
   return (
     <div>
       <div
         className={twMerge(
-          "fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]  bg-background z-20 sm:rounded-lg max-sm:w-svh max-sm:h-svh overflow-auto",
+          "fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]  bg-background z-20 sm:rounded-lg max-sm:w-screen max-sm:h-svh overflow-auto shadow-lg",
           showDetail
             ? "w-[90%] md:w-[500px] min-h-[600px]"
             : "w-[90%] lg:w-[800px] h-[500px]"
         )}
       >
-        <div className="h-[80px] bg-theme w-full sm:rounded-t-lg"></div>
-        {!user && (
+        <div className="h-[80px] bg-theme w-full sm:rounded-t-lg relative">
+          {
+           ( profileData && user?.role !== "staff" && user?.role !== "admin") && <button
+           onClick={async()=>{
+              if(user && profileData){
+                showLoading();
+             const chatId = await createConversation({
+                user1 : {
+                  userId : user.id,
+                  firstName : user.firstName!,
+                  middleName : user.middleName,
+                  lastName : user.lastName,
+                  email : user.email,
+                  role : user.role!,
+                  profileImagePath : user.profileImagePath,
+                  gender : user.gender,
+                },
+                user2 :  {
+                  userId : profileData.id,
+                  firstName : profileData.firstName!,
+                  middleName : profileData.middleName,
+                  lastName : profileData.lastName,
+                  email : profileData.email,
+                  role : profileData.role!,
+                  profileImagePath : profileData.profileImagePath,
+                  gender : profileData.gender,
+                },
+              });
+              hideLoading();
+              router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+              }
+           }}
+           className="absolute flex flex-row justify-center items-center gap-3 -bottom-5 right-[60px] bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2">
+             <div
+             className="relative w-7 h-7 opacity-80">
+               <Image 
+               src={MessageIcon}
+               alt="Message"
+               fill={true}
+               />
+             </div>
+             <span className="text-base text-iconGray">Message</span>
+           </button>
+          }
+        </div>
+        {!profileData && (
           <div className="text-2xl text-center mt-40">User Not Found</div>
         )}
-        {user && (
+        {profileData && (
           <div>
             {/* profile photo */}
             <div className="absolute top-6 left-[60px]">
-              {user.profileImagePath ? (
+              {profileData.profileImagePath ? (
                 <img
-                  src={user?.profileImagePath ?? UserIcon.src}
+                  src={profileData?.profileImagePath ?? UserIcon.src}
                   className="w-[100px] h-[100px]"
                   alt=""
                 />
@@ -174,17 +231,17 @@ export default function UserProfile({
             >
               <div className="flex gap-5 items-center">
                 <h1 className="text-2xl text-profileHeading font-bold">
-                  {user.firstName +
+                  {profileData.firstName +
                     " " +
-                    (user.middleName ?? "") +
+                    (profileData.middleName ?? "") +
                     " " +
-                    user.lastName}
+                    profileData.lastName}
                 </h1>
                 {showDetail && (
                   <div className="flex gap-2 items-center mt-1">
-                    <StatusIcon status={user.status} activeDays={0} />
+                    <StatusIcon status={profileData.status} activeDays={0} />
                     <span className="font-bold text-gray-500">
-                      {user.status}
+                      {profileData.status}
                     </span>
                   </div>
                 )}
@@ -194,12 +251,12 @@ export default function UserProfile({
                 <div className="flex flex-wrap mt-5 gap-x-20 gap-y-3 font-bold text-profileText text-sm">
                   <div className="flex gap-2">
                     <img src={Email.src} className="w-5 h-5" alt="" />
-                    {user.email}
+                    {profileData.email}
                   </div>
-                  {user.phoneNumber && (
+                  {profileData.phoneNumber && (
                     <div className="flex gap-2">
                       <img src={Phone.src} className="w-5 h-5" alt="" />
-                      {user.phoneNumber}
+                      {profileData.phoneNumber}
                     </div>
                   )}
                 </div>
@@ -335,7 +392,7 @@ export default function UserProfile({
         </div>
       </div>
       <div
-        className="fixed bg-black/70 z-[15] top-0 left-0 w-svh h-svh"
+        className="fixed bg-black/70 z-[15] top-0 left-0 w-screen h-svh"
         onClick={() => {
           setProfileDetailPopup(false);
           setShowDetail(false);
