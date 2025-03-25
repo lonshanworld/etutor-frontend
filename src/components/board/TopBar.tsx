@@ -14,17 +14,31 @@ const TopBar = ({
   selectedSection,
   viewNewPost,
 }: TopBarProps) => {
+  // Scroll to top function
+  const scrollToTop = () => {
+    const container = document.getElementById("postContainer");
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // handle Post button
+  const handlePost = () => {
+    onSelectSection("post");
+    scrollToTop();
+  };
+
   return (
-    <div className='flex items-center md:w-1/2 w-full justify-between md:pr-2 sticky bg-secondaryBackground top-0 z-10 px-6 max-md:px-4 py-2 min-h-[56px]'>
-      <div className='flex gap-4'>
-        <div className='flex text-xl gap-4'>
+    <div className='flex items-center md:w-1/2 w-full justify-between md:px-2  bg-secondaryBackground  max-md:px-4 py-2 absolute top-0 left-0'>
+      <div className='flex gap-4 h-full'>
+        <div className='flex items-baseline text-xl gap-4 h-full'>
           <div
             className={`p-1 cursor-pointer border-b-2 ${
               selectedSection === "post"
                 ? "border-b-theme text-theme"
                 : "text-secondaryText border-transparent"
             }`}
-            onClick={() => onSelectSection("post")}
+            onClick={handlePost}
           >
             Post
           </div>
@@ -41,13 +55,18 @@ const TopBar = ({
         </div>
       </div>
       {selectedSection === "post" && (
-        <div
-          className=''
-          onClick={viewNewPost}
-        >
+        <div onClick={viewNewPost}>
           <Button
             size='lg'
             variant='default'
+            className='max-md:hidden'
+          >
+            <FiEdit /> POST
+          </Button>
+          <Button
+            size='default'
+            variant='default'
+            className='md:hidden'
           >
             <FiEdit /> POST
           </Button>
