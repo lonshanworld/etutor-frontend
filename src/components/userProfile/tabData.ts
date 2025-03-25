@@ -52,6 +52,6 @@ export function getTutorInfo(user: Profile | null) {
   return [
     { label: dataLabels.subject, value: user?.info?.subject_id },
     { label: dataLabels.qualifications, value: user?.info?.qualifications },
-    { label: dataLabels.experience, value: user?.info?.experience },
+    { label: dataLabels.experience, value: user?.info?.experience + " years" },
   ];
 }

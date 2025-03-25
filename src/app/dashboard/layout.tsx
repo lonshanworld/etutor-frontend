@@ -29,7 +29,7 @@ export default function DashboardLayout({
   }, []);
 
   return (
-    <div className="w-screen h-svh bg-background flex flex-col overflow-clip">
+    <div className="w-svw h-svh bg-background flex flex-col overflow-clip">
       {profilePopup && <ProfilePopup setProfilePopup={setProfilePopup} />}
 
       {profilePopup && (
