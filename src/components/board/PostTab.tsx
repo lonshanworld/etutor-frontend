@@ -4,11 +4,10 @@ import logo from "@/assets/images/unilogo-without-text.png";
 import { feedData, likedUserData } from "@/components/board/data";
 import Post from "@/components/board/UserPost";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import LikeModal from "./modals/LikeModal";
-import { FaArrowUp } from "react-icons/fa";
 
 const PostTab = () => {
   const [selectedPost, setSelectedPost] = useState<any>(null);
@@ -77,9 +76,9 @@ const PostTab = () => {
         />
       )}
 
-      <div className='flex md:gap-1 pt-1 h-auto overflow-hidden w-full'>
+      <div className='flex h-auto overflow-hidden w-full'>
         {/* Main Board */}
-        <div className='md:basis-1/2 md:px-1 h-auto pt-14'>
+        <div className='md:basis-1/2 md:pr-2 h-auto pt-16 mt-2'>
           <div
             id='postContainer'
             className='flex flex-col md:gap-3 gap-1.5 h-full overflow-y-auto scrollbar-none pb-4'
@@ -109,12 +108,16 @@ const PostTab = () => {
         </div>
 
         {/* <VerticalDivider /> */}
-        <div className='w-[2px] h-full bg-cusGray2 bg-opacity-10 max-md:hidden'></div>
+        <div
+          className={`w-[2px] h-full  bg-opacity-50 max-md:hidden z-10 ${
+            selectedPost ? "bg-transparent" : "bg-background"
+          }`}
+        ></div>
 
         {/* Post Details */}
-        <div className='md:basis-1/2 md:block h-full bg-secondaryBackground z-10 y-auto scrollbar-none relative'>
+        <div className='md:basis-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative'>
           <div
-            className={`flex h-full w-full opacity-30 items-center justify-center z-0 absolute`}
+            className={`flex h-full w-full opacity-logo items-center justify-center z-0 absolute `}
           >
             <Image
               src={logo}
@@ -123,7 +126,7 @@ const PostTab = () => {
           </div>
 
           <div
-            className={`fixed max-md:top-[57px] left-0 w-full h-full bg-secondaryBackground z-10 md:px-1 pb-2.5 overflow-y-auto scrollbar-none md:relative md:basis-1/2 md:block transition-transform duration-500 ease-in-out transform ${
+            className={`fixed max-md:top-[57px] md:pt-3 left-0 w-full h-full bg-secondaryBackground z-10 md:px-1 pb-2.5 overflow-y-auto scrollbar-none md:relative md:basis-1/2 md:block transition-transform duration-500 ease-in-out transform ${
               selectedPost && !isClosing
                 ? "translate-x-0 opacity-100"
                 : "translate-x-full md:opacity-100"
@@ -132,7 +135,7 @@ const PostTab = () => {
             {selectedPost && (
               <>
                 {/* Back button for mobile */}
-                <div className='max-md:sticky bg-background top-0 left-0 right-0 pb-1 p-3'>
+                <div className='max-md:sticky bg-background top-0 left-0 right-0 p-3'>
                   <button
                     className='flex items-center gap-2 text-gray-500 md:hover:text-gray-800'
                     onClick={handleClose}

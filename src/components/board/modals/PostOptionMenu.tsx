@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
+"use client";
+
+import { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-import { MdDeleteOutline, MdOutlineDelete } from "react-icons/md";
-import { RiDeleteBinLine } from "react-icons/ri";
 
 interface Props {
   onEdit: () => void;

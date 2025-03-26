@@ -30,7 +30,7 @@ const ImageModal = ({
   if (!mounted || selectedIndex === null) return null;
 
   return createPortal(
-    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center z-50'>
+    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center z-50 select-none'>
       <button
         className='text-white absolute md:top-4 md:right-4 top-2 max-md:left-2 hover:bg-gray-500 p-2 rounded-full'
         onClick={onClose}

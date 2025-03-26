@@ -27,6 +27,7 @@
   --primary-text: #222;
   --secondary-text: #3a3a3a;
   --board-file: #eeeeee;
+  --logo-opacity: 30%;
 }
 
 .dark {
@@ -54,6 +55,7 @@
   --primary-text: rgba(255, 255, 255, 0.9);
   --secondary-text: #c5c5c5;
   --board-file: #333;
+  --logo-opacity: 10%;
 }
 
 body {

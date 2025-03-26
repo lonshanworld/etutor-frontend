@@ -99,6 +99,9 @@ export default {
         md: "0.9375rem", // 15px
         "xl-2": "1.375rem", // 22px
       },
+      opacity: {
+        logo: "var(--logo-opacity)",
+      },
     },
   },
   plugins: [

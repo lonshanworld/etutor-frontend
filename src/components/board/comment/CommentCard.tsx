@@ -28,7 +28,7 @@ const CommentCard = ({ username, profilePic, time, comment }: Props) => {
             <p className='font-semibold'>{username}</p>
             <p className='text-xsm'>{time}</p>
           </div>
-          <div className='bg-boardFile p-2 rounded-sm text-md break-words'>
+          <div className='bg-boardFile p-2 rounded-sm break-words'>
             {comment}
           </div>
         </div>
