@@ -31,7 +31,7 @@ export default function MobileSideBar({
             <LogoBox />
           </div>
 
-          <div className="w-full px-2 py-3">
+          <div className="w-full pr-4 py-3">
             <SideBarContainer />
           </div>
         </div>

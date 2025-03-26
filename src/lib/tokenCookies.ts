@@ -29,6 +29,14 @@ export async function storeRoleInCookie(roleTxt?: string) {
   }
 }
 
+export async function getTokenCookies() : Promise<{sessionToken : any, role : any}> {
+  const cookieStore = await cookies();
+    const sessionToken = cookieStore.get("sessionToken")?.value;
+    const role = cookieStore.get("role")?.value;
+  
+    return { sessionToken, role };
+}
+
 export async function deleteTokensInCookie() {
   const cookieStore = await cookies();
   cookieStore.delete("sessionToken");

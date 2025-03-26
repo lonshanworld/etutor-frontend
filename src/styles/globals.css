@@ -154,6 +154,10 @@ body {
 @layer utilities {
   .custom-scrollbar {
     @apply [&::-webkit-scrollbar]:w-1.5
+           [&::-webkit-scrollbar]:h-1.5
+           [&::-webkit-scrollbar]:bg-transparent
+           [&::-webkit-scrollbar-track]:w-1.5
+           [&::-webkit-scrollbar-track]:h-1.5
            [&::-webkit-scrollbar-track]:rounded-full
            [&::-webkit-scrollbar-track]:bg-gray-100
            [&::-webkit-scrollbar-thumb]:rounded-full

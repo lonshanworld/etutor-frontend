@@ -5,12 +5,16 @@ import ChatTitle from "@/components/chat/ChatTitle";
 import SearchUser from "@/components/chat/SearchUser";
 import VerticalDivider from "@/components/dividers/VerticalDivider";
 import { AppRouter } from "@/router";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { usePathname } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import { Profile } from "@/model/profile";
+import { Cursor } from "convex/server";
+
+
+const itemCount = 10;
 
 export default function MainChat({
     children,
@@ -20,14 +24,11 @@ export default function MainChat({
     userData : Profile, 
   }>){
     const pathName = usePathname();
-    const [paginationOpts, setPaginationOpts] = useState({
-        numItems: 10, 
-        cursor : null,
-      });
-      const getChatHeadList = useQuery(api.chatRoom.getConversationsWithLatestMessage, {
-        userId: userData.id ?? 0, // Replace with actual userId
-        paginationOpts,
-      });
+    const { results, isLoading,status, loadMore } = usePaginatedQuery(
+      api.chatRoom.getConversationsWithLatestMessage, 
+      {userId : userData.id}, 
+      {initialNumItems: itemCount}
+    );
 
     return (
         <div
@@ -46,37 +47,34 @@ export default function MainChat({
                     <ChatTitle />
                     <SearchUser />
                     <div className="w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar">
-            {getChatHeadList?.page?.length === 0 ? (
-              <div className="text-center text-gray-500 py-4">
-                No conversations yet. <br />
-                <span className="text-theme font-medium">Search people</span> and start chatting!
-              </div>
-            ) : (
-              getChatHeadList?.page.map((chat) => (
-                <ChatHead key={chat._id} chat={chat} />
-              ))
-            )}
+                    {status === "LoadingFirstPage" && <span className="w-full flex justify-center items-center text-gray-500">Loading chats...</span>}
 
-            {/* Load More Button */}
-            {getChatHeadList?.page.length && getChatHeadList?.page.length > 0 && (
-              <button
-                className="p-2 bg-theme text-white rounded"
-                onClick={() =>
-                  setPaginationOpts((prev) => ({
-                    ...prev,
-                    cursor: null, // Adjust logic here if a continuation mechanism is implemented
-                  }))
-                }
-              >
-                Load More
-              </button>
-            )}
-            {getChatHeadList?.page?.length === 0 && (
-              <div className="text-center text-gray-500 py-4">
-                🎉 End of chats. Keep the conversation going!
-              </div>
-            )}
-          </div>
+                    {!isLoading && results?.length === 0 ? (
+                      <div className="text-center text-gray-500 py-4">
+                        No conversations yet. <br />
+                        <span className="text-theme font-medium">Search people</span> and start chatting!
+                      </div>
+                    ) : (
+                      results?.map((chat) => <ChatHead key={chat._id} chat={chat} />)
+                    )}
+
+                    {/* Load More Button */}
+                    {status !== "Exhausted" && (
+                      <button
+                        className="p-2 bg-theme text-white rounded"
+                        onClick={() => loadMore(itemCount)} // Load 10 more chats
+                      >
+                        Load More
+                      </button>
+                    )}
+
+                    {/* End of Chats Message */}
+                    {!isLoading && status === "Exhausted" && results?.length > 0 && (
+                      <div className="text-center text-gray-500 py-4">
+                        🎉 End of chats. Keep the conversation going!
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div
                 className="hidden sm:block">
@@ -98,38 +96,35 @@ export default function MainChat({
                     <ChatTitle />
                     <SearchUser />
                     <div className="w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar">
-            {getChatHeadList?.page?.length === 0 ? (
-              <div className="text-center text-gray-500 py-4">
-                No conversations yet. <br />
-                <span className="text-blue-500 font-medium">Search people</span> and start chatting!
-              </div>
-            ) : (
-              getChatHeadList?.page.map((chat) => (
-                <ChatHead key={chat._id} chat={chat} />
-              ))
-            )}
+                    {status === "LoadingFirstPage" && <p>Loading chats...</p>}
 
-            {/* Load More Button */}
-            {getChatHeadList?.continueCursor ? (
-              <button
-                className="p-2 bg-blue-500 text-white rounded"
-                onClick={() =>
-                  setPaginationOpts((prev) => ({
-                    ...prev,
-                    cursor: null, // Fix: Set cursor properly
-                  }))
-                }
-              >
-                Load More
-              </button>
-            ) : (
-                getChatHeadList?.page.length && getChatHeadList?.page.length > 0 && (
-                <div className="text-center text-gray-500 py-4">
-                  🎉 End of chats. Keep the conversation going!
-                </div>
-              )
-            )}
-          </div>
+                    {results?.length === 0 ? (
+                      <div className="text-center text-gray-500 py-4">
+                        No conversations yet. <br />
+                        <span className="text-theme font-medium">Search people</span> and start chatting!
+                      </div>
+                    ) : (
+                      results?.map((chat) => <ChatHead key={chat._id} chat={chat} />)
+                    )}
+
+                    {/* Load More Button */}
+                    {status !== "Exhausted" && (
+                      <button
+                        className="p-2 bg-theme text-white rounded"
+                        onClick={() => loadMore(itemCount)} // Load 10 more chats
+                      >
+                        Load More
+                      </button>
+                    )}
+
+                    {/* End of Chats Message */}
+                    {status === "Exhausted" && results?.length > 0 && (
+                      <div className="text-center text-gray-500 py-4">
+                        🎉 End of chats. Keep the conversation going!
+                      </div>
+                    )}
+                  </div>
+
                 </div>
                 <div
                 className="hidden sm:block">

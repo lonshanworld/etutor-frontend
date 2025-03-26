@@ -88,3 +88,21 @@ export const getConversationsWithLatestMessage = query({
     return { ...conversations, page: conversationList };
   },
 });
+
+export const getConversation = query({
+  args : {
+    id : v.optional(v.id("conversations")),
+  },
+  handler :async(ctx, args)=> {
+    if(args.id){
+      try{
+        const conversation = await ctx.db.get(args.id);
+        return conversation;
+      }catch(err){
+        return undefined;
+      }
+    }else{
+      return undefined;
+    }
+  }
+});
