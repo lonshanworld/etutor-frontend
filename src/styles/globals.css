@@ -25,8 +25,10 @@
   --profile-background: #ffffff;
   --error-message: #f87171;
   --primary-text: #222;
-  --secondary-text: #2c2c2c;
+  --secondary-text: #3a3a3a;
   --board-file: #eeeeee;
+  --gray-toggle : #E2E2E2;
+  --logo-opacity: 30%;
 }
 
 .dark {
@@ -54,6 +56,8 @@
   --primary-text: rgba(255, 255, 255, 0.9);
   --secondary-text: #c5c5c5;
   --board-file: #333;
+  --gray-toggle : #4B4B4B;
+  --logo-opacity: 10%;
 }
 
 body {
@@ -152,6 +156,10 @@ body {
 @layer utilities {
   .custom-scrollbar {
     @apply [&::-webkit-scrollbar]:w-1.5
+           [&::-webkit-scrollbar]:h-1.5
+           [&::-webkit-scrollbar]:bg-transparent
+           [&::-webkit-scrollbar-track]:w-1.5
+           [&::-webkit-scrollbar-track]:h-1.5
            [&::-webkit-scrollbar-track]:rounded-full
            [&::-webkit-scrollbar-track]:bg-gray-100
            [&::-webkit-scrollbar-thumb]:rounded-full

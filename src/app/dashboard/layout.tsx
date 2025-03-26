@@ -1,9 +1,7 @@
 "use client";
-import { getProfile } from "@/api/services/getProfile";
 import { useUserStore } from "@/stores/useUserStore";
 import ProfilePopup from "@/components/userProfile/ProfilePopup";
 import UserDetail from "@/components/userProfile/UserProfile";
-import { useEffect } from "react";
 
 export default function DashboardLayout({
   children,
@@ -12,24 +10,14 @@ export default function DashboardLayout({
 }>) {
   const {
     user,
-    setUser,
     setShowDetail,
     setProfilePopup,
     profilePopup,
     profileDetailPopup,
   } = useUserStore();
 
-  useEffect(() => {
-    async function getUser() {
-      const user = await getProfile();
-      setUser(user);
-      console.log("profile", user);
-    }
-    getUser();
-  }, []);
-
   return (
-    <div className="w-svh h-svh bg-background flex flex-col overflow-clip">
+    <div className="w-svw h-svh bg-background flex flex-col overflow-clip">
       {profilePopup && <ProfilePopup setProfilePopup={setProfilePopup} />}
 
       {profilePopup && (
@@ -39,7 +27,7 @@ export default function DashboardLayout({
         ></div>
       )}
       {profileDetailPopup && (
-        <UserDetail user={user} setShowDetail={setShowDetail} />
+        <UserDetail profileData={user} setShowDetail={setShowDetail} />
       )}
       {children}
     </div>

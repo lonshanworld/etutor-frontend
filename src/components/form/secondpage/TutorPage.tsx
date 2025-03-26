@@ -138,7 +138,7 @@ export default function TutorPage({ setPageForm }: Props) {
             date_of_birth: allUpdatedFields.dob,
             nationality: allUpdatedFields.nationality,
             gender: allUpdatedFields.gender,
-            // passport: allUpdatedFields.passportNo,
+            passport: allUpdatedFields.passportNo,
             address: allUpdatedFields.address,
             phone_number: allUpdatedFields.phoneNo,
             qualifications: allUpdatedFields.qualifications,

@@ -6,9 +6,7 @@ import Form from "@/components/form/Form";
 import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
 import { User, userFromJson, UserRole } from "@/model/user";
-import { useEffect } from "react";
-import { useLoading } from "@/stores/useLoading";
-import LoadingSpinner from "@/components/loadingspinner/LoadingSpinner";
+
 import { getTutors } from "@/api/services/tutors";
 import { AppRouter } from "@/router";
 

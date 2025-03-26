@@ -58,6 +58,7 @@ const ResetPasswordPage = () => {
       await resetPassword(email, formData.password, formData.repassword, otp);
 
       router.push(AppRouter.loginPage);
+      showToast("Password reset successfully", "success");
       return;
     } catch (error: any) {
       setError(

@@ -34,20 +34,10 @@ export default function SelectBox({
   watch,
   clearErrors,
 }: Options) {
-  const { updatePage, isUpdateFormRendered } = useFormStore();
+  const { updatePage } = useFormStore();
   const [isError, setIsError] = useState<string | undefined>(error);
-  const [selectedMajor, setSelectedMajor] = useState<string | undefined>(
-    undefined
-  );
 
   useEffect(() => {
-    console.log("selected value", selectedValue);
-  }, [selectedValue]);
-
-  useEffect(() => {
-    // if (selectedValue) {
-    //   setIsError(undefined);
-    // }
     setIsError(error);
   }, [error]);
 
@@ -69,19 +59,17 @@ export default function SelectBox({
       clearErrors(name); // ✅ clear error if value is present on load
     }
   }, [selectedValue]);
-  console.log("errors", error);
+
   return (
     <div>
       <Select
         onValueChange={(value) => {
-          // setSelectedMajor(value);
           if (value) {
             setIsError(undefined);
           }
           setValue(name, value);
         }}
-        {...(selectedValue ? { value: selectedValue } : {})}
-        // defaultValue={watch(name)}
+        value={selectedValue ? String(selectedValue) : undefined}
       >
         <SelectTrigger
           className={twMerge(

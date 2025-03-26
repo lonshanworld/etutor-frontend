@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import CommentInputField from "./CommentInputField";
 import PostComment from "./CommentCard";
 

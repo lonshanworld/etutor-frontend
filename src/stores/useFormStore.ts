@@ -154,7 +154,6 @@ export const useFormStore = create<State & Action>((set) => ({
         subject: data?.subject,
       },
     });
-    console.log("tutor", data);
   },
   setStaffData: (data) => {
     set({

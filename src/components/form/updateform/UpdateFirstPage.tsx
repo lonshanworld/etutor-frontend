@@ -176,6 +176,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
               <DayPicker
                 input="dob"
                 watch={watch}
+                value={formData.dob}
                 setValue={setValue}
                 register={register("dob", {
                   required: "DOB is required",

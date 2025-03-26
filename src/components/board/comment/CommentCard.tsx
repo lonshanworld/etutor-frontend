@@ -25,10 +25,10 @@ const CommentCard = ({ username, profilePic, time, comment }: Props) => {
 
         <div className='w-10/12 flex flex-col'>
           <div className='flex gap-2 items-center pb-3'>
-            <p className='font-semibold text-sm'>{username}</p>
-            <p className='text-xs'>{time}</p>
+            <p className='font-semibold'>{username}</p>
+            <p className='text-xsm'>{time}</p>
           </div>
-          <div className='bg-boardFile p-2 rounded-sm text-sm break-words'>
+          <div className='bg-boardFile p-2 rounded-sm break-words'>
             {comment}
           </div>
         </div>

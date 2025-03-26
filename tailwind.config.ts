@@ -82,6 +82,8 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        grayToggle : "var(--gray-toggle)",
+        iconGray : "#939393",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -95,6 +97,12 @@ export default {
       },
       fontSize: {
         xss: "0.65rem",
+        xsm: "0.8125rem", // 13px
+        md: "0.9375rem", // 15px
+        "xl-2": "1.375rem", // 22px
+      },
+      opacity: {
+        logo: "var(--logo-opacity)",
       },
     },
   },

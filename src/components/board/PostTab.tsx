@@ -1,27 +1,26 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { FiEdit } from "react-icons/fi";
-import Post from "@/components/board/UserPost";
 import logo from "@/assets/images/unilogo-without-text.png";
-import Image from "next/image";
-import PostComment from "@/components/board/comment/CommentCard";
-import CommentInputField from "@/components/board/comment/CommentInputField";
-import { IoArrowBack } from "react-icons/io5";
-import NewPostPopup from "@/components/board/modals/NewPostModal";
-import { RxCross1 } from "react-icons/rx";
-import CommentSection from "@/components/board/comment/CommentSection";
-import TopBar from "@/components/board/TopBar";
 import { feedData, likedUserData } from "@/components/board/data";
+import Post from "@/components/board/UserPost";
+import Image from "next/image";
+import { useState } from "react";
+import { IoArrowBack } from "react-icons/io5";
+import { RxCross1 } from "react-icons/rx";
 import LikeModal from "./modals/LikeModal";
-import VerticalDivider from "../dividers/VerticalDivider";
 
 const PostTab = () => {
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const [posts, setPosts] = useState(feedData);
   const [isLikedModalOpen, setLikeModalOpen] = useState(false);
   const [isClosing, setClosing] = useState(false);
+
+  const scrollToTop = () => {
+    const container = document.getElementById("postContainer");
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const handleClose = () => {
     setClosing(true);
@@ -77,12 +76,13 @@ const PostTab = () => {
         />
       )}
 
-      <div className='flex gap-1 h-svh md:px-5 py-3 tracking-wide'>
+      <div className='flex h-auto overflow-hidden w-full'>
         {/* Main Board */}
-        <div
-          className={`md:basis-1/2 md:pr-1 overflow-y-auto max-h-svh scrollbar-none`}
-        >
-          <div className='flex flex-col gap-5 pb-32 overflow-y-auto'>
+        <div className='md:basis-1/2 md:pr-2 h-auto pt-16 mt-2'>
+          <div
+            id='postContainer'
+            className='flex flex-col md:gap-3 gap-1.5 h-full overflow-y-auto scrollbar-none pb-4'
+          >
             {/* Posts */}
             {posts.map((post) => (
               <Post
@@ -108,12 +108,16 @@ const PostTab = () => {
         </div>
 
         {/* <VerticalDivider /> */}
-        <div className='w-[2px] h-full bg-cusGray2 bg-opacity-20'></div>
+        <div
+          className={`w-[2px] h-full  bg-opacity-50 max-md:hidden z-10 ${
+            selectedPost ? "bg-transparent" : "bg-background"
+          }`}
+        ></div>
 
         {/* Post Details */}
-        <div className='md:basis-1/2 md:block h-full bg-secondaryBackground z-10 y-auto scrollbar-none relative'>
+        <div className='md:basis-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative'>
           <div
-            className={`flex h-full w-full opacity-30 items-center justify-center z-0 absolute`}
+            className={`flex h-full w-full opacity-logo items-center justify-center z-0 absolute `}
           >
             <Image
               src={logo}
@@ -122,13 +126,13 @@ const PostTab = () => {
           </div>
 
           <div
-            className={`fixed top-[-67px] max-md:top-[57px] left-0 w-full h-full bg-secondaryBackground z-10 md:px-2.5 md:pt-2 pb-2.5 md:pb-20 overflow-y-auto scrollbar-none md:relative md:basis-1/2 md:block transition-transform duration-500 ease-in-out transform ${
+            className={`fixed max-md:top-[57px] md:pt-3 left-0 w-full h-full bg-secondaryBackground z-10 md:px-1 pb-2.5 overflow-y-auto scrollbar-none md:relative md:basis-1/2 md:block transition-transform duration-500 ease-in-out transform ${
               selectedPost && !isClosing
                 ? "translate-x-0 opacity-100"
                 : "translate-x-full md:opacity-100"
             }`}
           >
-            {selectedPost ? (
+            {selectedPost && (
               <>
                 {/* Back button for mobile */}
                 <div className='max-md:sticky bg-background top-0 left-0 right-0 p-3'>
@@ -164,19 +168,6 @@ const PostTab = () => {
                   viewLike={() => setLikeModalOpen(true)}
                 />
               </>
-            ) : (
-              <div
-                className={`flex h-full ${
-                  selectedPost
-                    ? "flex-col  overflow-y-auto"
-                    : "opacity-30 items-center justify-center"
-                } `}
-              >
-                <Image
-                  src={logo}
-                  alt='Logo'
-                />
-              </div>
             )}
           </div>
         </div>

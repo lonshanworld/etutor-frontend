@@ -25,10 +25,10 @@ export const DayPicker = ({
 
   useEffect(() => {
     if (value) {
-      console.log(value);
       setCurrentDate(value);
     }
   }, [value]);
+  console.log("selected date", value);
 
   return (
     <div>
@@ -45,7 +45,7 @@ export const DayPicker = ({
             "px-8 border-[1px] w-full min-w-[150px] h-[45px] bg-transparent rounded-md flex items-center focus:outline-none focus:ring-1"
           )}
           selected={parsedDate} // Watch the dob value from react-hook-form
-          value={currentDate}
+          value={currentDate || ""}
           onChange={(date: Date | null) => {
             setDate(date);
             setCurrentDate(date);

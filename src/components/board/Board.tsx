@@ -3,8 +3,8 @@
 import { useState } from "react";
 import PostSection from "./PostTab";
 import FileSection from "./FileTab";
-import TopBar from "./TopBar";
 import NewPostPopup from "./modals/NewPostModal";
+import NavBar from "./NavBar";
 
 const Board = () => {
   const [selectedSection, setSelectedSection] = useState<"post" | "file">(
@@ -13,14 +13,18 @@ const Board = () => {
   const [isNewPostModalOpen, setNewPostModalOpen] = useState(false);
 
   return (
-    <>
-      <div className='flex flex-col md:pt-2 max-h-svh pt-2'>
-        <TopBar
-          viewNewPost={() => setNewPostModalOpen(true)}
-          selectedSection={selectedSection}
-          onSelectSection={setSelectedSection}
-        />
+    <div className='w-full h-full relative'>
+      <div className='flex flex-col absolute top-0 left-0 right-0 bottom-0 md:pl-4 px-0 h-full'>
+        <div className='relative'>
+          <NavBar
+            viewNewPost={() => setNewPostModalOpen(true)}
+            selectedSection={selectedSection}
+            onSelectSection={setSelectedSection}
+          />
+        </div>
+
         {selectedSection === "post" ? <PostSection /> : <FileSection />}
+
         {isNewPostModalOpen && (
           <NewPostPopup
             onClose={() => setNewPostModalOpen(false)}
@@ -29,7 +33,7 @@ const Board = () => {
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 
