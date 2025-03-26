@@ -30,7 +30,7 @@ export default function LoginPage() {
   const { isError, setError } = errorStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  const { toast, showToast } = useToast();
   const {setUser} = useUserStore();
 
   const {
@@ -72,6 +72,7 @@ export default function LoginPage() {
       } else {
         throw new Error("Invalid user role");
       }
+      showToast("Login successful", "success");
       return;
     } catch (error: any) {
       setError(
@@ -87,70 +88,70 @@ export default function LoginPage() {
   return (
     <>
       {isError && <ErrorPopup />}
-      <div className="h-svh w-svw overflow-clip flex items-center justify-center bg-login sm:px-4">
-        <div className="flex flex-col sm:flex-row justify-between bg-theme sm:bg-secondaryBackground sm:shadow-xl sm:rounded-3xl h-full w-full sm:w-full sm:max-w-[800px] sm:h-[583px] relative">
+      <div className='h-svh w-svw overflow-clip flex items-center justify-center bg-login sm:px-4'>
+        <div className='flex flex-col sm:flex-row justify-between bg-theme sm:bg-secondaryBackground sm:shadow-xl sm:rounded-3xl h-full w-full sm:w-full sm:max-w-[800px] sm:h-[583px] relative'>
           {/* Top Section */}
-          <div className="flex flex-col items-center justify-center w-full sm:w-1/2 bg-theme sm:rounded-l-3xl sm:p-6">
+          <div className='flex flex-col items-center justify-center w-full sm:w-1/2 bg-theme sm:rounded-l-3xl sm:p-6'>
             {/* Mobile Image */}
             <Image
               src={mobileImage}
-              alt="Login Illustration"
-              loading="lazy"
-              className="object-contain sm:hidden"
+              alt='Login Illustration'
+              loading='lazy'
+              className='object-contain sm:hidden'
             />
 
             {/* Desktop Image */}
             <Image
               src={desktopImage}
-              alt="Login Illustration"
-              className="w-[80%] object-contain hidden sm:block"
+              alt='Login Illustration'
+              className='w-[80%] object-contain hidden sm:block'
             />
           </div>
 
           {/* Middle Section */}
-          <div className="flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-6 py-7 sm:px-2 mx-5 sm:shadow-none shadow-cusShadow rounded-lg">
-            <div className="hidden sm:block absolute top-6 right-8">
+          <div className='flex flex-col justify-center items-start sm:w-1/2 bg-secondaryBackground px-6 py-7 sm:px-2 mx-5 sm:shadow-none shadow-cusShadow rounded-lg'>
+            <div className='hidden sm:block absolute top-6 right-8'>
               <ToggleTheme />
             </div>
 
-            <h2 className="text-4xl font-semibold text-primaryText">Login</h2>
+            <h2 className='text-4xl font-semibold text-primaryText'>Login</h2>
             <form
               onSubmit={handleSubmit(handleLogin)}
-              className="w-full mt-1 flex flex-col"
+              className='w-full mt-1 flex flex-col'
             >
-              <div className="mt-3.5 flex flex-col gap-3">
+              <div className='mt-3.5 flex flex-col gap-3'>
                 <InputFieldType1
-                  id="email"
-                  label="Email"
-                  type="email"
-                  ariaLabel="Enter your email here"
-                  placeholder="Enter Your Email"
+                  id='email'
+                  label='Email'
+                  type='email'
+                  ariaLabel='Enter your email here'
+                  placeholder='Enter Your Email'
                   register={register("email")}
                   error={errors.email?.message}
                 />
 
                 <InputFieldType1
-                  id="password"
-                  label="Password"
-                  type="password"
-                  ariaLabel="Enter your password here"
-                  placeholder="Enter Your Password"
+                  id='password'
+                  label='Password'
+                  type='password'
+                  ariaLabel='Enter your password here'
+                  placeholder='Enter Your Password'
                   register={register("password")}
                   error={errors.password?.message}
                 />
               </div>
-              <div className="flex justify-center mt-6">
+              <div className='flex justify-center mt-6'>
                 <Button
-                  text="Sign In"
-                  type="submit"
-                  ariaLabel="Sign in button"
+                  text='Sign In'
+                  type='submit'
+                  ariaLabel='Sign in button'
                   fullWidth={true}
                   disabled={loading}
                 />
               </div>
               <Link
-                href="/forget-password"
-                className="pt-2 text-xs text-center text-theme cursor-pointer hover:underline"
+                href='/forget-password'
+                className='pt-2 text-xs text-center text-theme cursor-pointer hover:underline'
               >
                 Forgot password?
               </Link>
@@ -158,14 +159,19 @@ export default function LoginPage() {
           </div>
 
           {/* Bottom Section */}
-          <div className="flex justify-between items-center w-full sm:w-auto p-6 sm:p-4 sm:absolute sm:top-0 sm:left:0">
-            <div className="sm:hidden">
+          <div className='flex justify-between items-center w-full sm:w-auto p-6 sm:p-4 sm:absolute sm:top-0 sm:left:0'>
+            <div className='sm:hidden'>
               <ToggleTheme />
             </div>
             <LogoBox />
           </div>
         </div>
-        {toast && <Toast message={toast?.message} type={toast?.type} />}
+        {toast && (
+          <Toast
+            message={toast?.message}
+            type={toast?.type}
+          />
+        )}
       </div>
     </>
   );

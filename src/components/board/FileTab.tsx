@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
-import TopBar from "./TopBar";
-import TableDemo from "../table/Table";
 import FileTable from "./FileTable";
 
 const FileTab = () => {
   return (
-    <div className='w-full h-svh sm:w-[97%] mx-4 mt-4 min-h-svh overflow-y-auto'>
-      <FileTable />
+    <div className='w-full h-full sm:w-[99%] pt-16 mt-2'>
+      <div className='z-0 overflow-y-auto custom-scrollbar h-full'>
+        <FileTable />
+      </div>
     </div>
   );
 };

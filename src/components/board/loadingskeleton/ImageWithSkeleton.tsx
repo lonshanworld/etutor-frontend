@@ -9,7 +9,7 @@ const ImageWithSkeleton = ({ src, alt }: { src: string; alt: string }) => {
   return (
     <div className='relative w-full h-full'>
       {isLoading && (
-        <div className='absolute inset-0 bg-gray-300 animate-pulse rounded-md'></div>
+        <div className='absolute inset-0 bg-gray-300 animate-pulse md:rounded-md'></div>
       )}
       <Image
         src={src}
@@ -17,7 +17,7 @@ const ImageWithSkeleton = ({ src, alt }: { src: string; alt: string }) => {
         loading='lazy'
         width={600}
         height={400}
-        className={`object-cover w-full h-full rounded-md transition-opacity duration-300 ${
+        className={`object-cover w-full h-full md:rounded-md transition-opacity duration-300 ${
           isLoading ? "opacity-0" : "opacity-100"
         }`}
         onLoad={() => setIsLoading(false)}

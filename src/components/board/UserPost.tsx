@@ -1,16 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
-import { useEffect, useRef, useState } from "react";
 import { BiCommentDetail } from "react-icons/bi";
+import { BsThreeDots } from "react-icons/bs";
 import { FiFileText } from "react-icons/fi";
 import { VscOpenPreview } from "react-icons/vsc";
-import ImageModal from "./modals/ImageModal";
 import HorizontalDivider from "../dividers/HorizontalDivider";
 import CommentSection from "./comment/CommentSection";
 import ImageWithSkeleton from "./loadingskeleton/ImageWithSkeleton";
+import ImageModal from "./modals/ImageModal";
 import PostOptionsMenu from "./modals/PostOptionMenu";
 
 interface Props {
@@ -105,24 +105,24 @@ const UserPost = ({
   return (
     <div
       className={`bg-background pt-4 ${
-        isDetail ? "" : "shadow md:rounded-lg rounded-xl"
+        isDetail ? "" : "md:shadow md:rounded-md rounded-none"
       }`}
     >
       {/* Header Section */}
       <div className='flex justify-between pb-3 mx-4'>
         <div className='flex items-center gap-2'>
-          <div className='w-11 h-11 rounded-full overflow-hidden'>
+          <div className='w-10 h-10 rounded-full overflow-hidden'>
             <Image
               src={profilePic}
               alt={`${username}'s profile`}
-              width={48}
-              height={48}
+              width={40}
+              height={40}
               className='object-cover'
             />
           </div>
           <div>
             <p className='font-semibold text-primaryText'>{username}</p>
-            <p className='text-xs text-gray-500'>{time}</p>
+            <p className='text-xsm text-gray-500'>{time}</p>
           </div>
         </div>
         <PostOptionsMenu
@@ -135,10 +135,10 @@ const UserPost = ({
       <div className='mb-2'>
         <div className='mx-4 text-primaryText'>
           {/* Title */}
-          {title && <h3 className='text-lg font-semibold pb-1'>{title}</h3>}
+          {title && <h2 className='text-xl font-semibold pb-1'>{title}</h2>}
 
           {/* Content text */}
-          <p className='text-sm pb-3'>
+          <p className=' pb-3'>
             {contentToDisplay}
             {contentToggle && content.length > MAX_CONTENT_LENGTH && (
               <button
@@ -234,7 +234,7 @@ const UserPost = ({
                       size={24}
                       className='text-gray-600 flex-shrink-0'
                     />
-                    <div className='truncate w-full overflow-hidden whitespace-nowrap text-ellipsis'>
+                    <div className='truncate w-full overflow-hidden whitespace-nowrap text-ellipsis '>
                       {doc}
                     </div>
                   </div>
@@ -251,7 +251,7 @@ const UserPost = ({
 
       {/* Like and comment counts */}
       <div className='mx-4 mb-2 select-none'>
-        <div className='flex items-center justify-between text-sm text-primaryText'>
+        <div className='flex items-center justify-between text-secondaryText text-md'>
           <div
             className='flex items-center hover:underline cursor-pointer'
             onClick={viewLike}
@@ -277,7 +277,7 @@ const UserPost = ({
       <HorizontalDivider />
 
       {/* Like and comment button */}
-      <div className='flex py-3 justify-between mx-4 select-none'>
+      <div className='flex py-2 justify-between mx-4 select-none max-md:'>
         <div className='flex gap-10'>
           {/* Like btn */}
           <div
@@ -292,7 +292,7 @@ const UserPost = ({
             ) : (
               <AiOutlineLike size={20} />
             )}
-            <span className='font-semibold'>Like</span>
+            <span className=''>Like</span>
           </div>
           {/* Comment btn */}
           <div
@@ -300,7 +300,7 @@ const UserPost = ({
             onClick={isDetail ? undefined : viewDetail}
           >
             <BiCommentDetail size={20} />
-            <span className='font-semibold'>Comment</span>
+            <span className=''>Comment</span>
           </div>
         </div>
 
@@ -310,7 +310,8 @@ const UserPost = ({
             onClick={viewDetail}
           >
             <VscOpenPreview size={20} />
-            <span className='font-semibold'>View Full Post</span>
+            <span className='max-sm:hidden'>View Full Post</span>
+            <span className='sm:hidden'>View</span>
           </div>
         )}
       </div>

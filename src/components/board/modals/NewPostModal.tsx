@@ -1,12 +1,11 @@
 "use client";
 
-import InputFieldType1 from "../../inputfields/InputFieldType1";
+import Image from "next/image";
 import { CgAttachment } from "react-icons/cg";
 import { MdOutlineInsertPhoto } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
 import { TfiVideoClapper } from "react-icons/tfi";
 import { Button } from "../../ui/button";
-import { RxCross1 } from "react-icons/rx";
-import Image from "next/image";
 
 interface Props {
   profileUrl: string;
@@ -35,11 +34,11 @@ const NewPostModal = ({ profileUrl, username, onClose }: Props) => {
             </div>
           </div>
           <div
-            className='rounded-full p-1 cursor-pointer hover:bg-gray-300'
+            className='rounded-full p-2 cursor-pointer hover:bg-gray-400'
             onClick={onClose}
           >
-            <RxCross1
-              color='teal'
+            <RxCross2
+              className={`${"text-theme"}`}
               size={20}
             />
           </div>
