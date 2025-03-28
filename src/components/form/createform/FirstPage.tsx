@@ -91,7 +91,7 @@ export default function FirstPage({ setPageForm }: Props) {
             <InputField
               id="address"
               label="Address"
-              register={register("address", { required: false })}
+              register={register("address", { required: true })}
               type="text"
               error={{
                 name: errors.address ? "address" : null,
@@ -102,7 +102,7 @@ export default function FirstPage({ setPageForm }: Props) {
               id="nationality"
               label="Nationality"
               type="text"
-              register={register("nationality", { required: false })}
+              register={register("nationality", { required: true })}
               error={{
                 name: errors.nationality ? "nationality" : null,
                 message: errors?.nationality?.message,
@@ -131,6 +131,7 @@ export default function FirstPage({ setPageForm }: Props) {
               <DayPicker
                 input="dob"
                 watch={watch}
+                value={formData.dob}
                 setValue={setValue}
                 register={register("dob", {
                   required: "DOB is required",

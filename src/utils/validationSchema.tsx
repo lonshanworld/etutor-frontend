@@ -21,12 +21,20 @@ export const CreateFormSchema = z
     nationality: z
       .string()
       .min(2, { message: "Nationality field is required" }),
-    gender: z.string().min(1, { message: "Gender is required" }),
+    gender: z
+      .string()
+      .min(1, { message: "Gender is required" })
+      .refine((val) => val !== "", {
+        message: "Gender is required",
+      }),
     dob: z
       .string()
       .min(1, { message: "Date is required" })
       .refine((val) => !isNaN(Date.parse(val)), {
         message: "Invalid date format",
+      })
+      .refine((val) => val !== "", {
+        message: "Date is required",
       }),
     passportNo: z.string().nullable(),
     phoneNo: z.string().min(9, { message: "This is not a valid phone number" }),

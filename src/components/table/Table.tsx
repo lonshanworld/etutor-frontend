@@ -159,8 +159,13 @@ export default function TableDemo({
       console.log("deactivate", response);
       if (response.message === "success") {
         showToast("User Deactivated Successfully", "success");
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
         setShowWarning(false);
         setActiveRow(null, null);
+      } else {
+        showToast(response.errorText, "error");
       }
     } catch (error) {
       showToast("Error occurred while deactivating the user", "error");
@@ -181,12 +186,7 @@ export default function TableDemo({
               Activity Status
             </TableHead>
             <TableHead className="max-md:hidden">View</TableHead>
-            <TableHead
-              className={twMerge(
-                "max-sm:text-sm sm:rounded-tr-md",
-                user?.role === role && "md:hidden"
-              )}
-            >
+            <TableHead className="max-sm:text-sm sm:rounded-tr-md">
               Action
             </TableHead>
           </TableRow>
@@ -234,12 +234,7 @@ export default function TableDemo({
                     View Profile
                   </button>
                 </TableCell>
-                <TableCell
-                  className={twMerge(
-                    "flex justify-center items-center mt-1 h-[70px]",
-                    role === UserRole.staff && "md:hidden"
-                  )}
-                >
+                <TableCell className="flex justify-center items-center mt-1 h-[70px]">
                   <button
                     ref={(el) => {
                       if (menuRefs) menuRefs.current[user.id] = el;
@@ -280,20 +275,14 @@ export default function TableDemo({
               View Profile
             </li>
             <li
-              className={twMerge(
-                "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
-                selectedUser?.role === UserRole.staff ? "hidden" : ""
-              )}
+              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
               onClick={() => showEditForm(activeRowId)}
             >
               <FiEdit className="text-xl text-theme" />
               <span>Edit</span>
             </li>
             <li
-              className={twMerge(
-                "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
-                user?.id !== activeRowId && role === UserRole.staff && "hidden"
-              )}
+              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
               onClick={showWarningPopup}
             >
               <IoMdCloseCircleOutline className="text-xl text-red-500" />

@@ -63,8 +63,8 @@ export default function UserProfile({
   const [about, setAbout] = useState<UserType[] | null>(null);
   const [info, setInfo] = useState<UserType[] | null>(null);
   const router = useRouter();
-  const {showLoading, hideLoading} = useLoading();
-  const {user} = useUserStore();
+  const { showLoading, hideLoading } = useLoading();
+  const { user } = useUserStore();
 
   const {
     register,
@@ -75,14 +75,15 @@ export default function UserProfile({
     resolver: zodResolver(ChangePasswordSchema),
   });
 
+  console.log("profile data", profileData);
+
   const otherUserAbout: UserType[] = getOtherUserAbout(profileData);
   const currentUserAbout: UserType[] = getCurrentUserAbout(profileData);
   const emgContacts: UserType[] = getEmgContact(profileData);
   const staffInfo: UserType[] = getStaffInfo(profileData);
   const studentInfo: UserType[] = getStudentInfo(profileData);
   const tutorInfo: UserType[] = getTutorInfo(profileData);
-  const createConversation = useMutation(api.chatRoom.createConversation)
-  
+  const createConversation = useMutation(api.chatRoom.createConversation);
 
   const getInfoName = (role: any) => {
     switch (role) {
@@ -160,55 +161,54 @@ export default function UserProfile({
         )}
       >
         <div className="h-[80px] bg-theme w-full sm:rounded-t-lg relative">
-          {
-           ( profileData && user?.role !== "staff" && user?.role !== "admin") && <button
-           onClick={async()=>{
-              if(user && profileData){
-                showLoading();
-                try{
-                  const chatId = await createConversation({
-                    user1 : {
-                      userId : user.id,
-                      firstName : user.firstName!,
-                      middleName : user.middleName ?? undefined,
-                      lastName : user.lastName ?? undefined,
-                      email : user.email,
-                      role : user.role!,
-                      profileImagePath : user.profileImagePath ?? undefined,
-                      gender : user.gender,
-                    },
-                    user2 :  {
-                      userId : profileData.id,
-                      firstName : profileData.firstName!,
-                      middleName : profileData.middleName ?? undefined,
-                      lastName : profileData.lastName ?? undefined,
-                      email : profileData.email,
-                      role : profileData.role!,
-                      profileImagePath : profileData.profileImagePath ?? undefined,
-                      gender : profileData.gender,
-                    },
-                  });
-                  hideLoading();
-                  router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
-                }catch(err){
-                  hideLoading();
-                  showToast("Unexpected error occured. Please try again later", "Error");
+          {profileData && user?.role !== "staff" && user?.role !== "admin" && (
+            <button
+              onClick={async () => {
+                if (user && profileData) {
+                  showLoading();
+                  try {
+                    const chatId = await createConversation({
+                      user1: {
+                        userId: user.id,
+                        firstName: user.firstName!,
+                        middleName: user.middleName ?? undefined,
+                        lastName: user.lastName ?? undefined,
+                        email: user.email,
+                        role: user.role!,
+                        profileImagePath: user.profileImagePath ?? undefined,
+                        gender: user.gender,
+                      },
+                      user2: {
+                        userId: profileData.id,
+                        firstName: profileData.firstName!,
+                        middleName: profileData.middleName ?? undefined,
+                        lastName: profileData.lastName ?? undefined,
+                        email: profileData.email,
+                        role: profileData.role!,
+                        profileImagePath:
+                          profileData.profileImagePath ?? undefined,
+                        gender: profileData.gender,
+                      },
+                    });
+                    hideLoading();
+                    router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+                  } catch (err) {
+                    hideLoading();
+                    showToast(
+                      "Unexpected error occured. Please try again later",
+                      "Error"
+                    );
+                  }
                 }
-                
-              }
-           }}
-           className="absolute flex flex-row justify-center items-center gap-3 -bottom-5 right-[60px] bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2">
-             <div
-             className="relative w-7 h-7 opacity-80">
-               <Image 
-               src={MessageIcon}
-               alt="Message"
-               fill={true}
-               />
-             </div>
-             <span className="text-base text-iconGray">Message</span>
-           </button>
-          }
+              }}
+              className="absolute flex flex-row justify-center items-center gap-3 -bottom-5 right-[60px] bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2"
+            >
+              <div className="relative w-7 h-7 opacity-80">
+                <Image src={MessageIcon} alt="Message" fill={true} />
+              </div>
+              <span className="text-base text-iconGray">Message</span>
+            </button>
+          )}
         </div>
         {!profileData && (
           <div className="text-2xl text-center mt-40">User Not Found</div>

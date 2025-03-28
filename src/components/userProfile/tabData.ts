@@ -2,6 +2,7 @@ import { Profile } from "@/model/profile";
 import { dataLabels } from "./profileConstants";
 
 export function getOtherUserAbout(user: Profile | null) {
+  // console.log("other user", user);
   return [
     { label: dataLabels.dob, value: user?.dateOfBirth },
     { label: dataLabels.gender, value: user?.gender },
@@ -12,6 +13,8 @@ export function getOtherUserAbout(user: Profile | null) {
 }
 
 export function getCurrentUserAbout(user: Profile | null) {
+  // console.log("current user", user);
+
   return [
     {
       label: "Name",

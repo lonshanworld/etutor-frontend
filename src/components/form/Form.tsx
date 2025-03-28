@@ -20,6 +20,10 @@ const Form = () => {
     setShowForm,
     setCreatePage,
     setUpdatePage,
+    setStudentData,
+    setTutorData,
+    setStaffData,
+    resetFormData,
     role,
     isUpdateFormRendered,
     setIsBackClick,
@@ -36,6 +40,7 @@ const Form = () => {
     setIsBackClick(true);
     if (isUpdateFormRendered) {
       updatePage === 2 ? setUpdatePage(1) : setShowForm();
+      // updatePage === 1 && resetFormData();
     } else {
       createPage === 2 ? setCreatePage(1) : setShowForm();
     }

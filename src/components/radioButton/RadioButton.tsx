@@ -52,7 +52,7 @@ export function RadioButton({
         </div>
       </RadioGroup>
       <input type="hidden" {...register} />
-      {isError && <p className="text-red-500 mt-2">{error}</p>}
+      {isError && <p className="text-red-500 mt-3 text-sm">{error}</p>}
     </div>
   );
 }
