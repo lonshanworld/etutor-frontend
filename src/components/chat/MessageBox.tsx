@@ -1,23 +1,17 @@
-import { formatTimestamp } from "@/lib/utils";
+import { checkExist, formatTimestamp } from "@/lib/utils";
 import ProfileImageBox from "../ProfileImageBox"
 import { FaCheckCircle } from "react-icons/fa";
+
 
 export default function MessageBox(
     {
         isMine,
-        message
+        message,
+        isChat
     } : {
         isMine : boolean,
-        message : {
-            _id: string;
-            _creationTime: number;
-            context?: string | undefined;
-            fileUrls?: string[] | undefined;
-            deleted_at?: number | undefined;
-            conversation_id: string;
-            sender_id: number;
-            is_read: boolean;
-        }
+        message : MessageType,
+        isChat : boolean
     }
 ){
     return (
@@ -35,7 +29,7 @@ export default function MessageBox(
                     <span
                     className={`${isMine ? "text-end" : "text-start"} text-xs opacity-50`}>{formatTimestamp(message._creationTime).time}</span>
                     {
-                        isMine && <FaCheckCircle className={`${message.is_read ? "text-green-500" : "text-gray-500"}`} />
+                        isChat && isChatMessage(message) && isMine && <FaCheckCircle className={`${message.is_read ? "text-green-500" : "text-gray-500"}`} />
                     }
                 </div>
             </div>

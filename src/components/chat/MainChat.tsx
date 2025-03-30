@@ -1,7 +1,6 @@
 "use client";
 
 import ChatHead from "@/components/chat/ChatHead";
-import ChatTitle from "@/components/chat/ChatTitle";
 import SearchUser from "@/components/chat/SearchUser";
 import VerticalDivider from "@/components/dividers/VerticalDivider";
 import { AppRouter } from "@/router";
@@ -12,6 +11,7 @@ import { useState } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import { Profile } from "@/model/profile";
 import { Cursor } from "convex/server";
+import PageTitle from "../PageTitle";
 
 
 const itemCount = 10;
@@ -44,7 +44,7 @@ export default function MainChat({
             className="absolute top-0 left-0 right-0 bottom-0 flex flex-row sm:py-4 py-2 px-4">
                 <div
                 className="w-full sm:w-1/3 lg:w-1/4 h-full sm:pr-4 flex flex-col gap-3">
-                    <ChatTitle />
+                    <PageTitle title="Chat" />
                     <SearchUser />
                     <div className="w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar">
                     {status === "LoadingFirstPage" && <span className="w-full flex justify-center items-center text-gray-500">Loading chats...</span>}
@@ -93,7 +93,7 @@ export default function MainChat({
             className="absolute top-0 left-0 right-0 bottom-0 flex flex-row sm:py-4 py-2 px-4">
                 <div
                 className="w-full sm:w-1/3 lg:w-1/4 h-full sm:pr-4 flex flex-col gap-3">
-                    <ChatTitle />
+                    <PageTitle title="Chat" />
                     <SearchUser />
                     <div className="w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar">
                     {status === "LoadingFirstPage" && <p>Loading chats...</p>}
