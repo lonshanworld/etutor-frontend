@@ -9,15 +9,16 @@ import MessageBox from "./MessageBox";
 import { api } from "../../../convex/_generated/api";
 import { Profile } from "@/model/profile";
 import { IoCloseCircleSharp } from "react-icons/io5";
+import { checkExist } from "@/lib/utils";
 
 
-const itemCount = 20;
+const itemCount = 10;
 
 export default function ChatList({
   chat,
   user,
 }: {
-  chat: {
+  chat?: {
     _id: string;
     _creationTime: number;
     user1: {
@@ -45,12 +46,15 @@ export default function ChatList({
 }) {
   const [message, setMessage] = useState("");
   const sendMessage = useMutation(api.message.createMessage);
+  const sendNote = useMutation(api.note.createNote);
   const markMessagesAsRead = useMutation(api.message.markMessagesAsRead);
   const [files, setFiles] = useState<File[]>([]); // Store multiple selected files
   const [filePreviews, setFilePreviews] = useState<string[]>([]); // Store preview URLs
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { results, isLoading, status, loadMore } = usePaginatedQuery(
+  const { results, isLoading, status, loadMore } = chat 
+  ?
+  usePaginatedQuery(
     api.message.getMessages,
     {
       conversationId: chat._id as any,
@@ -58,16 +62,28 @@ export default function ChatList({
     {
       initialNumItems: itemCount,
     }
+  ) 
+  :
+  usePaginatedQuery(
+    api.note.getNotes,
+    {
+      senderId: user.id,
+    },
+    {
+      initialNumItems: itemCount,
+    }
   );
 
-  useEffect(() => {
-    if (results.length > 0) {
-      markMessagesAsRead({
-        conversationId: chat._id as any,
-        userId: user.id,
-      });
-    }
-  }, [results]);
+  if(chat){
+    useEffect(() => {
+      if (results.length > 0) {
+        markMessagesAsRead({
+          conversationId: chat._id as any,
+          userId: user.id,
+        });
+      }
+    }, [results]);
+  }
 
 
 
@@ -76,12 +92,20 @@ export default function ChatList({
     console.log("here files", files);
     if (!message.trim()) return;
 
-    await sendMessage({
-      conversation_id: chat._id as any,
-      sender_id: user.id,
-      context: message,
-      fileUrls: [],
-    });
+    if(chat){
+      await sendMessage({
+        conversation_id: chat._id as any,
+        sender_id: user.id,
+        context: message,
+        fileUrls: [],
+      });
+    }else{
+      await sendNote({
+        sender_id: user.id,
+        context: message,
+        fileUrls: [],
+      });
+    }
 
     setMessage(""); 
   };
@@ -102,20 +126,28 @@ export default function ChatList({
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+  
+
   const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     setFilePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="flex flex-col h-[88%] w-full relative">
+    <div className={`flex flex-col ${chat ? "h-[88%]" : "h-[90%]"} w-full relative`}>
       {/* Messages List */}
       <div className="absolute left-0 right-0 top-0 bottom-12 py-4 flex flex-col-reverse gap-2 overflow-y-auto scrollbar-none">
         
         
           {/* Show messages */}
       {results?.map((msg) => (
-          <MessageBox key={msg._id} isMine={msg.sender_id === user.id} message={msg} />
+          <MessageBox key={msg._id} isChat={checkExist(chat)} isMine={msg.sender_id === user.id} message={msg as MessageType} />
         ))}
 
         {/* Show "No messages yet" */}
@@ -137,7 +169,7 @@ export default function ChatList({
         {status !== "Exhausted" && !isLoading && results.length > 0 && (
           <button
             onClick={() => loadMore(itemCount)}
-            className="self-center text-blue-500 hover:underline mb-2"
+            className="self-center text-theme hover:underline mb-2"
           >
             Load More Messages
           </button>
@@ -189,6 +221,8 @@ export default function ChatList({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="outline-none focus:outline-none w-full bg-transparent text-base placeholder:text-base"
+          onKeyDown={handleKeyPress}
+
         />
         <input
           type="file"
