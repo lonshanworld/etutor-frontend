@@ -16,9 +16,9 @@ interface NonChatMessage extends BaseMessage {
     deleted_at: number | null;
 }
 
-type MessageType = ChatMessage | NonChatMessage;
+export type MessageType = ChatMessage | NonChatMessage;
 
-function isChatMessage(message: MessageType): message is ChatMessage {
+export function isChatMessage(message: MessageType): message is ChatMessage {
     return 'is_read' in message;
 }
 

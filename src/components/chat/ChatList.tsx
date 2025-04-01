@@ -10,6 +10,7 @@ import { api } from "../../../convex/_generated/api";
 import { Profile } from "@/model/profile";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { checkExist } from "@/lib/utils";
+import { MessageType } from "@/model/message";
 
 
 const itemCount = 10;
