@@ -29,6 +29,7 @@
   --board-file: #eeeeee;
   --gray-toggle : #E2E2E2;
   --logo-opacity: 30%;
+  --meeting-card: #099797;
 }
 
 .dark {
@@ -58,6 +59,7 @@
   --board-file: #333;
   --gray-toggle : #4B4B4B;
   --logo-opacity: 10%;
+  --meeting-card: #1d968c;
 }
 
 body {
@@ -166,5 +168,17 @@ body {
            [&::-webkit-scrollbar-thumb]:bg-theme
            dark:[&::-webkit-scrollbar-track]:bg-neutral-700
            dark:[&::-webkit-scrollbar-thumb]:bg-theme;
+  }
+}
+
+@layer utilities {
+  .scrollbar-cus-1 {
+    @apply [&::-webkit-scrollbar]:w-2
+    [&::-webkit-scrollbar-track]:rounded-full
+    [&::-webkit-scrollbar-track]:bg-gray-100
+    [&::-webkit-scrollbar-thumb]:rounded-full
+    [&::-webkit-scrollbar-thumb]:bg-gray-300
+    dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
   }
 }

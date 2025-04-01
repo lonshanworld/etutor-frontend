@@ -44,6 +44,7 @@ export default {
         primaryText: "var(--primary-text)",
         secondaryText: "var(--secondary-text)",
         boardFile: "var(--board-file)",
+        meetingCard: "var(--meeting-card)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -82,8 +83,8 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-        grayToggle : "var(--gray-toggle)",
-        iconGray : "#939393",
+        grayToggle: "var(--gray-toggle)",
+        iconGray: "#939393",
       },
       borderRadius: {
         lg: "var(--radius)",
