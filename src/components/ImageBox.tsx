@@ -12,7 +12,6 @@ export default function ImageBox(
   return (
     <div
       className="w-11 h-11 rounded-full bg-secondaryBackground relative overflow-clip cursor-pointer"
-     
     >
       <Image
         src={
