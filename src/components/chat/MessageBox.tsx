@@ -2,6 +2,7 @@ import { checkExist, formatTimestamp } from "@/lib/utils";
 import ProfileImageBox from "../ProfileImageBox"
 import { FaCheckCircle } from "react-icons/fa";
 import { isChatMessage, MessageType } from "@/model/message";
+import PreviewBox from "./PreviewBox";
 
 
 export default function MessageBox(
@@ -23,6 +24,24 @@ export default function MessageBox(
             }
             <div
             className={`flex flex-col min-w-20 max-w-[75%] md:max-w-[65%] lg:max-w-[50%] bg-gray-400 bg-opacity-30 px-3 py-2 ${isMine ? "rounded-l-2xl rounded-t-2xl " : "rounded-r-2xl rounded-b-2xl "}`}>
+               
+                {
+                    message.fileUrls && message.fileUrls.length > 0 && (
+                        <div
+                        className={`min-w-28 md:min-w-36 max-w-full ${message.fileUrls.length > 1 ? "grid grid-cols-2 lg:grid-cols-3 gap-2" : "flex"} `}>
+                            {
+                                message.fileUrls.map((file, index) => {
+                                    return (
+                                        <div key={index} className="w-28 md:w-36 aspect-square relative rounded-sm overflow-clip mb-2">
+                                            <PreviewBox file={file} />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    )
+                    
+                }
                 <span
                 className="text-base">{message.context}</span>
                 <div

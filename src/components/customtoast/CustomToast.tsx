@@ -9,6 +9,19 @@ interface ToastProps {
   type?: string;
 }
 
+const getProgressBarColor = (type: string = "") => {
+  switch (type.toLowerCase()) {
+    case "success":
+      return "bg-theme";
+    case "warning":
+      return "bg-yellow-500";
+    case "error":
+      return "bg-red-500";
+    default:
+      return "bg-gray-500";
+  }
+};
+
 export default function Toast({ message, type }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
@@ -62,8 +75,8 @@ export default function Toast({ message, type }: ToastProps) {
           alt=""
         />
         <div className="ms-3">
-          <h1 className="md:text-xl font-bold">
-            {type === "success" ? "Success" : "Error"}
+          <h1 className="md:text-xl font-bold capitalize">
+            {type}
           </h1>
           <span className="text-[12px] md:text-sm">{message}</span>
         </div>
@@ -71,7 +84,7 @@ export default function Toast({ message, type }: ToastProps) {
       <div
         className={twMerge(
           "h-1 md:h-2 transition-all duration-50",
-          type === "success" ? "bg-theme" : "bg-red-500"
+          getProgressBarColor(type),
         )}
         style={{ width: `${progress}%` }}
       ></div>

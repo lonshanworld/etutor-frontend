@@ -1,4 +1,3 @@
-import { get } from "http";
 
 export const APIS = {
   GET: {
@@ -20,6 +19,7 @@ export const APIS = {
     createTutor: "tutors/account/create",
     createStaff: "staffs/account/create",
     changePassword: "user/change-password",
+    chatuploadFile : "upload-attachment"
   },
   PATCH: {
     updatePassword: "update-password", // reset password

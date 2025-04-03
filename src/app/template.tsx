@@ -9,6 +9,8 @@ import useLoading from "@/stores/useLoading";
 import { useUserStore } from "@/stores/useUserStore";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useToast } from "@/stores/useToast";
+import Toast from "@/components/customtoast/CustomToast";
 
 export default function MainTemplate({
   children,
@@ -20,6 +22,7 @@ export default function MainTemplate({
   const {showLoading,hideLoading} = useLoading();
   const router = useRouter();
   const pathName = usePathname();
+  const { toast } = useToast();
 
   useEffect(() => {
     async function getUser() {
@@ -33,7 +36,8 @@ export default function MainTemplate({
         console.log("profile", user);
         hideLoading();
         if(role === "staff" && !pathName.includes("staff")){
-          router.push(AppRouter.staffDashboard);
+          // router.push(AppRouter.staffDashboard);
+          router.push(pathName);
         }else if(role === "student" && !pathName.includes("student")){
           router.push(AppRouter.studentDashboard);
         }else if(role === "tutor" && !pathName.includes("tutor")){
@@ -52,7 +56,12 @@ export default function MainTemplate({
   return (
     <ConvexClientProvider>
       <LoadingSpinner />
-
+      {toast && (
+                <Toast
+                  message={toast?.message}
+                  type={toast?.type}
+                />
+              )}
       
         {
           children
