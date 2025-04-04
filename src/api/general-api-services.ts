@@ -11,16 +11,30 @@ async function fetchData(
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get("sessionToken")?.value;
 
+  // Use a Record type for headers to allow arbitrary string keys
+  const headers: Record<string, string> = {
+    ...(sessionToken && { Authorization: `Bearer ${sessionToken}` }),
+  };
+
+  const requestOptions: RequestInit = {
+    method: method,
+    headers: headers,
+  };
+
+  if (body) {
+    // If the body is a FormData object (for file uploads), don't set the Content-Type
+    if (body instanceof FormData) {
+      requestOptions.body = body;
+    } else {
+      // For regular JSON bodies
+      headers["Content-Type"] = "application/json";
+      requestOptions.body = JSON.stringify(body);
+    }
+  }
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/${apiString}`,
-    {
-      method: method,
-      headers: {
-        "Content-Type": "Application/json",
-        ...(sessionToken && { Authorization: `Bearer ${sessionToken}` }),
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    }
+    requestOptions
   );
 
   if (!response.ok) {
@@ -41,7 +55,7 @@ async function fetchData(
 }
 
 export async function GetRequest(apiString?: string): Promise<any> {
-  return fetchData("GET", apiString, undefined);
+  return fetchData("GET", apiString);
 }
 
 export async function PostRequest(
@@ -50,8 +64,6 @@ export async function PostRequest(
 ): Promise<any> {
   return fetchData("POST", apiString, body);
 }
-
-// ...existing code...
 
 export async function ChatFilePostFormDataRequest(
   formData : FormData,

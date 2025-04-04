@@ -5,7 +5,7 @@ import placeholderProfile from "@/assets/images/placeholder-profile.png";
 
 interface Props {
   username: string;
-  profilePic: string;
+  profilePic: string | null;
   time: string;
   comment: string;
 }

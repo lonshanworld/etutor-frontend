@@ -3,7 +3,7 @@ import { APIS } from "../api-constants";
 import { ChatFilePostFormDataRequest } from "../general-api-services";
 
 export async function sendChatFiles(formData : FormData) : Promise<string[]>{
-    const response = await ChatFilePostFormDataRequest(formData, APIS.POST.chatuploadFile );
+    const response = await ChatFilePostFormDataRequest(formData, APIS.POST.uploadAttachment );
     if(isErrorModel(response)){
         throw response;
     }

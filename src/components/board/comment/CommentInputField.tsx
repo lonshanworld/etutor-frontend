@@ -1,53 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Send } from "lucide-react";
+import { useUserStore } from "@/stores/useUserStore";
+import { Comment } from "@/model/blog";
+import { giveComment } from "@/api/services/blogs";
 
 interface Props {
-  onAddComment: (comment: {
-    id: number;
-    profilePic: string;
-    username: string;
-    time: string;
-    text: string;
-  }) => void;
+  blogId: number;
+  onAddComment: (comment: Comment) => void;
 }
 
-const CommentInputField = ({ onAddComment }: Props) => {
-  const [text, setText] = useState("");
+const CommentInputField = ({ blogId, onAddComment }: Props) => {
+  const [commentContent, setcommentContent] = useState("");
+  const commentSectionRef = useRef<HTMLDivElement | null>(null);
 
-  const handleSubmit = () => {
-    if (text.trim() === "") return;
+  const handleSubmit = async () => {
+    if (commentContent.trim() === "") return;
 
-    // Will need to change with data from store
-    const newComment = {
-      id: Date.now(),
-      profilePic: "",
-      username: "You",
-      time: "Just now",
-      text,
-    };
+    try {
+      const response = await giveComment(blogId, commentContent);
+      console.log("add comment", response);
+      onAddComment(response); // Add new comment to UI
+      setcommentContent(""); // Clear input field
 
-    onAddComment(newComment);
-    setText("");
+      setTimeout(() => {
+        if (commentSectionRef.current) {
+          commentSectionRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
 
   return (
-    <div className='flex items-center border border-gray-500 rounded-lg px-3 py-2 w-full'>
-      <input
-        type='text'
-        placeholder='Comment...'
-        className='flex-1 bg-transparent outline-none placeholder-gray-400'
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button
-        className='text-gray-600 transition'
-        onClick={handleSubmit}
-      >
-        <Send size={18} />
-      </button>
-    </div>
+    <>
+      <div className='flex items-center border border-gray-500 rounded-lg px-3 py-2 w-full'>
+        <input
+          type='text'
+          placeholder='Comment...'
+          className='flex-1 bg-transparent outline-none placeholder-gray-400'
+          value={commentContent}
+          onChange={(e) => setcommentContent(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <button
+          className='text-gray-600 transition'
+          onClick={handleSubmit}
+        >
+          <Send size={18} />
+        </button>
+      </div>
+      <div
+        id='comment-input'
+        className='pt-3'
+        ref={commentSectionRef}
+      ></div>
+    </>
   );
 };
 

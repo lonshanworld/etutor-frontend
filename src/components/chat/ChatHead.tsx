@@ -53,6 +53,17 @@ export default function ChatHead(
     const router = useRouter();
     const {user} = useUserStore();
 
+    function getColorRole(value : string) : string{
+        console.log("check value role", value);
+        switch(value.toLowerCase()){
+            case "student":
+                return "text-chatStudent";
+            case "tutor":
+                return "text-chatTutor";
+            default:
+                return "text-font";
+        }
+    }
 
     return (
         <>
@@ -71,10 +82,16 @@ export default function ChatHead(
                     <div
                     className="flex flex-row justify-between items-center gap-3">
                         <span className="text-start w-full text-base line-clamp-1">{getOtherChatData(user.id, chat).firstName} {getOtherChatData(user.id, chat).middleName} {getOtherChatData(user.id, chat).lastName}</span>
-                        <span className="text-xss w-20 opacity-50">{chat.latestMessage ? chat.latestMessage._creationTime : chat._creationTime}</span>
+                        <div
+                        className="flex flex-row justify-end items-center gap-2">
+                            <span className={`text-xss text-nowrap capitalize ${getColorRole(getOtherChatData(user.id,chat).role)}`}>{getOtherChatData(user.id, chat).role.toString()}</span>
+                            <div
+                            className="w-[2px] h-4 bg-black rounded-t-full rounded-b-full"></div>
+                            <span className="text-xss text-nowrap opacity-50">{chat.latestMessage ? formatTimestamp(chat.latestMessage._creationTime).time : formatTimestamp(chat._creationTime).time}</span>
+                        </div>
                     </div>
                     {
-                        chat.latestMessage && <span className="text-sm text-start line-clamp-1 w-full">{chat.latestMessage.context ? chat.latestMessage.context : (chat.latestMessage.fileUrls && chat.latestMessage.fileUrls.length > 0) ? "File -" : " -- "}</span>
+                        chat.latestMessage && <span className={`text-sm text-start line-clamp-1 w-full ${chat.latestMessage.deleted_at ? "text-red-500" : "text-font"}`}>{chat.latestMessage.context ? chat.latestMessage.context : (chat.latestMessage.fileUrls && chat.latestMessage.fileUrls.length > 0) ? "File -" : " -- "}</span>
                     }
                 </div>
             </button>
@@ -91,10 +108,16 @@ export default function ChatHead(
                     <div
                     className="flex flex-row justify-between items-center gap-3">
                         <span className="text-start text-base line-clamp-1 w-full">{getOtherChatData(user.id, chat).firstName}</span>
-                        <span className="text-end text-xss w-16 opacity-50">{chat.latestMessage ? formatTimestamp(chat.latestMessage._creationTime).time : formatTimestamp(chat._creationTime).time}</span>
+                        <div
+                        className="flex flex-row justify-end items-center gap-1">
+                            <span className={`text-xss text-nowrap capitalize ${getColorRole(getOtherChatData(user.id,chat).role.toString())}`}>{getOtherChatData(user.id, chat).role.toString()}</span>
+                            <div
+                            className="w-[2px] h-4 bg-black rounded-t-full rounded-b-full"></div>
+                            <span className="text-end text-xss text-nowrap opacity-50">{chat.latestMessage ? formatTimestamp(chat.latestMessage._creationTime).time : formatTimestamp(chat._creationTime).time}</span>
+                        </div>
                     </div>
                     {
-                        chat.latestMessage && <span className="text-sm text-start line-clamp-1 w-full">{chat.latestMessage.context ? chat.latestMessage.context : (chat.latestMessage.fileUrls && chat.latestMessage.fileUrls.length > 0) ? "File -" : " -- "}</span>
+                        chat.latestMessage && <span className={`text-sm text-start line-clamp-1 w-full ${chat.latestMessage.deleted_at ? "text-red-500" : "text-font"}`}>{chat.latestMessage.context ? chat.latestMessage.context : (chat.latestMessage.fileUrls && chat.latestMessage.fileUrls.length > 0) ? "File -" : " -- "}</span>
                     }
                 </div>
             </button>
