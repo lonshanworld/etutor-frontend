@@ -166,12 +166,7 @@ export default function LoginPage() {
             <LogoBox />
           </div>
         </div>
-        {toast && (
-          <Toast
-            message={toast?.message}
-            type={toast?.type}
-          />
-        )}
+      
       </div>
     </>
   );
