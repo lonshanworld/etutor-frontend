@@ -41,6 +41,10 @@ export const deleteNote = mutation({
         noteId : v.id("notes"),
     },
     handler : async (ctx, args) => {
-        return await ctx.db.delete(args.noteId);
+        return await ctx.db.patch(args.noteId,{
+            deleted_at: Date.now(),
+            context: "Note Deleted",
+            fileUrls: [],
+        });
     }
 })

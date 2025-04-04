@@ -84,6 +84,9 @@ export default {
         },
         grayToggle : "var(--gray-toggle)",
         iconGray : "#939393",
+        chatTutor : "#FFA500",
+        chatMyTutor : "#9D69E1",
+        chatStudent : "#FF1493",
       },
       borderRadius: {
         lg: "var(--radius)",
