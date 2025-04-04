@@ -1,4 +1,3 @@
-import { get } from "http";
 
 export const APIS = {
   GET: {
