@@ -2,17 +2,17 @@
 
 import { FiEdit } from "react-icons/fi";
 
-interface TopBarProps {
-  onSelectSection: (section: "post" | "file") => void; // Accept prop to change selected section
-  selectedSection: "post" | "file"; // Track the currently selected section
-  viewNewPost: () => void;
+interface Props {
+  onSelectTab: (tab: "blog" | "file") => void;
+  selectedTab: "blog" | "file";
+  viewCreateNewBlog: () => void;
 }
 
 const NavBar = ({
-  onSelectSection,
-  selectedSection,
-  viewNewPost,
-}: TopBarProps) => {
+  onSelectTab,
+  selectedTab,
+  viewCreateNewBlog: viewNewBlog,
+}: Props) => {
   // Scroll to top function
   const scrollToTop = () => {
     const container = document.getElementById("postContainer");
@@ -22,8 +22,8 @@ const NavBar = ({
   };
 
   // handle Post button
-  const handlePost = () => {
-    onSelectSection("post");
+  const handleBlog = () => {
+    onSelectTab("blog");
     scrollToTop();
   };
 
@@ -33,31 +33,31 @@ const NavBar = ({
         <div className='flex items-baseline text-xl gap-4 h-full py-1'>
           <div
             className={`p-1 cursor-pointer border-b-2 ${
-              selectedSection === "post"
-                ? "border-b-theme text-theme"
-                : "text-secondaryText border-transparent"
+              selectedTab === "blog" ?
+                "border-b-theme text-theme"
+              : "text-secondaryText border-transparent"
             }`}
-            onClick={handlePost}
+            onClick={handleBlog}
           >
-            Post
+            Blog
           </div>
           <div
             className={`p-1 cursor-pointer border-b-2  ${
-              selectedSection === "file"
-                ? "border-b-theme text-theme"
-                : "text-secondaryText border-transparent"
+              selectedTab === "file" ?
+                "border-b-theme text-theme"
+              : "text-secondaryText border-transparent"
             }`}
-            onClick={() => onSelectSection("file")}
+            onClick={() => onSelectTab("file")}
           >
             File
           </div>
         </div>
       </div>
       <div></div>
-      {selectedSection === "post" && (
+      {selectedTab === "blog" && (
         <button
           className='bg-theme rounded-sm px-7 py-2 text-white flex items-center gap-2'
-          onClick={viewNewPost}
+          onClick={viewNewBlog}
         >
           <FiEdit size={20} /> POST
         </button>

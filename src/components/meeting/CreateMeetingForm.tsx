@@ -3,7 +3,7 @@ import { BiArrowBack } from "react-icons/bi";
 import MeetingDropdown from "./MeetingDropdown";
 import AddStudent from "./AddStudent";
 import { FiArrowLeft } from "react-icons/fi";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "../ProfilePic";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import InputFieldType1 from "../inputfields/InputFieldType1";
 

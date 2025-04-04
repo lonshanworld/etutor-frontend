@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import { studentData } from "./data";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "../ProfilePic";
 import StudentListItem from "./StudentListItem";
 
 interface Student {

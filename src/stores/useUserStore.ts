@@ -18,9 +18,10 @@ type Action = {
   setProfilePopup: (value: boolean) => void;
   setProfileDetailPopup: (value: boolean) => void;
   setIsProfileClicked: (value: boolean) => void;
+  getUserId: () => number | null;
 };
 
-export const useUserStore = create<State & Action>((set) => ({
+export const useUserStore = create<State & Action>((set, get) => ({
   user: null,
   showOption: false,
   showDetail: false,
@@ -41,4 +42,5 @@ export const useUserStore = create<State & Action>((set) => ({
   setIsProfileClicked: (value) => {
     set({ isProfileClicked: value });
   },
+  getUserId: () => get().user?.id ?? null,
 }));

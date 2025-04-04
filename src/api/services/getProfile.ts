@@ -5,7 +5,7 @@ import { Profile, profileFromJson } from "@/model/profile";
 
 export async function getProfile(): Promise<Profile> {
   const response = await GetRequest(APIS.GET.getMyProfile);
-  if(isErrorModel(response)){
+  if (isErrorModel(response)) {
     throw response;
   }
   const data = profileFromJson(response);

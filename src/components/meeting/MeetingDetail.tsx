@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "../ProfilePic";
 import { IoBookOutline, IoTimeOutline } from "react-icons/io5";
 
 export interface meetingProps {

@@ -4,7 +4,7 @@ import {
   MdOutlineCheckBox,
   MdOutlineCheckBoxOutlineBlank,
 } from "react-icons/md";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "../ProfilePic";
 
 interface Props {
   id: number;

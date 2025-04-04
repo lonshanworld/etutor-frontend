@@ -1,3 +1,4 @@
+import { get } from "http";
 
 export const APIS = {
   GET: {
@@ -11,6 +12,7 @@ export const APIS = {
     getMajors: "majors",
     getSubjects: "subjects",
     getMajorsWithSubjects: "majors-with-subjects",
+    getBlogs: "blogs",
   },
   POST: {
     login: "auth/login",
@@ -19,7 +21,10 @@ export const APIS = {
     createTutor: "tutors/account/create",
     createStaff: "staffs/account/create",
     changePassword: "user/change-password",
-    chatuploadFile : "upload-attachment"
+    giveLike: "blogs/give-like",
+    giveComment: "blogs/give-comment",
+    uploadAttachment: "upload-attachment",
+    addBlog: "blogs/add",
   },
   PATCH: {
     updatePassword: "update-password", // reset password
