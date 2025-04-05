@@ -9,28 +9,34 @@ import { giveComment } from "@/api/services/blogs";
 interface Props {
   blogId: number;
   onAddComment: (comment: Comment) => void;
+  onPendingComment: (msg: string) => void;
 }
 
-const CommentInputField = ({ blogId, onAddComment }: Props) => {
+const CommentInputField = ({
+  blogId,
+  onAddComment,
+  onPendingComment,
+}: Props) => {
   const [commentContent, setcommentContent] = useState("");
   const commentSectionRef = useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = async () => {
     if (commentContent.trim() === "") return;
+    onPendingComment(commentContent);
 
     try {
       const response = await giveComment(blogId, commentContent);
-      console.log("add comment", response);
-      onAddComment(response); // Add new comment to UI
-      setcommentContent(""); // Clear input field
-
+      onAddComment(response);
+      setcommentContent("");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // scroll to comment input
       setTimeout(() => {
         if (commentSectionRef.current) {
           commentSectionRef.current.scrollIntoView({ behavior: "smooth" });
         }
       }, 100);
-    } catch (error) {
-      console.log(error);
     }
   };
 

@@ -1,9 +1,11 @@
 "use client";
 
-import { getBlogs, giveLike } from "@/api/services/blogs";
+import { getBlogs } from "@/api/services/blogs";
 import logo from "@/assets/images/unilogo-without-text.png";
 import UserBlog from "@/components/board/UserBlog";
 import { Like } from "@/model/blog";
+import { errorStore } from "@/stores/errorStore";
+import { useToast } from "@/stores/useToast";
 import { useUserStore } from "@/stores/useUserStore";
 import { formatName } from "@/utils/formatData";
 import Image from "next/image";
@@ -12,7 +14,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import CreateNewBlogModal from "./modals/CreateNewBlogModal";
 import LikeModal from "./modals/LikeModal";
-import { errorStore } from "@/stores/errorStore";
+import ErrorPopup from "../ErrorPopup";
 
 interface Props {
   isNewPostModalOpen: boolean;
@@ -37,6 +39,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   const lastBlogRef = useRef(null);
   const { isError, setError } = errorStore();
   const { getUserId, user } = useUserStore();
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -88,6 +91,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   };
 
   const handleDeleteBlog = (blogId: number) => {
+    showToast("Blog deleted successfully", "success");
     setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
     if (selectedBlog?.id === blogId) {
       setSelectedBlog(null);
@@ -113,65 +117,6 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
     },
     [isLoading, cursor]
   );
-
-  const handleLike = async (blogId: number) => {
-    setBlogs((prevBlogs) =>
-      prevBlogs.map((blog) =>
-        blog.id === blogId ?
-          {
-            ...blog,
-            isLiked: !blog.isLiked,
-            likeCount: blog.isLiked ? blog.likeCount - 1 : blog.likeCount + 1,
-          }
-        : blog
-      )
-    );
-
-    if (selectedBlog?.id === blogId) {
-      setSelectedBlog((prev: any) =>
-        prev ?
-          {
-            ...prev,
-            isLiked: !prev.isLiked,
-            likeCount: prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1,
-          }
-        : null
-      );
-    }
-
-    try {
-      await giveLike(blogId);
-    } catch (error: any) {
-      // Revert changes on failure
-      setTimeout(() => {
-        setBlogs((prevBlogs) =>
-          prevBlogs.map((blog) =>
-            blog.id === blogId ?
-              {
-                ...blog,
-                isLiked: !blog.isLiked,
-                likeCount:
-                  blog.isLiked ? blog.likeCount - 1 : blog.likeCount + 1,
-              }
-            : blog
-          )
-        );
-
-        if (selectedBlog?.id === blogId) {
-          setSelectedBlog((prev: any) =>
-            prev ?
-              {
-                ...prev,
-                isLiked: !prev.isLiked,
-                likeCount:
-                  prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1,
-              }
-            : null
-          );
-        }
-      }, 500);
-    }
-  };
 
   // Detail page close
   const handleClose = () => {
@@ -199,6 +144,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
 
   return (
     <>
+      {isError && <ErrorPopup />}
       {isNewPostModalOpen && (
         <CreateNewBlogModal
           onClose={() => setNewPostModalOpen(false)}
@@ -216,12 +162,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         <LikeModal
           blogId={likedList.blogId}
           likeCount={likedList.likes.length}
-          likedUserList={likedList.likes.map((like) => ({
-            likeId: like.id,
-            userId: like.user.id,
-            profilePic: like.user.profile_picture,
-            name: like.user.name,
-          }))}
+          likedUserList={likedList.likes}
           onClose={() => setLikeModalOpen(false)}
         />
       )}
@@ -246,7 +187,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   text={blog.text}
                   files={blog.files}
                   likes={blog.likes}
-                  // comments={blog.comments}
+                  comments={blog.comments}
                   likeCount={blog.likeCount}
                   commentCount={blog.commentCount}
                   isLiked={blog.isLiked}
@@ -254,7 +195,6 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   isDetail={false}
                   contentToggle={true}
                   viewDetail={() => handleViewPost(blog)}
-                  handleLike={() => handleLike(blog.id)}
                   viewLike={() => handleViewLike(blog.id, blog.likes)}
                   onDelete={() => handleDeleteBlog(blog.id)}
                   ref={index === blogs.length - 1 ? lastBlogElementRef : null}
@@ -329,7 +269,6 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   isOwnBlog={selectedBlog.isOwnBlog}
                   isDetail={true}
                   contentToggle={false}
-                  handleLike={() => handleLike(selectedBlog.id)}
                   viewLike={() =>
                     handleViewLike(selectedBlog.id, selectedBlog.likes)
                   }

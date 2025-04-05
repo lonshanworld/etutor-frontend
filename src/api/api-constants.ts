@@ -1,4 +1,3 @@
-
 export const APIS = {
   GET: {
     getStudentList: "students",
@@ -12,6 +11,7 @@ export const APIS = {
     getSubjects: "subjects",
     getMajorsWithSubjects: "majors-with-subjects",
     getBlogs: "blogs",
+    getBlogById: (blogId: number) => `blogs/${blogId}`,
   },
   POST: {
     login: "auth/login",
@@ -24,6 +24,7 @@ export const APIS = {
     giveComment: "blogs/give-comment",
     uploadAttachment: "upload-attachment",
     addBlog: "blogs/add",
+    deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
   },
   PATCH: {
     updatePassword: "update-password", // reset password
