@@ -33,7 +33,7 @@ export default async function StudentListPage({
   }
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto">
+    <div className="w-full sm:w-[95%] mx-auto">
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Students"

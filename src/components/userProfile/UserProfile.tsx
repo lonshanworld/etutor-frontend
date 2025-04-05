@@ -5,7 +5,7 @@ import Close from "@/assets/svgs/close.svg";
 import Email from "@/assets/svgs/email.svg";
 import Phone from "@/assets/svgs/phone.svg";
 import StatusIcon from "../statusicon/StatusIcon";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useUserStore } from "@/stores/useUserStore";
 import { Profile } from "@/model/profile";
@@ -50,12 +50,15 @@ type ErrorType = {
 
 export default function UserProfile({
   profileData,
+  showDetail = false,
   setShowDetail,
+  setProfileDetailPopup,
 }: {
   profileData: Profile | null;
-  setShowDetail: any;
+  showDetail?: boolean;
+  setShowDetail?: any;
+  setProfileDetailPopup?: any;
 }) {
-  const { showDetail, setProfileDetailPopup } = useUserStore();
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
@@ -74,8 +77,6 @@ export default function UserProfile({
   } = useForm<ChangePasswordSchemaType>({
     resolver: zodResolver(ChangePasswordSchema),
   });
-
-  console.log("profile data", profileData);
 
   const otherUserAbout: UserType[] = getOtherUserAbout(profileData);
   const currentUserAbout: UserType[] = getCurrentUserAbout(profileData);
@@ -148,6 +149,8 @@ export default function UserProfile({
       showToast(error.message, "error");
     }
   };
+
+  console.log("show detail", showDetail);
 
   if (!profileData) return <div>Loading...</div>;
   return (
@@ -289,19 +292,19 @@ export default function UserProfile({
                   {/* about tab */}
                   {(activeTab === tabLabels.about ||
                     activeTab === tabLabels.aboutMe) && (
-                    <DataComponent data={about} />
+                    <DataComponent data={about} showDetail={showDetail} />
                   )}
 
                   {/* Emergency Contact tab */}
                   {activeTab === tabLabels.emgContact && (
-                    <DataComponent data={emgContacts} />
+                    <DataComponent data={emgContacts} showDetail={showDetail} />
                   )}
 
                   {/* info tab */}
                   {(activeTab === tabLabels.staffInfo ||
                     activeTab === tabLabels.tutorInfo ||
                     activeTab === tabLabels.studentInfo) && (
-                    <DataComponent data={info} />
+                    <DataComponent data={info} showDetail={showDetail} />
                   )}
 
                   {/* change password tab */}
@@ -390,8 +393,8 @@ export default function UserProfile({
         <div
           className="absolute top-5 right-5 cursor-pointer"
           onClick={() => {
-            setShowDetail(false);
-            setProfileDetailPopup(false);
+            setProfileDetailPopup && setProfileDetailPopup(false);
+            showDetail && setShowDetail(false);
           }}
         >
           <img src={Close.src} className="text-backgroundOpposite" alt="" />
@@ -400,8 +403,8 @@ export default function UserProfile({
       <div
         className="fixed bg-black/70 z-[15] top-0 left-0 w-svw h-svh"
         onClick={() => {
-          setProfileDetailPopup(false);
-          setShowDetail(false);
+          setProfileDetailPopup && setProfileDetailPopup(false);
+          showDetail && setShowDetail(false);
         }}
       ></div>
     </div>

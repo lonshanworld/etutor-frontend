@@ -47,14 +47,16 @@ export default function TableDemo({
   const { activeRowId, position, setActiveRow, closeOptionBox } =
     useOptionBoxStore();
 
-  const { user, showDetail, setShowDetail, setProfileDetailPopup } =
-    useUserStore();
+  const { user } = useUserStore();
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
   const { selectedUser, setSelectedUser } = useSelectedUser();
   const { isSearch, data, setIsSearch, searchData } = useSearchStore();
   const { setShowForm, setRole, setUpdateFormRendered, setUpdateFormModified } =
     useFormStore();
+
+  const [showDetail, setShowDetail] = useState(false);
+  const [profileDetailPopup, setProfileDetailPopup] = useState(false);
 
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
 
@@ -105,6 +107,7 @@ export default function TableDemo({
   };
 
   const showUserDetail = (id: number) => {
+    console.log("show user detail");
     user?.id === id ? setProfileDetailPopup(true) : setShowDetail(true);
     getSelectedUser(id);
   };
@@ -323,7 +326,18 @@ export default function TableDemo({
 
       {/* user profile detail */}
       {showDetail && (
-        <UserProfile profileData={userProfile} setShowDetail={setShowDetail} />
+        <UserProfile
+          profileData={userProfile}
+          showDetail={showDetail}
+          setShowDetail={setShowDetail}
+        />
+      )}
+
+      {profileDetailPopup && (
+        <UserProfile
+          profileData={userProfile}
+          setProfileDetailPopup={setProfileDetailPopup}
+        />
       )}
 
       <div className="flex justify-end mt-3">

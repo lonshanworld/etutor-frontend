@@ -27,7 +27,7 @@ export default async function TutorListPage({
 
   try {
     const response = await getTutors(page, name);
-    console.log("tutors", response);
+    console.log("tutors", response.data);
     tutorData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
   } catch (error) {
@@ -35,7 +35,7 @@ export default async function TutorListPage({
   }
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto">
+    <div className="w-full sm:w-[95%] mx-auto">
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Tutors"

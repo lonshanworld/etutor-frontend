@@ -19,7 +19,7 @@ export default async function StaffDashboardTemplate({
     console.log("error", error);
   }
   return (
-    <div className="h-full max-h-svh overflow-y-auto custom-scrollbar pt-5 pb-24 border-t-2 border-secondaryBackground">
+    <div className="h-full max-h-svh overflow-y-auto custom-scrollbar pt-8 pb-24 border-t-2 border-secondaryBackground">
       {children}
       <Major majors={majors} subjects={subjects} />
     </div>

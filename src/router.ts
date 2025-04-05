@@ -14,6 +14,8 @@ export const AppRouter = {
   staffDashboardTutors: "/dashboard/staff/tutors",
   staffDashboardStaff: "/dashboard/staff/staffs",
   staffDashboardAllocate: "/dashboard/staff/allocate",
+  staffDashboardAllocateTutor: "/dashboard/staff/allocate/tutor",
+  staffDashboardAllocateStudent: "/dashboard/staff/allocate/student",
 
   studentDashboard: "/dashboard/student",
   studentChat: "/dashboard/student/chat",
@@ -21,7 +23,7 @@ export const AppRouter = {
   studentMeeting: "/dashboard/student/meeting",
   studentNote: "/dashboard/student/note",
   studentPeople: "/dashboard/student/people",
-  studentChatBox : "/dashboard/student/chat/chatbox",
+  studentChatBox: "/dashboard/student/chat/chatbox",
 
   tutorDashboard: "/dashboard/tutor",
   tutorChat: "/dashboard/tutor/chat",
@@ -30,5 +32,5 @@ export const AppRouter = {
   tutorNote: "/dashboard/tutor/note",
   tutorPeople: "/dashboard/tutor/people",
   tutorAllocatedStudents: "/dashboard/tutor/allocatedstudent",
-  tutorChatBox : "/dashboard/tutor/chat/chatbox",
+  tutorChatBox: "/dashboard/tutor/chat/chatbox",
 };

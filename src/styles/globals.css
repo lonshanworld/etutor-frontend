@@ -27,8 +27,11 @@
   --primary-text: #222;
   --secondary-text: #3a3a3a;
   --board-file: #eeeeee;
-  --gray-toggle : #E2E2E2;
+  --gray-toggle: #e2e2e2;
   --logo-opacity: 30%;
+  --selected-tab: #d4d4d4;
+  --tab-bg: #ffffff;
+  --unassign: #ff5555;
 }
 
 .dark {
@@ -56,8 +59,11 @@
   --primary-text: rgba(255, 255, 255, 0.9);
   --secondary-text: #c5c5c5;
   --board-file: #333;
-  --gray-toggle : #4B4B4B;
+  --gray-toggle: #4b4b4b;
   --logo-opacity: 10%;
+  --selected-tab: #202020;
+  --tab-bg: #454545;
+  --unassign: #ff5555;
 }
 
 body {
