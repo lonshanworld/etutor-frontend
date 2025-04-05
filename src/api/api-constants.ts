@@ -1,5 +1,3 @@
-import { get } from "http";
-
 export const APIS = {
   GET: {
     getStudentList: "students",
@@ -12,6 +10,7 @@ export const APIS = {
     getMajors: "majors",
     getSubjects: "subjects",
     getMajorsWithSubjects: "majors-with-subjects",
+    getBlogs: "blogs",
   },
   POST: {
     login: "auth/login",
@@ -20,6 +19,10 @@ export const APIS = {
     createTutor: "tutors/account/create",
     createStaff: "staffs/account/create",
     changePassword: "user/change-password",
+    giveLike: "blogs/give-like",
+    giveComment: "blogs/give-comment",
+    uploadAttachment: "upload-attachment",
+    addBlog: "blogs/add",
 
     unassignStudent: "staffs/unassign-student-tutor",
     allocateStudent: "staffs/allocate-student-tutor",

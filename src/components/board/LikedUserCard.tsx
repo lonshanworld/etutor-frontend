@@ -1,22 +1,21 @@
 "use client";
 
 import Image from "next/image";
+import placeholderProfile from "@/assets/images/placeholder-profile.png";
+import ProfilePic from "../ProfilePic";
 
 interface Props {
-  profilePicUrl: string;
+  profilePicUrl: string | null;
   username: string;
 }
 
 const LikedUserCard = ({ profilePicUrl, username }: Props) => {
   return (
-    <div className='w-full py-2 flex items-center gap-3 px-4'>
+    <div className='w-full py-2 flex items-center gap-3 px-5'>
       <div className='w-10 h-10 rounded-full overflow-hidden'>
-        <Image
-          src={profilePicUrl}
-          alt={`${username} profile picture`}
-          width={40}
-          height={40}
-          className='object-cover'
+        <ProfilePic
+          profileUrl={profilePicUrl}
+          size={40}
         />
       </div>
       <div>{username}</div>

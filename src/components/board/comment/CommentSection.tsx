@@ -1,44 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import CommentInputField from "./CommentInputField";
 import PostComment from "./CommentCard";
-
-interface Comment {
-  id: number;
-  profilePic: string;
-  username: string;
-  time: string;
-  text: string;
-}
+import { Comment } from "@/model/blog";
+import { formatTime } from "@/utils/formatData";
 
 interface Props {
+  blogId: number;
   comments: Comment[];
 }
 
-const CommentSection = ({ comments }: Props) => {
+const CommentSection = ({ blogId, comments }: Props) => {
+  const [commentList, setCommentList] = useState<Comment[]>(comments);
+
   const addComment = (newComment: Comment) => {
-    // add
+    setCommentList((prevComments) => [...prevComments, newComment]);
   };
 
   return (
     <div className='bg-background'>
       <div className='p-4'>
-        {comments.length > 0 ? (
-          comments.map((comment) => (
+        {commentList.length > 0 ?
+          commentList.map((comment) => (
             <PostComment
               key={comment.id}
-              profilePic={comment.profilePic}
-              username={comment.username}
-              time={comment.time}
-              comment={comment.text}
+              profilePic={comment.user.profile_picture}
+              username={comment.user.name}
+              time={formatTime(comment.created_at)}
+              comment={comment.content}
             />
           ))
-        ) : (
-          <div>No comments</div>
-        )}
+        : <div>No comments</div>}
       </div>
-      <div className='mx-3 pt-1 md:pb-10 pb-20'>
-        <CommentInputField onAddComment={addComment} />
+      <div className='mx-3 pt-1 pb-3'>
+        <CommentInputField
+          onAddComment={addComment}
+          blogId={blogId}
+        />
       </div>
     </div>
   );

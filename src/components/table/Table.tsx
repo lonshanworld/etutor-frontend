@@ -357,8 +357,7 @@ export default function TableDemo({
         )}
       </div>
 
-      {/* Toast Container */}
-      {toast && <CustomToast message={toast.message} type={toast.type} />}
+     
     </div>
   );
 }

@@ -194,7 +194,11 @@ export default function UserProfile({
                       },
                     });
                     hideLoading();
-                    router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+                    if (user.role === "student") {
+                      router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+                    } else if (user.role === "tutor") {
+                      router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
+                    }
                   } catch (err) {
                     hideLoading();
                     showToast(

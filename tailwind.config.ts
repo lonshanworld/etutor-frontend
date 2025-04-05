@@ -44,6 +44,7 @@ export default {
         primaryText: "var(--primary-text)",
         secondaryText: "var(--secondary-text)",
         boardFile: "var(--board-file)",
+        meetingCard: "var(--meeting-card)",
         selectedTab: "var(--selected-tab)",
         tabBg: "var(--tab-bg)",
         unassign: "var(--unassign)",
@@ -87,6 +88,9 @@ export default {
         },
         grayToggle: "var(--gray-toggle)",
         iconGray: "#939393",
+        chatTutor: "#FFA500",
+        chatMyTutor: "#9D69E1",
+        chatStudent: "#FF1493",
       },
       borderRadius: {
         lg: "var(--radius)",

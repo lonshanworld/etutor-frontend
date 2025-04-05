@@ -8,10 +8,12 @@ type State = {
 type Action = {
   logout: () => void;
   setUser: (user: Profile | null) => void;
+  getUserId: () => number | null;
 };
 
-export const useUserStore = create<State & Action>((set) => ({
+export const useUserStore = create<State & Action>((set, get) => ({
   user: null,
   logout: () => set({ user: null }),
   setUser: (user) => set({ user }),
+  getUserId: () => get().user?.id ?? null,
 }));

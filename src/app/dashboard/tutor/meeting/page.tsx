@@ -1,5 +1,9 @@
-export default function MeetingPage(){
-    return (
-        <>This is just meeting pagefrom student</>
-    );
-}
+"use client";
+
+import Meeting from "@/components/meeting/Meeting";
+
+const StudentMeetingPage = () => {
+  return <Meeting />;
+};
+
+export default StudentMeetingPage;

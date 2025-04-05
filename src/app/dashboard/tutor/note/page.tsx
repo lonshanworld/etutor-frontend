@@ -1,5 +1,7 @@
+import Note from "@/components/note/Note";
+
 export default function NotePage(){
     return (
-        <>This is just note page</>
+        <Note />
     );
 }
