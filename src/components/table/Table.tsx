@@ -47,14 +47,16 @@ export default function TableDemo({
   const { activeRowId, position, setActiveRow, closeOptionBox } =
     useOptionBoxStore();
 
-  const { user, showDetail, setShowDetail, setProfileDetailPopup } =
-    useUserStore();
+  const { user: loggedInUser, viewUser } = useUserStore();
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
   const { selectedUser, setSelectedUser } = useSelectedUser();
   const { isSearch, data, setIsSearch, searchData } = useSearchStore();
   const { setShowForm, setRole, setUpdateFormRendered, setUpdateFormModified } =
     useFormStore();
+
+  const [showDetail, setShowDetail] = useState(false);
+  const [profileDetailPopup, setProfileDetailPopup] = useState(false);
 
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
 
@@ -105,7 +107,8 @@ export default function TableDemo({
   };
 
   const showUserDetail = (id: number) => {
-    user?.id === id ? setProfileDetailPopup(true) : setShowDetail(true);
+    console.log("show user detail");
+    loggedInUser?.id === id ? setProfileDetailPopup(true) : setShowDetail(true);
     getSelectedUser(id);
   };
 
@@ -136,13 +139,25 @@ export default function TableDemo({
   };
 
   const getUrl = () => {
-    switch (role) {
-      case UserRole.student:
-        return AppRouter.staffDashboardStudents;
-      case UserRole.tutor:
-        return AppRouter.staffDashboardTutors;
-      case UserRole.staff:
-        return AppRouter.staffDashboardStaff;
+    if (viewUser) {
+      if (viewUser.role === UserRole.student) {
+        return AppRouter.studentPeople;
+      } else if (viewUser.role === UserRole.tutor) {
+        return AppRouter.tutorPeople;
+      }
+    } else if (loggedInUser && loggedInUser.role === UserRole.staff) {
+      switch (role) {
+        case UserRole.student:
+          return AppRouter.staffStudents;
+        case UserRole.tutor:
+          return AppRouter.staffTutors;
+        case UserRole.staff:
+          return AppRouter.staffStaff;
+      }
+    } else if (loggedInUser?.role === UserRole.student) {
+      return AppRouter.studentPeople;
+    } else if (loggedInUser?.role === UserRole.tutor) {
+      return AppRouter.tutorPeople;
     }
   };
 
@@ -159,13 +174,19 @@ export default function TableDemo({
       console.log("deactivate", response);
       if (response.message === "success") {
         showToast("User Deactivated Successfully", "success");
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
         setShowWarning(false);
         setActiveRow(null, null);
+      } else {
+        showToast(response.errorText, "error");
       }
     } catch (error) {
       showToast("Error occurred while deactivating the user", "error");
     }
   };
+  console.log("porfile user", loggedInUser?.role);
 
   return (
     <div className="sm:rounded-t-xl overflow-hidden">
@@ -181,14 +202,11 @@ export default function TableDemo({
               Activity Status
             </TableHead>
             <TableHead className="max-md:hidden">View</TableHead>
-            <TableHead
-              className={twMerge(
-                "max-sm:text-sm sm:rounded-tr-md",
-                user?.role === role && "md:hidden"
-              )}
-            >
-              Action
-            </TableHead>
+            {loggedInUser?.role === UserRole.staff && (
+              <TableHead className="max-sm:text-sm sm:rounded-tr-md">
+                Action
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody className="max-sm:text-[11px]">
@@ -234,23 +252,20 @@ export default function TableDemo({
                     View Profile
                   </button>
                 </TableCell>
-                <TableCell
-                  className={twMerge(
-                    "flex justify-center items-center mt-1 h-[70px]",
-                    role === UserRole.staff && "md:hidden"
-                  )}
-                >
-                  <button
-                    ref={(el) => {
-                      if (menuRefs) menuRefs.current[user.id] = el;
-                    }}
-                    onClick={() => handleMenuClick(user.id)}
-                    className="p-2 rounded-md hover:bg-
+                {loggedInUser?.role === UserRole.staff && (
+                  <TableCell className="flex justify-center items-center mt-1 h-[70px]">
+                    <button
+                      ref={(el) => {
+                        if (menuRefs) menuRefs.current[user.id] = el;
+                      }}
+                      onClick={() => handleMenuClick(user.id)}
+                      className="p-2 rounded-md hover:bg-
                     optionBgHover"
-                  >
-                    <BsThreeDots />
-                  </button>
-                </TableCell>
+                    >
+                      <BsThreeDots />
+                    </button>
+                  </TableCell>
+                )}
               </TableRow>
             ))
           ) : (
@@ -280,20 +295,14 @@ export default function TableDemo({
               View Profile
             </li>
             <li
-              className={twMerge(
-                "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
-                selectedUser?.role === UserRole.staff ? "hidden" : ""
-              )}
+              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
               onClick={() => showEditForm(activeRowId)}
             >
               <FiEdit className="text-xl text-theme" />
               <span>Edit</span>
             </li>
             <li
-              className={twMerge(
-                "p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2",
-                user?.id !== activeRowId && role === UserRole.staff && "hidden"
-              )}
+              className="p-2 hover:bg-optionBgHover cursor-pointer flex items-center gap-2"
               onClick={showWarningPopup}
             >
               <IoMdCloseCircleOutline className="text-xl text-red-500" />
@@ -334,7 +343,18 @@ export default function TableDemo({
 
       {/* user profile detail */}
       {showDetail && (
-        <UserProfile profileData={userProfile} setShowDetail={setShowDetail} />
+        <UserProfile
+          profileData={userProfile}
+          showDetail={showDetail}
+          setShowDetail={setShowDetail}
+        />
+      )}
+
+      {profileDetailPopup && (
+        <UserProfile
+          profileData={userProfile}
+          setProfileDetailPopup={setProfileDetailPopup}
+        />
       )}
 
       <div className="flex justify-end mt-3">
@@ -342,19 +362,17 @@ export default function TableDemo({
           <PaginationDemo
             pageCount={pageCount}
             currentPage={currentPage}
-            url={getUrl()}
+            url={getUrl() ?? AppRouter.loginPage}
           />
         )}
         {!isSearch && (
           <PaginationDemo
             pageCount={pageCount}
             currentPage={currentPage}
-            url={getUrl()}
+            url={getUrl() ?? AppRouter.loginPage}
           />
         )}
       </div>
-
-     
     </div>
   );
 }

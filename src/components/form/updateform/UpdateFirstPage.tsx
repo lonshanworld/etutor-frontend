@@ -56,7 +56,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
       middleName: formData?.middleName ?? undefined,
       lastName: formData?.lastName ?? "",
       address: formData?.address ?? undefined,
-      nationality: formData?.nationality ?? undefined,
+      nationality: formData?.nationality ?? "",
       gender: formData?.gender ?? "",
       dob: formData?.dob ?? "",
       passportNo: formData?.passportNo ?? undefined,
@@ -67,27 +67,33 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
   });
 
   useEffect(() => {
-    clearErrors();
+    if (formData) {
+      console.log("🔄 Syncing form fields with Zustand data:", formData); // Debugging
 
-    if (selectedUser) {
-      Object.entries(selectedUser).forEach(([key, value]) => {
-        setValue(key as keyof UpdateFormSchemaType, value);
+      Object.entries(formData).forEach(([key, value]) => {
+        setValue(key as keyof UpdateFormSchemaType, value, {
+          shouldValidate: true,
+        });
       });
     }
-  }, [selectedUser, setValue]);
+  }, [formData, setValue]);
 
   const onSubmit: SubmitHandler<any> = (data, e: any) => {
     e.preventDefault();
+    setUpdateFormModified(true);
 
     const updatedFields = checkUpdatedValue(data, selectedUser);
-    setUpdateFormData(updatedFields);
+    // console.log("updated zustand data", data);
+    // setUpdateFormData(updatedFields);
     setUpdatedData(updatedFields);
+    setFormData(data);
     setPageForm(2);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUpdateFormModified(true);
+    console.log("changed");
     const { name, value } = e.target;
+    console.log(name, value);
     setUpdateFormData({ [name]: value });
   };
 
@@ -106,8 +112,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                   name: errors.firstName ? "firstName" : "",
                   message: errors?.firstName?.message,
                 }}
-                value={formData.firstName}
-                onChange={handleChange}
               />
             </div>
             <div>
@@ -116,8 +120,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                 label="Middle Name"
                 register={register("middleName", { required: false })}
                 type="text"
-                value={formData.middleName || ""}
-                onChange={handleChange}
               />
             </div>
             <div>
@@ -130,8 +132,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                   name: errors.lastName ? "lastName" : "",
                   message: errors?.lastName?.message,
                 }}
-                value={formData.lastName}
-                onChange={handleChange}
               />
             </div>
           </div>
@@ -140,18 +140,14 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
             <InputField
               id="address"
               label="Address"
-              register={register("address", { required: false })}
+              register={register("address", { required: true })}
               type="text"
-              value={formData.address ?? ""}
-              onChange={handleChange}
             />
             <InputField
               id="nationality"
               label="Nationality"
               type="text"
               register={register("nationality", { required: false })}
-              value={formData.nationality ?? ""}
-              onChange={handleChange}
             />
           </div>
 
@@ -186,9 +182,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                   message: errors?.dob?.message,
                 }}
               />
-              {errors.dob && (
-                <p className="text-red-500">{errors.dob.message}</p>
-              )}
             </div>
 
             <div className="lg:mt-6">
@@ -197,8 +190,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                 label="Passport No"
                 type="text"
                 register={register("passportNo", { required: false })}
-                value={formData.passportNo ?? ""}
-                onChange={handleChange}
               />
             </div>
           </div>
@@ -214,8 +205,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                   name: errors.phoneNo ? "phoneNo" : null,
                   message: errors?.phoneNo?.message,
                 }}
-                value={formData.phoneNo ?? ""}
-                onChange={handleChange}
               />
             </div>
 
@@ -229,8 +218,6 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
                   name: errors.email ? "email" : null,
                   message: errors?.email?.message,
                 }}
-                value={formData.email ?? ""}
-                onChange={handleChange}
               />
             </div>
           </div>
@@ -242,7 +229,12 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
             value={role}
           />
 
-          <CustomButton text="Next" type="submit" fullWidth={true} />
+          <CustomButton
+            text="Next"
+            type="submit"
+            fullWidth={true}
+            onClick={() => console.log(formData)}
+          />
         </div>
       </form>
     </div>

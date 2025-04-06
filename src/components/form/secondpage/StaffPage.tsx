@@ -8,8 +8,9 @@ import { useFormStore } from "@/stores/useFormStore";
 import { DayPicker } from "../../daypicker/DayPicker";
 import { useSelectedUser } from "@/stores/useSelectedUser";
 import { useEffect } from "react";
-import { createStaff } from "@/api/services/staffs";
+import { createStaff, updateStaff } from "@/api/services/staffs";
 import { useToast } from "@/stores/useToast";
+import { checkUpdatedValue } from "@/utils/checkUpdatedValues";
 
 type Props = {
   setPageForm: (page: number) => void;
@@ -36,8 +37,10 @@ export default function StaffPage({ setPageForm }: Props) {
     isUpdateFormRendered,
     isUpdateFormModified,
     setUpdateStaffData,
+    updatedData,
   } = useFormStore();
-  const { selectedUser } = useSelectedUser();
+  const { selectedUser, lastSelectedUserId, setLastSelectedUserId } =
+    useSelectedUser();
 
   const { showToast } = useToast();
 
@@ -46,6 +49,7 @@ export default function StaffPage({ setPageForm }: Props) {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<StaffSchemaType>({
     resolver: zodResolver(StaffSchema),
@@ -54,19 +58,41 @@ export default function StaffPage({ setPageForm }: Props) {
   });
 
   useEffect(() => {
-    if (selectedUser && !isUpdateFormModified) {
-      setUpdateStaffData({
-        emgContactName: selectedUser.info.emergency_contact_name,
-        emgContactPhone: selectedUser.info.emergency_contact_phone,
-        startDate: selectedUser.info.start_date,
+    const subscription = watch((data) => {
+      console.log("watching...", data);
+      setStaffData(data); // Save current form data to global state
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setStaffData]);
+
+  useEffect(() => {
+    if (selectedUser && selectedUser.id !== lastSelectedUserId) {
+      const updateData = {
+        emgContactName: selectedUser.info.emergency_contact_name || "",
+        emgContactPhone: selectedUser.info.emergency_contact_phone || "",
+        startDate: selectedUser.info.start_date || "",
+      };
+      console.log("resetting", selectedUser.id, lastSelectedUserId);
+      setUpdateStaffData(updateData);
+      reset(updateData);
+
+      setLastSelectedUserId(selectedUser.id);
+
+      // ✅ Use setValue to update form values dynamically
+      Object.keys(updateData).forEach((key) => {
+        setValue(
+          key as keyof StaffSchemaType,
+          updateData[key as keyof StaffSchemaType]
+        );
       });
     }
-  }, [selectedUser, setUpdateStaffData]);
+  }, [selectedUser, setUpdateStaffData, setValue]);
 
   const onSubmit: SubmitHandler<StaffSchemaType> = async (data, e: any) => {
     e.preventDefault();
     setStaffData(data);
     setShowForm();
+    errors && console.log(errors);
     setPageForm(1);
     const staffData = {
       first_name: formData.firstName,
@@ -86,22 +112,73 @@ export default function StaffPage({ setPageForm }: Props) {
       emergency_contact_phone: data.emgContactPhone,
     };
 
-    try {
-      const response = await createStaff(staffData);
-      if (response.message === "success") {
-        showToast("Staff account created successfully", "success");
-        setTimeout(() => {
-          location.reload();
-        }, 3000);
-      } else {
-        showToast(response.errorText, "error");
+    if (!isUpdateFormRendered) {
+      try {
+        const response = await createStaff(staffData);
+        if (response.message === "success") {
+          showToast("Staff account created successfully", "success");
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
+        } else {
+          showToast(response.errorText, "error");
+        }
+      } catch (error: any) {
+        showToast(error.message, "error");
       }
-    } catch (error: any) {
-      showToast(error.message, "error");
+    } else {
+      if (selectedUser) {
+        const updatedInfo = {
+          emgContactName: selectedUser.info.emergency_contact_name,
+          emgContactPhone: selectedUser.info.emergency_contact_phone,
+          startDate: selectedUser.info.start_date,
+        };
+        const updatedFields = checkUpdatedValue(data, updatedInfo);
+        const allUpdatedFields = { ...updatedData, ...updatedFields };
+        const finalUpdatedData = Object.fromEntries(
+          Object.entries({
+            first_name: allUpdatedFields.firstName,
+            middle_name: allUpdatedFields.middleName,
+            last_name: allUpdatedFields.lastName,
+            email: allUpdatedFields.email,
+            date_of_birth: allUpdatedFields.dob,
+            nationality: allUpdatedFields.nationality,
+            gender: allUpdatedFields.gender,
+            passport: allUpdatedFields.passportNo,
+            address: allUpdatedFields.address,
+            phone_number: allUpdatedFields.phoneNo,
+            start_date: allUpdatedFields.startDate,
+            emergency_contact_name: allUpdatedFields.emgContactName,
+            emergency_contact_phone: allUpdatedFields.emgContactPhone,
+          }).filter(([_, value]) => value !== null && value !== undefined)
+        );
+
+        console.log("updating student data...", finalUpdatedData);
+        if (Object.keys(finalUpdatedData).length > 0) {
+          try {
+            const response = await updateStaff(
+              finalUpdatedData,
+              selectedUser.id
+            );
+            if (response.message === "success") {
+              showToast("Staff account updated successfully", "success");
+              setTimeout(() => {
+                location.reload();
+              }, 3000);
+            } else {
+              console.log("res error", response.errorText);
+              showToast(response.errorText, "error");
+            }
+          } catch (error: any) {
+            console.log("catch error", error);
+            showToast(error.message, "error");
+          }
+        } else {
+          showToast("No changes have been made!", "error");
+        }
+      }
     }
   };
-
-  console.log(errors);
 
   return (
     <div>
@@ -139,6 +216,7 @@ export default function StaffPage({ setPageForm }: Props) {
               <DayPicker
                 input="startDate"
                 watch={watch}
+                value={staffData?.startDate}
                 setValue={setValue}
                 register={register("startDate", {
                   required: "startDate is required",
@@ -148,10 +226,6 @@ export default function StaffPage({ setPageForm }: Props) {
                   message: errors?.startDate?.message,
                 }}
               />
-              {/* {errors.startDate && (
-                <p className="text-red-500">{errors.startDate.message}</p>
-              )} */}
-              <div></div>
             </div>
           </div>
 

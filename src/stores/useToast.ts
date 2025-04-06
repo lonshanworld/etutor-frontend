@@ -22,6 +22,6 @@ export const useToast = create<State & Action>((set) => ({
         type,
       },
     });
-    setTimeout(() => set({ toast: null }), 6000);
+    setTimeout(() => set({ toast: null }), 4000);
   },
 }));

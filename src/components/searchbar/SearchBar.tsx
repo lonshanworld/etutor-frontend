@@ -23,9 +23,6 @@ export default function SearchBar({ placeholder, url }: Props) {
     window.location.href = `${url}?name=${value}`;
   };
 
-  useEffect(() => {
-    console.log("data", data);
-  }, [data]);
   return (
     <div>
       <form action="" onSubmit={handleSearch}>

@@ -43,7 +43,8 @@ export default function TutorPage({ setPageForm }: Props) {
     setSelectedMajor,
     updatedData,
   } = useFormStore();
-  const { selectedUser } = useSelectedUser();
+  const { selectedUser, lastSelectedUserId, setLastSelectedUserId } =
+    useSelectedUser();
   const {
     register,
     handleSubmit,
@@ -67,12 +68,20 @@ export default function TutorPage({ setPageForm }: Props) {
   };
 
   useEffect(() => {
-    if (selectedUser && !isUpdateFormModified) {
+    const subscription = watch((data) => {
+      setTutorData(data); // Save current form data to global state
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setTutorData]);
+
+  useEffect(() => {
+    if (selectedUser && selectedUser.id !== lastSelectedUserId) {
       const infoData = getInfoFields(selectedUser);
       setUpdateTutorData(infoData);
       reset(infoData);
+      setLastSelectedUserId(selectedUser.id);
     }
-  }, [selectedUser, setUpdateTutorData]);
+  }, [selectedUser, setUpdateTutorData, reset]);
 
   useEffect(() => {
     if (tutorData?.subject) {
@@ -106,7 +115,7 @@ export default function TutorPage({ setPageForm }: Props) {
       password: formData.password,
       password_confirmation: formData.confirmPassword,
       qualifications: data.qualifications,
-      experience: data.experience,
+      experience: String(data.experience),
       subject_id: data.subject,
     };
 
@@ -142,7 +151,7 @@ export default function TutorPage({ setPageForm }: Props) {
             address: allUpdatedFields.address,
             phone_number: allUpdatedFields.phoneNo,
             qualifications: allUpdatedFields.qualifications,
-            experience: allUpdatedFields.experience,
+            experience: String(allUpdatedFields.experience),
             subject_id: allUpdatedFields.subject,
           }).filter(([_, value]) => value !== null && value !== undefined)
         );
@@ -196,7 +205,7 @@ export default function TutorPage({ setPageForm }: Props) {
                 id="experience"
                 label="Experience"
                 type="number"
-                register={register("experience")}
+                register={register("experience", { valueAsNumber: true })}
                 error={{
                   name: errors.experience ? "experience" : null,
                   message: errors?.experience?.message,

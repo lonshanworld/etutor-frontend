@@ -1,9 +1,11 @@
 "use client";
 
-import { getBlogs, giveLike } from "@/api/services/blogs";
+import { getBlogs } from "@/api/services/blogs";
 import logo from "@/assets/images/unilogo-without-text.png";
 import UserBlog from "@/components/board/UserBlog";
 import { Like } from "@/model/blog";
+import { errorStore } from "@/stores/errorStore";
+import { useToast } from "@/stores/useToast";
 import { useUserStore } from "@/stores/useUserStore";
 import { formatName } from "@/utils/formatData";
 import Image from "next/image";
@@ -12,7 +14,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import CreateNewBlogModal from "./modals/CreateNewBlogModal";
 import LikeModal from "./modals/LikeModal";
-import { errorStore } from "@/stores/errorStore";
+import ErrorPopup from "../ErrorPopup";
 
 interface Props {
   isNewPostModalOpen: boolean;
@@ -37,6 +39,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   const lastBlogRef = useRef(null);
   const { isError, setError } = errorStore();
   const { getUserId, user } = useUserStore();
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -88,6 +91,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   };
 
   const handleDeleteBlog = (blogId: number) => {
+    showToast("Blog deleted successfully", "success");
     setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
     if (selectedBlog?.id === blogId) {
       setSelectedBlog(null);
@@ -114,64 +118,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
     [isLoading, cursor]
   );
 
-  const handleLike = async (blogId: number) => {
-    setBlogs((prevBlogs) =>
-      prevBlogs.map((blog) =>
-        blog.id === blogId ?
-          {
-            ...blog,
-            isLiked: !blog.isLiked,
-            likeCount: blog.isLiked ? blog.likeCount - 1 : blog.likeCount + 1,
-          }
-        : blog
-      )
-    );
-
-    if (selectedBlog?.id === blogId) {
-      setSelectedBlog((prev: any) =>
-        prev ?
-          {
-            ...prev,
-            isLiked: !prev.isLiked,
-            likeCount: prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1,
-          }
-        : null
-      );
-    }
-
-    try {
-      await giveLike(blogId);
-    } catch (error: any) {
-      // Revert changes on failure
-      setTimeout(() => {
-        setBlogs((prevBlogs) =>
-          prevBlogs.map((blog) =>
-            blog.id === blogId ?
-              {
-                ...blog,
-                isLiked: !blog.isLiked,
-                likeCount:
-                  blog.isLiked ? blog.likeCount - 1 : blog.likeCount + 1,
-              }
-            : blog
-          )
-        );
-
-        if (selectedBlog?.id === blogId) {
-          setSelectedBlog((prev: any) =>
-            prev ?
-              {
-                ...prev,
-                isLiked: !prev.isLiked,
-                likeCount:
-                  prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1,
-              }
-            : null
-          );
-        }
-      }, 500);
-    }
-  };
+  
 
   // Detail page close
   const handleClose = () => {
@@ -196,9 +143,11 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
       likes: likedList,
     });
   };
+  console.log("blogs", blogs);
 
   return (
     <>
+      {isError && <ErrorPopup />}
       {isNewPostModalOpen && (
         <CreateNewBlogModal
           onClose={() => setNewPostModalOpen(false)}
@@ -216,25 +165,20 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         <LikeModal
           blogId={likedList.blogId}
           likeCount={likedList.likes.length}
-          likedUserList={likedList.likes.map((like) => ({
-            likeId: like.id,
-            userId: like.user.id,
-            profilePic: like.user.profile_picture,
-            name: like.user.name,
-          }))}
+          likedUserList={likedList.likes}
           onClose={() => setLikeModalOpen(false)}
         />
       )}
 
-      <div className='flex h-full w-full'>
+      <div className="flex h-full w-full">
         {/* Main Board */}
-        <div className='md:w-1/2 h-full pt-16 mt-2 w-full'>
+        <div className="md:w-1/2 h-full pt-16 mt-2 w-full">
           <div
-            id='postContainer'
-            className='flex flex-col md:gap-3 gap-1.5 h-[98.5%] overflow-y-auto scrollbar-cus-2 pb-4 md:pr-1 max-md:scrollbar-none'
+            id="postContainer"
+            className="flex flex-col md:gap-3 gap-1.5 h-[98.5%] overflow-y-auto scrollbar-cus-2 pb-4 md:pr-1 max-md:scrollbar-none"
           >
             {/* Posts */}
-            {blogs.length > 0 ?
+            {blogs.length > 0 ? (
               blogs.map((blog, index) => (
                 <UserBlog
                   key={blog.id}
@@ -246,7 +190,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   text={blog.text}
                   files={blog.files}
                   likes={blog.likes}
-                  // comments={blog.comments}
+                  comments={blog.comments}
                   likeCount={blog.likeCount}
                   commentCount={blog.commentCount}
                   isLiked={blog.isLiked}
@@ -254,18 +198,18 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   isDetail={false}
                   contentToggle={true}
                   viewDetail={() => handleViewPost(blog)}
-                  handleLike={() => handleLike(blog.id)}
                   viewLike={() => handleViewLike(blog.id, blog.likes)}
                   onDelete={() => handleDeleteBlog(blog.id)}
                   ref={index === blogs.length - 1 ? lastBlogElementRef : null}
                 />
               ))
-            : <div className='text-center py-3'>
+            ) : (
+              <div className="text-center py-3">
                 It’s quiet here… why not write something?
               </div>
-            }
+            )}
             {isLoading && (
-              <div className='text-center py-3'>Loading more posts...</div>
+              <div className="text-center py-3">Loading more posts...</div>
             )}
           </div>
         </div>
@@ -278,35 +222,32 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         ></div>
 
         {/* Post Details */}
-        <div className='md:w-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative'>
+        <div className="md:w-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative">
           <div
             className={`flex h-full w-full opacity-logo items-center justify-center z-0 absolute `}
           >
-            <Image
-              src={logo}
-              alt='Logo'
-            />
+            <Image src={logo} alt="Logo" />
           </div>
 
           <div
             className={`fixed max-md:top-[57px] md:mt-3 left-0 w-full h-full max-md:h-[calc(100%-56px)] bg-secondaryBackground z-10 md:px-1 overflow-y-auto scrollbar-none md:relative md:basis-1/2 md:block transition-transform duration-500 ease-in-out transform ${
-              selectedBlog && !isClosing ?
-                "translate-x-0 opacity-100"
-              : "translate-x-full md:opacity-100"
+              selectedBlog && !isClosing
+                ? "translate-x-0 opacity-100"
+                : "translate-x-full md:opacity-100"
             }`}
           >
             {selectedBlog && (
               <>
                 {/* Back button for mobile */}
-                <div className='max-md:sticky bg-background top-0 left-0 right-0 p-3'>
+                <div className="max-md:sticky bg-background top-0 left-0 right-0 p-3">
                   <button
-                    className='flex items-center gap-2 text-gray-500 md:hover:text-gray-800'
+                    className="flex items-center gap-2 text-gray-500 md:hover:text-gray-800"
                     onClick={handleClose}
                   >
-                    <div className='flex gap-2 md:hidden'>
+                    <div className="flex gap-2 md:hidden">
                       <IoArrowBack size={24} /> <span>Back</span>
                     </div>
-                    <div className='flex gap-2 items-center max-md:hidden'>
+                    <div className="flex gap-2 items-center max-md:hidden">
                       <RxCross1 size={20} /> <span>Close</span>
                     </div>
                   </button>
@@ -329,7 +270,6 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   isOwnBlog={selectedBlog.isOwnBlog}
                   isDetail={true}
                   contentToggle={false}
-                  handleLike={() => handleLike(selectedBlog.id)}
                   viewLike={() =>
                     handleViewLike(selectedBlog.id, selectedBlog.likes)
                   }

@@ -1,8 +1,6 @@
 import FilterBox from "@/components/filterbox/FilterBox";
 import SearchBar from "@/components/searchbar/SearchBar";
 import TableDemo from "@/components/table/Table";
-import Form from "@/components/form/Form";
-import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
 import { User, userFromJson, UserRole } from "@/model/user";
 import { getStudents } from "@/api/services/students";
@@ -33,11 +31,11 @@ export default async function StudentListPage({
   }
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto">
+    <div className="w-full sm:w-[95%] mx-auto">
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Students"
-          url={AppRouter.staffDashboardStudents}
+          url={AppRouter.staffStudents}
         />
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
@@ -56,11 +54,6 @@ export default async function StudentListPage({
           role={UserRole.student}
         />
       </div>
-
-      <div className="mt-5 flex justify-end">
-        <CreateFormButton role={UserRole.student} />
-      </div>
-      <Form />
     </div>
   );
 }

@@ -32,11 +32,11 @@ export default async function StaffListPage({
   }
 
   return (
-    <div className="w-full sm:w-[97%] mx-auto">
+    <div className="w-full sm:w-[95%] mx-auto">
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Staffs"
-          url={AppRouter.staffDashboardStaff}
+          url={AppRouter.staffStaff}
         />
         <div className="flex items-center sm:w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
