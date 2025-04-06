@@ -1,46 +1,51 @@
 "use client";
 
+import { getMeetingIcon } from "@/utils/getMeetingIcon";
 import Image from "next/image";
 import React from "react";
-import googleMeet from "@/assets/svgs/meeting-icons/googleMeet2.svg";
-// import zoom from "@/assets/svgs/meeting-icons/googleMeet.svg";
-// import teams from "@/assets/svgs/meeting-icons/googleMeet.svg";
 
 interface Props {
   meetingName: string;
+  date: string;
   time: string;
   meetingType: string;
+  platform: string | null;
   onClick: () => void;
 }
 
-const meetingIcons: { [key: string]: string } = {
-  google: googleMeet,
-  // zoom: zoom,
-  // teams: teams,
-};
-
-const MeetingBox = ({ meetingName, time, meetingType, onClick }: Props) => {
+const MeetingBox = ({
+  meetingName,
+  date,
+  time,
+  meetingType,
+  platform,
+  onClick,
+}: Props) => {
   return (
     <div
-      className='p-4 bg-background shadow-md rounded-lg border hover:shadow-lg transition duration-300 cursor-pointer'
+      className='p-4 bg-background shadow-md rounded-lg border hover:shadow-lg transition duration-300 cursor-pointer w-full'
       onClick={onClick}
     >
       <div className='flex items-center gap-4'>
-        <div className='w-16 h-16 flex-shrink-0 bg-blue-100 p-1 rounded-lg'>
+        <div className='w-20 h-20 flex-shrink-0 bg-blue-100 p-1 rounded-lg'>
           <Image
-            src={meetingIcons[meetingType] || googleMeet} // need fallback default icon
+            src={getMeetingIcon(meetingType, platform)}
             alt='Meeting Icon'
             loading='lazy'
-            width={64}
-            height={64}
+            width={80}
+            height={80}
+            className='p-2'
           />
         </div>
 
-        <div className='flex flex-col w-full overflow-hidden'>
-          <span className='text-lg font-semibold text-primaryText truncate'>
+        <div className='flex flex-col w-full overflow-hidden justify-between'>
+          <span className='h-10 font-semibold text-primaryText line-clamp-2 text-base leading-5'>
             {meetingName}
           </span>
-          <span className='text-sm text-secondaryText truncate'>{time}</span>
+          <div className='flex justify-between'>
+            <span className='text-sm text-secondaryText truncate'>{time}</span>
+            <span className='text-sm text-secondaryText truncate'>{date}</span>
+          </div>
         </div>
       </div>
     </div>

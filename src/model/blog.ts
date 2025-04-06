@@ -192,3 +192,31 @@ export function commentsFromJson(jsonData: any) {
     })),
   };
 }
+
+export function filesFromJson(jsonData: any): any {
+  return {
+    files: jsonData.data.map((file: File) => ({
+      id: file.id,
+      file_name: file.file_name,
+      url_link: file.url_link,
+      created_at: file.created_at,
+      user: file.user,
+    })),
+    links: {
+      first: jsonData.links.first,
+      last: jsonData.links.last,
+      prev: jsonData.links.prev,
+      next: jsonData.links.next,
+    },
+    meta: {
+      current_page: jsonData.meta.current_page,
+      from: jsonData.meta.from,
+      last_page: jsonData.meta.last_page,
+      links: jsonData.meta.links,
+      path: jsonData.meta.path,
+      per_page: jsonData.meta.per_page,
+      to: jsonData.meta.to,
+      total: jsonData.meta.total,
+    },
+  };
+}

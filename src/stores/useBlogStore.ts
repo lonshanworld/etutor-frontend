@@ -1,35 +1,40 @@
 import { create } from "zustand";
 
-type BlogStore = {
-  commentCounts: Record<number, number>;
-  setCommentCount: (blogId: number, count: number) => void;
-  incrementCommentCount: (blogId: number) => void;
-
+type State = {
+  isLiked: Record<number, boolean>;
   likeCounts: Record<number, number>;
+  commentCounts: Record<number, number>;
+};
+
+type Action = {
+  setIsLiked: (blogId: number, liked: boolean) => void;
+  toggleIsLiked: (blogId: number) => void;
+
   setLikeCount: (blogId: number, count: number) => void;
   incrementLikeCount: (blogId: number) => void;
   decrementLikeCount: (blogId: number) => void;
 
-  isLiked: Record<number, boolean>;
-  setIsLiked: (blogId: number, liked: boolean) => void;
-  toggleIsLiked: (blogId: number) => void;
+  setCommentCount: (blogId: number, count: number) => void;
+  incrementCommentCount: (blogId: number) => void;
 };
 
-export const useBlogStore = create<BlogStore>((set) => ({
+export const useBlogStore = create<State & Action>((set) => ({
+  isLiked: {},
+  likeCounts: {},
   commentCounts: {},
-  setCommentCount: (blogId, count) =>
+
+  setIsLiked: (blogId, liked) =>
     set((state) => ({
-      commentCounts: { ...state.commentCounts, [blogId]: count },
+      isLiked: { ...state.isLiked, [blogId]: liked },
     })),
-  incrementCommentCount: (blogId) =>
+  toggleIsLiked: (blogId) =>
     set((state) => ({
-      commentCounts: {
-        ...state.commentCounts,
-        [blogId]: (state.commentCounts[blogId] || 0) + 1,
+      isLiked: {
+        ...state.isLiked,
+        [blogId]: !(state.isLiked[blogId] || false),
       },
     })),
 
-  likeCounts: {},
   setLikeCount: (blogId, count) =>
     set((state) => ({
       likeCounts: { ...state.likeCounts, [blogId]: count },
@@ -49,16 +54,15 @@ export const useBlogStore = create<BlogStore>((set) => ({
       },
     })),
 
-  isLiked: {},
-  setIsLiked: (blogId, liked) =>
+  setCommentCount: (blogId, count) =>
     set((state) => ({
-      isLiked: { ...state.isLiked, [blogId]: liked },
+      commentCounts: { ...state.commentCounts, [blogId]: count },
     })),
-  toggleIsLiked: (blogId) =>
+  incrementCommentCount: (blogId) =>
     set((state) => ({
-      isLiked: {
-        ...state.isLiked,
-        [blogId]: !(state.isLiked[blogId] || false),
+      commentCounts: {
+        ...state.commentCounts,
+        [blogId]: (state.commentCounts[blogId] || 0) + 1,
       },
     })),
 }));

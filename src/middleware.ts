@@ -40,6 +40,15 @@ const roleRoutes = {
     AppRouter.studentNote,
     AppRouter.studentPeople,
     AppRouter.studentChatBox,
+
+    AppRouter.tutorBoard,
+    AppRouter.tutorChat,
+    AppRouter.tutorChatBox,
+    AppRouter.tutorDashboard,
+    AppRouter.tutorMeeting,
+    AppRouter.tutorNote,
+    AppRouter.tutorPeople,
+    AppRouter.tutorAllocatedStudents,
   ],
   tutor: [
     AppRouter.tutorBoard,
@@ -50,6 +59,14 @@ const roleRoutes = {
     AppRouter.tutorNote,
     AppRouter.tutorPeople,
     AppRouter.tutorAllocatedStudents,
+
+    AppRouter.studentDashboard,
+    AppRouter.studentChat,
+    AppRouter.studentBoard,
+    AppRouter.studentMeeting,
+    AppRouter.studentNote,
+    AppRouter.studentPeople,
+    AppRouter.studentChatBox,
   ],
 };
 

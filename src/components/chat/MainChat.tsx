@@ -45,7 +45,7 @@ export default function MainChat({
                 <div
                 className="w-full sm:w-1/3 lg:w-1/4 h-full sm:pr-4 flex flex-col gap-3">
                     <PageTitle title="Chat" />
-                    <SearchUser />
+                    {/* <SearchUser /> */}
                     <div className="w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar">
                     {status === "LoadingFirstPage" && <span className="w-full flex justify-center items-center text-gray-500">Loading chats...</span>}
 
