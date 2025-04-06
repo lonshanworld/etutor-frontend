@@ -1,4 +1,3 @@
-
 export const APIS = {
   GET: {
     getStudentList: "students",
@@ -13,8 +12,12 @@ export const APIS = {
     getMajorsWithSubjects: "majors-with-subjects",
     getBlogs: "blogs",
     getBlogById: (blogId: number) => `blogs/${blogId}`,
+    getFiles: "blogs/files",
+    getMyStudents: (tutorId: number) => `tutors/${tutorId}/students`,
+    getActiveMeetings: "meetings/active",
+    getHistoryMeetings: "meetings/old",
     getReportActiveUsers: "reports/active-users",
-    getBrowsersUsage : "reports/browser-usage",
+    getBrowsersUsage: "reports/browser-usage",
   },
   POST: {
     login: "auth/login",
@@ -31,6 +34,7 @@ export const APIS = {
     unassignStudent: "staffs/unassign-student-tutor",
     allocateStudent: "staffs/allocate-student-tutor",
     deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
+    createMeeting: "meetings/create",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

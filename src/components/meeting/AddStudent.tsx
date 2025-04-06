@@ -3,44 +3,59 @@
 import { useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { RxCross1, RxCross2 } from "react-icons/rx";
-import { studentData } from "./data";
 import ProfilePic from "../ProfilePic";
 import StudentListItem from "./StudentListItem";
+import { getMyStudents } from "@/api/services/meeting";
+import { useUserStore } from "@/stores/useUserStore";
 
-interface Student {
-  id: number;
+interface myStudent {
+  userId: number;
+  studentId: number;
   name: string;
-  profileUrl: string;
+  profile_picture: string;
 }
 
 interface Props {
   onBack: () => void;
-  onAdd: (assignedStudents: Student[]) => void;
-  preSelectedStudents?: Student[];
+  onAdd: (assignedStudents: myStudent[]) => void;
+  preSelectedStudents?: myStudent[];
 }
 
 const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
+  const [myStudentList, setMyStudentList] = useState<myStudent[]>([]);
   const [assignedStudents, setAssignedStudents] =
-    useState<Student[]>(preSelectedStudents);
+    useState<myStudent[]>(preSelectedStudents);
   const [searchTerm, setSearchTerm] = useState("");
+  const { user, getUserId } = useUserStore();
+
+  const fetchMyStudent = async () => {
+    if (user) {
+      const response = await getMyStudents(user.id);
+      setMyStudentList(response.myStudent);
+    }
+  };
+
+  useEffect(() => {
+    fetchMyStudent();
+  }, []);
 
   useEffect(() => {
     setAssignedStudents(preSelectedStudents);
   }, [preSelectedStudents]);
 
-  const handleSelect = (student: Student) => {
+  const handleSelect = (student: myStudent) => {
     setAssignedStudents((prev) => {
-      return prev.some((s) => s.id === student.id) ?
-          prev.filter((s) => s.id !== student.id)
+      return prev.some((s) => s.studentId === student.studentId) ?
+          prev.filter((s) => s.studentId !== student.studentId)
         : [...prev, student];
     });
   };
 
   const handleRemove = (id: number) => {
-    setAssignedStudents((prev) => prev.filter((s) => s.id !== id));
+    setAssignedStudents((prev) => prev.filter((s) => s.studentId !== id));
   };
 
-  const filteredStudents = studentData.filter((student) =>
+  const filteredStudents = myStudentList.filter((student) =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -76,18 +91,18 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
             {assignedStudents.length > 0 ?
               assignedStudents.map((student) => (
                 <div
-                  key={student.id}
+                  key={student.studentId}
                   className='flex items-center gap-2 px-3 bg-meetingCard h-8 text-white rounded-sm'
                 >
                   <ProfilePic
-                    profileUrl={student.profileUrl}
+                    profileUrl={student.profile_picture}
                     size={20}
                   />
                   <span className=''>{student.name}</span>
                   <RxCross2
                     size={22}
                     className='cursor-pointer'
-                    onClick={() => handleRemove(student.id)}
+                    onClick={() => handleRemove(student.studentId)}
                   />
                 </div>
               ))
@@ -125,12 +140,14 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
             {filteredStudents.length > 0 ?
               filteredStudents.map((student) => (
                 <StudentListItem
-                  key={student.id}
-                  id={student.id}
+                  key={student.studentId}
+                  id={student.studentId}
                   name={student.name}
-                  profileUrl={student.profileUrl}
+                  profileUrl={student.profile_picture}
                   onSelect={() => handleSelect(student)}
-                  isSelected={assignedStudents.some((s) => s.id === student.id)}
+                  isSelected={assignedStudents.some(
+                    (s) => s.studentId === student.studentId
+                  )}
                 />
               ))
             : <p className='text-sm text-primaryText pt-4'>

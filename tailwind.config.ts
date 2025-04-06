@@ -48,6 +48,7 @@ export default {
         selectedTab: "var(--selected-tab)",
         tabBg: "var(--tab-bg)",
         unassign: "var(--unassign)",
+        homeItem: "var(--home-item)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -101,6 +102,7 @@ export default {
         left: "-7px 0 10px rgba(0, 0, 0, 0.5)",
         cusShadow:
           "0px 6px 12px -2px rgba(50,50,93,0.25), 0px 3px 7px -3px rgba(0,0,0,0.3)",
+        cusShadow2: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       },
       fontSize: {
         xss: "0.65rem",

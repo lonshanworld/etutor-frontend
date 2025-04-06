@@ -37,22 +37,26 @@ const MeetingDetail = ({
   onBack,
 }: Props) => {
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex flex-col w-full pl-6 pt-3'>
       {/* Back btn */}
       <div
-        className='flex items-center gap-1'
+        className='flex items-center gap-1 cursor-pointer'
         onClick={onBack}
       >
-        <FiArrowLeft size={30} /> <span className='text-lg'>Back</span>
+        <FiArrowLeft
+          size={30}
+          className='text-theme'
+        />{" "}
+        <span className='text-lg text-theme'>Back</span>
       </div>
 
       <div className='py-3 text-2xl font-semibold'>{subject}</div>
 
       {/* tutor profile */}
-      <div className='flex gap-4'>
+      <div className='flex gap-4 py-3'>
         <div>
           <ProfilePic
-            profileUrl={profileUrl || profileUrl}
+            profileUrl={profileUrl}
             size={50}
           />
         </div>
@@ -62,27 +66,64 @@ const MeetingDetail = ({
         </div>
       </div>
 
-      <div>
-        <button className=''>Meeting Link</button>
+      <div className='py-5'>
+        <button className='bg-theme px-5 py-2.5 text-white rounded-lg'>
+          Meeting Link
+        </button>
       </div>
 
-      <div className='grid grid-cols-2 border border-black'>
-        <div className='border-r border-r-black w-2/5'>
+      <div className='flex w-[80%] border border-secondaryText'>
+        <div className='pl-2 border-r border-r-secondaryText basis-60'>
           <div className='flex items-center gap-2 p-1'>
-            <IoBookOutline size={22} />
+            {/* <IoBookOutline size={22} /> */}
             <span className='font-semibold'>Subject</span>
           </div>
-          <div>Subject</div>
-          <div>Subject</div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className='font-semibold'>Time</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className='font-semibold'>Students</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className='font-semibold'>Meeting Type</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className='font-semibold'>Location</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className='font-semibold'>Platform</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className='font-semibold'>Meeting Link</span>
+          </div>
         </div>
-        <div className='w-3/5'>
-          <div>{subject}</div>
-          <div>{subject}</div>
-          <div>{subject}</div>
+        <div className='flex flex-col pl-2'>
+          <div className='flex items-center gap-2 p-1'>
+            {/* <IoBookOutline size={22} /> */}
+            <span className=''>{subject}</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className=''>{time}</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className=''>{studentList}</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className=''>{meetingType}</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className=''>{location || "-"}</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className=''>{platform || "-"}</span>
+          </div>
+          <div className='flex items-center gap-2 p-1'>
+            <span className=''>{meetingLink || "-"}</span>
+          </div>
         </div>
       </div>
 
-      <div className='mt-6 border border-gray-700'>
+      {/* <div className='mt-6 border border-gray-700'>
         <div className='flex justify-between border-b border-b-black'>
           <div className='flex items-center gap-2 mb-2 border-r border-r-black'>
             <IoBookOutline size={22} />
@@ -126,7 +167,7 @@ const MeetingDetail = ({
             {meetingLink}
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
