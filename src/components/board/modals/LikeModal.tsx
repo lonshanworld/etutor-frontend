@@ -5,22 +5,28 @@ import HorizontalDivider from "../../dividers/HorizontalDivider";
 import LikedUserCard from "../LikedUserCard";
 import { useEffect, useState } from "react";
 import { fetchLikedList } from "@/api/services/blogs";
+import { Like } from "@/model/blog";
+import { useBlogStore } from "@/stores/useBlogStore";
 
 interface Props {
   blogId: number | null;
   likeCount: number;
-  likedUserList: {
-    likeId: number;
-    userId: number;
-    profilePic: string | null;
-    name: string;
-  }[];
+  likedUserList: Like[];
   onClose: () => void;
 }
 
-const LikeModal = ({ blogId, likeCount, likedUserList, onClose }: Props) => {
-  const [users, setUsers] = useState(likedUserList); // Local state for likes
+const LikeModal = ({
+  blogId,
+  likeCount: initialLikeCount,
+  likedUserList,
+  onClose,
+}: Props) => {
+  // const [likeCount, setInitialLikeCount] = useState(initialLikeCount);
+  const [users, setUsers] = useState(likedUserList);
   const [loading, setLoading] = useState(false);
+  const { likeCounts, setLikeCount } = useBlogStore();
+
+  const likeCount = blogId ? likeCounts[blogId] : initialLikeCount;
 
   useEffect(() => {
     const FetchLatestLikes = async () => {
@@ -29,11 +35,13 @@ const LikeModal = ({ blogId, likeCount, likedUserList, onClose }: Props) => {
         if (blogId) {
           const response = await fetchLikedList(blogId);
           setUsers(response.likes);
+          setLikeCount(blogId, response.likes.length);
         }
       } catch (error) {
         console.error("Error fetching likes:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     FetchLatestLikes();
@@ -63,9 +71,9 @@ const LikeModal = ({ blogId, likeCount, likedUserList, onClose }: Props) => {
           ) : users.length > 0 ? (
             users.map((likedUser) => (
               <LikedUserCard
-                key={likedUser.likeId}
-                profilePicUrl={likedUser.profilePic}
-                username={likedUser.name}
+                key={likedUser.id}
+                profilePicUrl={likedUser.user.profile_picture}
+                username={likedUser.user.name}
               />
             ))
           ) : (

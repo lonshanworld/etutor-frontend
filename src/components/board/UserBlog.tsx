@@ -16,6 +16,8 @@ import FileIcon from "./FileIcon";
 import ImageWithSkeleton from "./loadingskeleton/ImageWithSkeleton";
 import MediaModal from "./modals/MediaModal";
 import PostOptionsMenu from "./modals/PostOptionMenu";
+import { useBlogStore } from "@/stores/useBlogStore";
+import { giveLike } from "@/api/services/blogs";
 import { useUserStore } from "@/stores/useUserStore";
 
 interface Props {
@@ -29,13 +31,13 @@ interface Props {
   likes: Like[];
   likeCount: number;
   commentCount: number;
-  comments?: Comment[];
+  comments: Comment[];
   isLiked: boolean;
   isOwnBlog: boolean;
   isDetail: boolean;
   contentToggle?: boolean;
   viewDetail?: () => void;
-  handleLike: () => void;
+  handleLike?: () => void;
   viewLike?: () => void;
   onDelete: () => void;
 }
@@ -52,16 +54,15 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
       title,
       text,
       files = [],
-      likeCount = 0,
-      commentCount = 0,
+      likeCount: initialLikeCount = 0,
+      commentCount: initialCommentCount = 0,
       likes,
       comments = [],
-      isLiked,
+      isLiked: initialIsLiked,
       isOwnBlog,
       isDetail = false,
       contentToggle = true,
       viewDetail,
-      handleLike,
       viewLike,
       onDelete,
     },
@@ -81,6 +82,56 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
       otherFiles: [],
     });
     const [formattedTime, setFormattedTime] = useState(formatTime(time));
+    const {
+      commentCounts,
+      likeCounts,
+      isLiked,
+      setLikeCount,
+      setCommentCount,
+      decrementLikeCount,
+      incrementLikeCount,
+      setIsLiked,
+      toggleIsLiked,
+    } = useBlogStore();
+
+    useEffect(() => {
+      if (!isDetail) {
+        console.log("use");
+        setLikeCount(blogId, initialLikeCount);
+        setCommentCount(blogId, initialCommentCount);
+        setIsLiked(blogId, initialIsLiked);
+      }
+    }, []);
+
+    const commentCount = commentCounts[blogId] ?? initialCommentCount;
+    const likeCount = likeCounts[blogId] ?? initialLikeCount;
+    const liked = isLiked[blogId] ?? initialIsLiked;
+
+    const handleGlobalLike = async () => {
+      toggleIsLiked(blogId);
+
+      if (!liked) {
+        incrementLikeCount(blogId);
+        try {
+          await giveLike(blogId);
+        } catch (error) {
+          setTimeout(() => {
+            toggleIsLiked(blogId);
+            decrementLikeCount(blogId);
+          }, 500);
+        }
+      } else {
+        decrementLikeCount(blogId);
+        try {
+          await giveLike(blogId);
+        } catch (error) {
+          setTimeout(() => {
+            toggleIsLiked(blogId);
+            incrementLikeCount(blogId);
+          }, 500);
+        }
+      }
+    };
 
     const { isReadOnly } = useUserStore();
 
@@ -200,7 +251,12 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
               <p className="text-xsm text-gray-500">{formattedTime}</p>
             </div>
           </div>
-          {isOwnBlog && <PostOptionsMenu onDelete={onDelete} />}
+          {isOwnBlog && (
+            <PostOptionsMenu
+              onDelete={onDelete}
+              blogId={blogId}
+            />
+          )}
         </div>
 
         {/* Post Content */}
@@ -352,12 +408,12 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
               onClick={viewLike}
             >
               <AiOutlineLike size={20} />
-              <div className="pl-1">
-                {isLiked
-                  ? likeCount === 1
-                    ? "You"
-                    : `You and ${likeCount - 1} others`
-                  : likeCount}
+              <div className='pl-1'>
+                {liked ?
+                  likeCount === 1 ?
+                    "You"
+                  : `You and ${likeCount - 1} others`
+                : likeCount}
               </div>
             </div>
 
@@ -376,15 +432,15 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
           <div className="flex gap-10">
             {/* Like btn */}
             <div
-              className={`flex items-center gap-1 text-secondaryText ${isReadOnly ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
-              onClick={handleLike}
+              className='flex items-center gap-1 cursor-pointer text-secondaryText'
+              onClick={handleGlobalLike}
             >
-              {isLiked ? (
+              {liked ? (
                 <AiFillLike color="teal" size={20} />
               ) : (
                 <AiOutlineLike size={20} />
               )}
-              <span className={`${isLiked && "text-teal-600 "}`}>Like</span>
+              <span className={`${liked && "text-teal-600 "}`}>Like</span>
             </div>
             {/* Comment btn */}
             <div
@@ -409,7 +465,13 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
         </div>
         {isDetail && <HorizontalDivider />}
 
-        {isDetail && <CommentSection comments={comments} blogId={blogId} />}
+        {isDetail && (
+          <CommentSection
+            key={blogId}
+            comments={comments}
+            blogId={blogId}
+          />
+        )}
 
         <MediaModal
           imageUrls={mediaUrls} // Media files (images + videos)

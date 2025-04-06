@@ -168,10 +168,27 @@ export function newCommentFromJson(jsonData: any) {
 export function likedListFromJson(jsonData: any) {
   return {
     likes: jsonData.data.likes.map((like: Like) => ({
-      likeId: like.id,
-      userId: like.user.id,
-      name: like.user.name,
-      profile_picture: like.user.profile_picture,
+      id: like.id,
+      user: {
+        id: like.user.id,
+        name: like.user.name,
+        profile_picture: like.user.profile_picture,
+      },
+    })),
+  };
+}
+
+export function commentsFromJson(jsonData: any) {
+  return {
+    comments: jsonData.data.comments.map((comment: Comment) => ({
+      id: comment.id,
+      content: comment.content,
+      user: {
+        id: comment.user.id,
+        name: comment.user.name,
+        profile_picture: comment.user.profile_picture,
+      },
+      created_at: comment.created_at,
     })),
   };
 }

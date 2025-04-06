@@ -11,6 +11,7 @@ export const APIS = {
     getSubjects: "subjects",
     getMajorsWithSubjects: "majors-with-subjects",
     getBlogs: "blogs",
+    getBlogById: (blogId: number) => `blogs/${blogId}`,
   },
   POST: {
     login: "auth/login",
@@ -26,6 +27,7 @@ export const APIS = {
 
     unassignStudent: "staffs/unassign-student-tutor",
     allocateStudent: "staffs/allocate-student-tutor",
+    deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
   },
   PATCH: {
     updatePassword: "update-password", // reset password

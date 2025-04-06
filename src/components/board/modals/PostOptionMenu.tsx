@@ -1,19 +1,22 @@
 "use client";
 
+import { deleteBlog } from "@/api/services/blogs";
 import WarningPopup from "@/components/warningpopup/WarningPopup";
+import { errorStore } from "@/stores/errorStore";
 import { useUserStore } from "@/stores/useUserStore";
 import { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 interface Props {
-  // onEdit: () => void;
+  blogId: number;
   onDelete: () => void;
 }
 
-const PostOptionsMenu = ({ onDelete }: Props) => {
+const PostOptionsMenu = ({ blogId, onDelete }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showWarningPopup, setWarningPopup] = useState(false);
+  const { isError, setError } = errorStore();
 
   const { isReadOnly } = useUserStore();
 
@@ -25,10 +28,18 @@ const PostOptionsMenu = ({ onDelete }: Props) => {
   };
 
   const handleDelete = async () => {
-    // api
-    alert("waiting for backend to implement delete");
+    try {
+      await deleteBlog(blogId);
+
+      onDelete();
+    } catch (error: any) {
+      setError(
+        error.errorText ||
+          error.message ||
+          "Error fetching blogs. Please refresh the page and try again."
+      );
+    }
     setWarningPopup(false);
-    onDelete(); // Trigger parent to remove blog from UI
   };
 
   return (
@@ -51,20 +62,8 @@ const PostOptionsMenu = ({ onDelete }: Props) => {
       )}
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-lg w-40">
-          <ul className="py-2">
-            <li>
-              {/* <button
-                onClick={() => {
-                  onEdit();
-                  setIsOpen(false); // Close the menu after action
-                }}
-                className='flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-              >
-                <FaRegEdit size={20} />
-                Edit
-              </button> */}
-            </li>
+        <div className='absolute right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-lg w-40'>
+          <ul className='py-2'>
             <li>
               <button
                 onClick={confirmDelete}
