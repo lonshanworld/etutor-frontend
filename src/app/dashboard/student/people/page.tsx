@@ -17,9 +17,9 @@ export default async function PeoplePage({
     name?: string;
   }>;
 }) {
-
   return (
-    <StudentListPage searchParams={searchParams} />
-  );  
-  
+    <div className="pb-10">
+      <StudentListPage searchParams={searchParams} />
+    </div>
+  );
 }

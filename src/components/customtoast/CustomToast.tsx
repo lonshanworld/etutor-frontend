@@ -62,7 +62,7 @@ export default function Toast({ message, type }: ToastProps) {
   return (
     <div
       className={`fixed top-[70px] right-0 sm:w-[350px] md:w-[400px] bg-toastBg text-toastFont text-wrap p-0 rounded-lg shadow-lg overflow-hidden
-        transition-transform duration-300 ease-in-out z-20
+        transition-transform duration-300 ease-in-out z-[100]
         ${isVisible ? "translate-x-0 opacity-100" : "translate-x-[100%] opacity-0"} 
         ${isClosing ? "translate-x-[100%] opacity-0" : ""}`}
     >
@@ -73,16 +73,14 @@ export default function Toast({ message, type }: ToastProps) {
           alt=""
         />
         <div className="ms-3">
-          <h1 className="md:text-xl font-bold capitalize">
-            {type}
-          </h1>
+          <h1 className="md:text-xl font-bold capitalize">{type}</h1>
           <span className="text-[12px] md:text-sm">{message}</span>
         </div>
       </div>
       <div
         className={twMerge(
           "h-1 md:h-2 transition-all duration-50",
-          getProgressBarColor(type),
+          getProgressBarColor(type)
         )}
         style={{ width: `${progress}%` }}
       ></div>

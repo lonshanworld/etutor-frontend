@@ -1,5 +1,6 @@
 "use client";
 
+import { useUserStore } from "@/stores/useUserStore";
 import { FiEdit } from "react-icons/fi";
 
 interface Props {
@@ -14,6 +15,8 @@ const NavBar = ({
   viewCreateNewBlog: viewNewBlog,
 }: Props) => {
   // Scroll to top function
+  const { isReadOnly } = useUserStore();
+
   const scrollToTop = () => {
     const container = document.getElementById("postContainer");
     if (container) {
@@ -28,14 +31,14 @@ const NavBar = ({
   };
 
   return (
-    <div className='flex items-center md:w-1/2 w-full justify-between bg-secondaryBackground px-3 mt-1  py-2 absolute top-0 left-0 z-5'>
-      <div className='flex gap-4 h-full'>
-        <div className='flex items-baseline text-xl gap-4 h-full py-1'>
+    <div className="flex items-center md:w-1/2 w-full justify-between bg-secondaryBackground px-3 mt-1  py-2 absolute top-0 left-0 z-5">
+      <div className="flex gap-4 h-full">
+        <div className="flex items-baseline text-xl gap-4 h-full py-1">
           <div
             className={`p-1 cursor-pointer border-b-2 ${
-              selectedTab === "blog" ?
-                "border-b-theme text-theme"
-              : "text-secondaryText border-transparent"
+              selectedTab === "blog"
+                ? "border-b-theme text-theme"
+                : "text-secondaryText border-transparent"
             }`}
             onClick={handleBlog}
           >
@@ -43,9 +46,9 @@ const NavBar = ({
           </div>
           <div
             className={`p-1 cursor-pointer border-b-2  ${
-              selectedTab === "file" ?
-                "border-b-theme text-theme"
-              : "text-secondaryText border-transparent"
+              selectedTab === "file"
+                ? "border-b-theme text-theme"
+                : "text-secondaryText border-transparent"
             }`}
             onClick={() => onSelectTab("file")}
           >
@@ -56,8 +59,9 @@ const NavBar = ({
       <div></div>
       {selectedTab === "blog" && (
         <button
-          className='bg-theme rounded-sm px-7 py-2 text-white flex items-center gap-2'
+          className={`bg-theme rounded-sm px-7 py-2 text-white flex items-center gap-2 ${isReadOnly && "pointer-events-none opacity-50"}`}
           onClick={viewNewBlog}
+          disabled={isReadOnly}
         >
           <FiEdit size={20} /> POST
         </button>

@@ -140,26 +140,11 @@ const CreateNewBlogModal = ({
 
   const getFileIcon = (fileType: string) => {
     if (fileType.startsWith("image/"))
-      return (
-        <AiOutlineFileImage
-          size={24}
-          className='text-blue-500'
-        />
-      );
+      return <AiOutlineFileImage size={24} className="text-blue-500" />;
     if (fileType.startsWith("video/"))
-      return (
-        <FaRegFileVideo
-          size={24}
-          className='text-purple-500'
-        />
-      );
+      return <FaRegFileVideo size={24} className="text-purple-500" />;
     if (fileType === "application/pdf")
-      return (
-        <AiOutlineFilePdf
-          size={24}
-          className='text-red-500'
-        />
-      );
+      return <AiOutlineFilePdf size={24} className="text-red-500" />;
 
     // Microsoft Office Formats (Word, Excel, PowerPoint)
     const wordTypes = [
@@ -177,107 +162,81 @@ const CreateNewBlogModal = ({
     ];
 
     if (wordTypes.includes(fileType))
-      return (
-        <AiOutlineFileWord
-          size={24}
-          className='text-blue-700'
-        />
-      );
+      return <AiOutlineFileWord size={24} className="text-blue-700" />;
     if (excelTypes.includes(fileType))
-      return (
-        <AiOutlineFileExcel
-          size={24}
-          className='text-green-600'
-        />
-      );
+      return <AiOutlineFileExcel size={24} className="text-green-600" />;
     if (pptTypes.includes(fileType))
-      return (
-        <AiOutlineFilePpt
-          size={24}
-          className='text-orange-500'
-        />
-      );
+      return <AiOutlineFilePpt size={24} className="text-orange-500" />;
 
     // Default icon
-    return (
-      <AiOutlineFile
-        size={24}
-        className='text-gray-500'
-      />
-    );
+    return <AiOutlineFile size={24} className="text-gray-500" />;
   };
 
   return (
-    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50'>
-      <div className='bg-background w-[97%] max-w-[500px] h-auto flex flex-col rounded-lg'>
-        <div className='flex items-center justify-center font-semibold text-lg w-full  relative py-3'>
-          <div className='text-xl font-semibold'>Create Blog</div>
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50">
+      <div className="bg-background w-[97%] max-w-[500px] h-auto flex flex-col rounded-lg">
+        <div className="flex items-center justify-center font-semibold text-lg w-full  relative py-3">
+          <div className="text-xl font-semibold">Create Blog</div>
           <div
-            className='rounded-full p-1.5 cursor-pointer absolute right-2 hover:bg-gray-400'
+            className="rounded-full p-1.5 cursor-pointer absolute right-2 hover:bg-gray-400"
             onClick={onClose}
           >
-            <RxCross2
-              className={`${"text-theme"}`}
-              size={23}
-            />
+            <RxCross2 className={`${"text-theme"}`} size={23} />
           </div>
         </div>
 
         <HorizontalDivider />
 
-        <div className='px-4 pt-4 pb-6'>
-          <div className='flex'>
-            <div className='flex items-center gap-2'>
-              <div className='w-7 h-7 rounded-full overflow-hidden'>
-                <ProfilePic
-                  profileUrl={profileUrl}
-                  size={28}
-                />
+        <div className="px-4 pt-4 pb-6">
+          <div className="flex">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full overflow-hidden">
+                <ProfilePic profileUrl={profileUrl} size={28} />
               </div>
               <div>
-                <p className='font-semibold'>{username}</p>
+                <p className="font-semibold">{username}</p>
               </div>
             </div>
           </div>
 
           {/* Input fields */}
-          <div className='flex flex-col gap-3 pt-4'>
+          <div className="flex flex-col gap-3 pt-4">
             <input
-              className='mt-1 h-10 w-full px-3 border bg-transparent border-gray-400 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-md'
-              type='text'
-              placeholder='Title'
+              className="mt-1 h-10 w-full px-3 border bg-transparent border-gray-400 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-md"
+              type="text"
+              placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <textarea
               rows={5}
-              placeholder='Write something...'
-              className='w-full p-3 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none bg-transparent transition-all duration-300 placeholder-gray-400 overflow-y-auto'
+              placeholder="Write something..."
+              className="w-full p-3 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none bg-transparent transition-all duration-300 placeholder-gray-400 overflow-y-auto"
               value={content}
               onChange={(e) => setContent(e.target.value)}
             ></textarea>
           </div>
 
-          <div className='flex flex-col overflow-y-auto max-h-[350px]'>
+          <div className="flex flex-col overflow-y-auto max-h-[350px]">
             {files.length > 0 && (
-              <div className='space-y-2'>
+              <div className="space-y-2">
                 {files.map((fileData, index) => (
                   <div
                     key={index}
-                    className='flex items-center bg-gray-100 p-2 rounded-lg'
+                    className="flex items-center bg-gray-100 p-2 rounded-lg"
                   >
                     {getFileIcon(fileData.file.type)}
-                    <div className='ml-3 flex-1'>
-                      <p className='text-sm font-medium'>
+                    <div className="ml-3 flex-1">
+                      <p className="text-sm font-medium">
                         {fileData.file.name}
                       </p>
-                      <p className='text-xs text-gray-500'>
+                      <p className="text-xs text-gray-500">
                         {(fileData.file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
                     <button
                       onClick={() => removeFile(index)}
-                      className='text-red-500'
+                      className="text-red-500"
                     >
                       <CgClose size={20} />
                     </button>
@@ -286,16 +245,16 @@ const CreateNewBlogModal = ({
               </div>
             )}
           </div>
-          {error && <p className='text-red-500 text-sm my-1'>{error}</p>}
+          {error && <p className="text-red-500 text-sm my-1">{error}</p>}
 
-          <div className='flex flex-col gap-2 justify-end items-center pt-2'>
-            <label className='flex items-center justify-center gap-2 cursor-pointer bg-blue-500 text-white px-4 py-1.5 w-full'>
+          <div className="flex flex-col gap-2 justify-end items-center pt-2">
+            <label className="flex items-center justify-center gap-2 cursor-pointer bg-blue-500 text-white px-4 py-1.5 w-full">
               Add Attachment
               <GrAttachment />
               <input
-                type='file'
+                type="file"
                 multiple
-                className='hidden'
+                className="hidden"
                 onChange={handleFileSelect}
               />
             </label>
@@ -306,11 +265,13 @@ const CreateNewBlogModal = ({
               className={`${loading ? "bg-gray-400" : "bg-teal-600"}  text-background text-white px-5 py-1.5 w-full`}
               disabled={loading}
             >
-              {loading ?
+              {loading ? (
                 <>
                   <span>Posting...</span> <Spinner />
                 </>
-              : "Post"}
+              ) : (
+                "Post"
+              )}
             </button>
           </div>
         </div>

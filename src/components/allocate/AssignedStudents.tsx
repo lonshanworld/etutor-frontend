@@ -117,6 +117,7 @@ const AssignedStudents = ({
     console.log("assigning...", selectedUsers);
     try {
       const response = await unassignedStudent({ student_id: selectedUsers });
+      console.log("res", response);
       showToast(response.message, "success");
       if (!response.errorCode) {
         setTimeout(() => {

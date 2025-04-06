@@ -38,6 +38,7 @@ import useLoading from "@/stores/useLoading";
 import { createConversation } from "../../../convex/chatRoom";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import Cookies from "js-cookie";
 
 export type UserType = {
   label: string;
@@ -67,7 +68,7 @@ export default function UserProfile({
   const [info, setInfo] = useState<UserType[] | null>(null);
   const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
-  const { user } = useUserStore();
+  const { user, setViewUser } = useUserStore();
 
   const {
     register,
@@ -150,7 +151,16 @@ export default function UserProfile({
     }
   };
 
-  console.log("show detail", showDetail);
+  const viewDashboard = (profileData: Profile) => {
+    // setViewUser(profileData);
+    console.log("view dashboard", profileData);
+    Cookies.set("viewUser", JSON.stringify(profileData), { expires: 7 });
+    if (profileData.role === UserRole.student) {
+      router.push(AppRouter.studentBoard);
+    } else if (profileData.role == UserRole.tutor) {
+      router.push(AppRouter.tutorBoard);
+    }
+  };
 
   if (!profileData) return <div>Loading...</div>;
   return (
@@ -384,7 +394,10 @@ export default function UserProfile({
             </div>
 
             {showDetail && (
-              <div className="float-right mb-5 mt-3 me-5">
+              <div
+                className="float-right mb-5 mt-3 me-5"
+                onClick={() => viewDashboard(profileData)}
+              >
                 <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
                   View Dashboard
                 </button>

@@ -6,12 +6,15 @@ import CreateMeetingForm from "./CreateMeetingForm";
 import { activeMeetingData, historyMeetingData } from "./data";
 import MeetingDetail from "./MeetingDetail";
 import { meetingProps } from "./MeetingDetail";
+import { useUserStore } from "@/stores/useUserStore";
 
 const Meeting = () => {
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
   const [viewDetail, setViewDetail] = useState<meetingProps | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [meetings, setMeetings] = useState(activeMeetingData);
+
+  const { isReadOnly } = useUserStore();
 
   useEffect(() => {
     setMeetings(
@@ -42,29 +45,21 @@ const Meeting = () => {
 
   return (
     <>
-      <div className='w-full h-full relative'>
-        <div className='absolute top-0 left-0 right-0 bottom-0 flex flex-row sm:py-4 py-2 px-4'>
-          {viewDetail ?
-            <MeetingDetail
-              onBack={() => setViewDetail(null)}
-              {...viewDetail}
-            />
-          : <div className='flex flex-col md:px-8 w-full'>
-              <NavBar
-                onSelectTab={setActiveTab}
-                selectedTab={activeTab}
-              />
+      <div className="w-full h-full relative">
+        <div className="absolute top-0 left-0 right-0 bottom-0 flex flex-row sm:py-4 py-2 px-4">
+          {viewDetail ? (
+            <MeetingDetail onBack={() => setViewDetail(null)} {...viewDetail} />
+          ) : (
+            <div className="flex flex-col md:px-8 w-full">
+              <NavBar onSelectTab={setActiveTab} selectedTab={activeTab} />
 
-              <MeetingList
-                meetings={meetings}
-                viewDetail={handleViewDetail}
-              />
+              <MeetingList meetings={meetings} viewDetail={handleViewDetail} />
 
-              <div className='flex justify-end pt-4 w-full bg-secondaryBackground absolute bottom-0 right-0'>
+              <div className="flex justify-end pt-4 w-full bg-secondaryBackground absolute bottom-0 right-0">
                 <Button
                   onClick={() => setOpenCreate(true)}
-                  size='default'
-                  className='mr-12 mb-8 max-lg:mb-4 max-md:mr-4'
+                  size="default"
+                  className={`mr-12 mb-8 max-lg:mb-4 max-md:mr-4 ${isReadOnly && "pointer-events-none opacity-50"}`}
                 >
                   Create Meeting
                 </Button>
@@ -75,7 +70,7 @@ const Meeting = () => {
                 onBack={() => setOpenCreate(false)}
               />
             </div>
-          }
+          )}
         </div>
       </div>
     </>

@@ -47,7 +47,7 @@ export default function TableDemo({
   const { activeRowId, position, setActiveRow, closeOptionBox } =
     useOptionBoxStore();
 
-  const { user } = useUserStore();
+  const { user: loggedInUser } = useUserStore();
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
   const { selectedUser, setSelectedUser } = useSelectedUser();
@@ -108,7 +108,7 @@ export default function TableDemo({
 
   const showUserDetail = (id: number) => {
     console.log("show user detail");
-    user?.id === id ? setProfileDetailPopup(true) : setShowDetail(true);
+    loggedInUser?.id === id ? setProfileDetailPopup(true) : setShowDetail(true);
     getSelectedUser(id);
   };
 
@@ -174,6 +174,7 @@ export default function TableDemo({
       showToast("Error occurred while deactivating the user", "error");
     }
   };
+  console.log("porfile user", loggedInUser?.role);
 
   return (
     <div className="sm:rounded-t-xl overflow-hidden">
@@ -189,9 +190,11 @@ export default function TableDemo({
               Activity Status
             </TableHead>
             <TableHead className="max-md:hidden">View</TableHead>
-            <TableHead className="max-sm:text-sm sm:rounded-tr-md">
-              Action
-            </TableHead>
+            {loggedInUser?.role === UserRole.staff && (
+              <TableHead className="max-sm:text-sm sm:rounded-tr-md">
+                Action
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody className="max-sm:text-[11px]">
@@ -237,18 +240,20 @@ export default function TableDemo({
                     View Profile
                   </button>
                 </TableCell>
-                <TableCell className="flex justify-center items-center mt-1 h-[70px]">
-                  <button
-                    ref={(el) => {
-                      if (menuRefs) menuRefs.current[user.id] = el;
-                    }}
-                    onClick={() => handleMenuClick(user.id)}
-                    className="p-2 rounded-md hover:bg-
+                {loggedInUser?.role === UserRole.staff && (
+                  <TableCell className="flex justify-center items-center mt-1 h-[70px]">
+                    <button
+                      ref={(el) => {
+                        if (menuRefs) menuRefs.current[user.id] = el;
+                      }}
+                      onClick={() => handleMenuClick(user.id)}
+                      className="p-2 rounded-md hover:bg-
                     optionBgHover"
-                  >
-                    <BsThreeDots />
-                  </button>
-                </TableCell>
+                    >
+                      <BsThreeDots />
+                    </button>
+                  </TableCell>
+                )}
               </TableRow>
             ))
           ) : (
@@ -356,8 +361,6 @@ export default function TableDemo({
           />
         )}
       </div>
-
-     
     </div>
   );
 }

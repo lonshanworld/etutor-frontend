@@ -18,6 +18,7 @@ import { sendChatFiles } from "@/api/services/chatService";
 import { isErrorModel } from "@/model/ErrorModel";
 import useLoading from "@/stores/useLoading";
 import PreviewBox from "./PreviewBox";
+import { useUserStore } from "@/stores/useUserStore";
 
 const itemCount = 10;
 
@@ -57,33 +58,31 @@ export default function ChatList({
   const markMessagesAsRead = useMutation(api.message.markMessagesAsRead);
   const [files, setFiles] = useState<File[]>([]); // Store multiple selected files
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const {toast,showToast} = useToast();
-  const {showLoading, hideLoading} = useLoading();
-  
+  const { toast, showToast } = useToast();
+  const { showLoading, hideLoading } = useLoading();
+  const { isReadOnly } = useUserStore();
 
-  const { results, isLoading, status, loadMore } = chat 
-  ?
-  usePaginatedQuery(
-    api.message.getMessages,
-    {
-      conversationId: chat._id as any,
-    },
-    {
-      initialNumItems: itemCount,
-    }
-  ) 
-  :
-  usePaginatedQuery(
-    api.note.getNotes,
-    {
-      senderId: user.id,
-    },
-    {
-      initialNumItems: itemCount,
-    }
-  );
+  const { results, isLoading, status, loadMore } = chat
+    ? usePaginatedQuery(
+        api.message.getMessages,
+        {
+          conversationId: chat._id as any,
+        },
+        {
+          initialNumItems: itemCount,
+        }
+      )
+    : usePaginatedQuery(
+        api.note.getNotes,
+        {
+          senderId: user.id,
+        },
+        {
+          initialNumItems: itemCount,
+        }
+      );
 
-  if(chat){
+  if (chat) {
     useEffect(() => {
       if (results.length > 0) {
         markMessagesAsRead({
@@ -94,14 +93,12 @@ export default function ChatList({
     }, [results]);
   }
 
-
-
   // Handle sending a message
   const handleSendMessage = async () => {
-    if (!message.trim() && (files.length <1)) return;
-    try{
-      let fileUrls : string[] = [];
-      if(files.length > 0){
+    if (!message.trim() && files.length < 1) return;
+    try {
+      let fileUrls: string[] = [];
+      if (files.length > 0) {
         showLoading();
 
         const formData = new FormData();
@@ -109,43 +106,43 @@ export default function ChatList({
           formData.append(`attachments[${index}]`, file);
         });
         const data = await sendChatFiles(formData);
-        if(!isErrorModel(data)){
-          data.forEach((item : string) => {
+        if (!isErrorModel(data)) {
+          data.forEach((item: string) => {
             fileUrls.push(item);
           });
           console.log("checking urls", fileUrls);
-        }else{
+        } else {
           throw new Error(data.errorText);
         }
       }
 
-      if(chat){
+      if (chat) {
         await sendMessage({
           conversation_id: chat._id as any,
           sender_id: user.id,
           context: message,
           fileUrls: fileUrls,
         });
-      }else{
+      } else {
         await sendNote({
           sender_id: user.id,
           context: message,
           fileUrls: fileUrls,
         });
       }
-
-      
-    }catch(err :any){
+    } catch (err: any) {
       console.log("check err", err);
-        showToast("Error sending message: " + err.errorText ||
+      showToast(
+        "Error sending message: " + err.errorText ||
           err.message ||
-          "An unknown error occurred. Please try again.", "Error");
-    }finally{
+          "An unknown error occurred. Please try again.",
+        "Error"
+      );
+    } finally {
       setMessage("");
-        setFiles([]);
+      setFiles([]);
       hideLoading();
     }
-  
   };
 
   const openFileDialog = () => {
@@ -157,35 +154,38 @@ export default function ChatList({
   const handleFileChange = () => {
     if (fileInputRef.current?.files) {
       const selectedFiles = Array.from(fileInputRef.current.files);
-      
+
       const maxFileList = hasMaxFileSizeForChat(selectedFiles);
 
-      if(selectedFiles.length > 10){
+      if (selectedFiles.length > 10) {
         showToast("Maximum 10 files can be selected", "Alert");
         return;
       }
-      
-      if(maxFileList.length > 0){
+
+      if (maxFileList.length > 0) {
         console.log("reach here???");
-        showToast(`Some files exceed 3MB limit: ${maxFileList.map(f => f.name).join(', ')}`, "Alert");
+        showToast(
+          `Some files exceed 3MB limit: ${maxFileList.map((f) => f.name).join(", ")}`,
+          "Alert"
+        );
         return;
       }
 
       setFiles(selectedFiles);
-      const previewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
-     
-        
+      const previewUrls = selectedFiles.map((file) =>
+        URL.createObjectURL(file)
+      );
+
       fileInputRef.current.value = "";
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       // e.preventDefault();
       handleSendMessage();
     }
   };
-  
 
   const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
@@ -193,15 +193,20 @@ export default function ChatList({
   };
 
   return (
-    <div className={`flex flex-col ${chat ? "h-[88%]" : "h-[95%]"} w-full relative`}>
+    <div
+      className={`flex flex-col ${chat ? "h-[88%]" : "h-[95%]"} w-full relative`}
+    >
       {/* Messages List */}
-      
+
       <div className="absolute left-0 right-0 top-0 bottom-12 py-4 flex flex-col-reverse gap-2 overflow-y-auto scrollbar-none">
-        
-        
-          {/* Show messages */}
-      {results?.map((msg) => (
-          <MessageBox key={msg._id} isChat={checkExist(chat)} isMine={msg.sender_id === user.id} message={msg as MessageType} />
+        {/* Show messages */}
+        {results?.map((msg) => (
+          <MessageBox
+            key={msg._id}
+            isChat={checkExist(chat)}
+            isMine={msg.sender_id === user.id}
+            message={msg as MessageType}
+          />
         ))}
 
         {/* Show "No messages yet" */}
@@ -228,39 +233,37 @@ export default function ChatList({
             Load More Messages
           </button>
         )}
-
-      
-         
       </div>
 
-        {
-          files.length > 0 && (
+      {files.length > 0 && (
+        <div className="absolute bottom-12 right-0 max-w-[75%] sm:max-w-[65%] md:max-w-[55%] min-w-28 h-28 overflow-x-auto custom-scrollbar flex flex-row gap-2 bg-background rounded-t-md rounded-l-md shadow-cusShadow">
+          {files.map((file, index) => (
             <div
-            className="absolute bottom-12 right-0 max-w-[75%] sm:max-w-[65%] md:max-w-[55%] min-w-28 h-28 overflow-x-auto custom-scrollbar flex flex-row gap-2 bg-background rounded-t-md rounded-l-md shadow-cusShadow">
-             {files.map((file, index) => (
-  <div key={index} className="relative flex-shrink-0 rounded-sm w-28 h-full overflow-clip">
-    <PreviewBox file={file} />
-            <button
-              onClick={() => removeFile(index)}
-              className="absolute top-0 right-0 w-5 h-5 flex justify-center items-center bg-red-500 text-white rounded-full p-1"
+              key={index}
+              className="relative flex-shrink-0 rounded-sm w-28 h-full overflow-clip"
             >
-              <ImCross className="text-xss text-white" />
-            </button>
-          </div>
-        ))}
+              <PreviewBox file={file} />
+              <button
+                onClick={() => removeFile(index)}
+                className="absolute top-0 right-0 w-5 h-5 flex justify-center items-center bg-red-500 text-white rounded-full p-1"
+              >
+                <ImCross className="text-xss text-white" />
+              </button>
             </div>
-          )
-        }
+          ))}
+        </div>
+      )}
 
       {/* Input Section */}
-      <div className="absolute bottom-0 left-0 right-0 border border-cusGray2 rounded-2xl flex flex-row justify-center items-center px-4 h-11">
+      <div
+        className={`absolute bottom-0 left-0 right-0 border border-cusGray2 rounded-2xl flex flex-row justify-center items-center px-4 h-11 ${isReadOnly && "pointer-events-none opacity-30"}`}
+      >
         <input
           placeholder="Type your message here"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="outline-none focus:outline-none w-full bg-transparent text-base placeholder:text-base"
           onKeyDown={handleKeyPress}
-
         />
         <input
           type="file"
@@ -269,13 +272,16 @@ export default function ChatList({
           onChange={handleFileChange}
           multiple
         />
-        <Image onClick={openFileDialog} src={LinkAttachment} alt="Attach File" />
+        <Image
+          onClick={openFileDialog}
+          src={LinkAttachment}
+          alt="Attach File"
+        />
         <div className="w-[3px] h-6 rounded-t-full rounded-b-full mx-3 bg-cusGray"></div>
-        <button  onClick={handleSendMessage}>
+        <button onClick={handleSendMessage}>
           <Image src={SendIcon} alt="Send" />
         </button>
       </div>
-
     </div>
   );
 }

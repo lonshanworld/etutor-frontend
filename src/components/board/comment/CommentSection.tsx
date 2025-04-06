@@ -5,6 +5,7 @@ import CommentInputField from "./CommentInputField";
 import PostComment from "./CommentCard";
 import { Comment } from "@/model/blog";
 import { formatTime } from "@/utils/formatData";
+import { useUserStore } from "@/stores/useUserStore";
 
 interface Props {
   blogId: number;
@@ -13,15 +14,16 @@ interface Props {
 
 const CommentSection = ({ blogId, comments }: Props) => {
   const [commentList, setCommentList] = useState<Comment[]>(comments);
+  const { isReadOnly } = useUserStore();
 
   const addComment = (newComment: Comment) => {
     setCommentList((prevComments) => [...prevComments, newComment]);
   };
 
   return (
-    <div className='bg-background'>
-      <div className='p-4'>
-        {commentList.length > 0 ?
+    <div className="bg-background">
+      <div className="p-4">
+        {commentList.length > 0 ? (
           commentList.map((comment) => (
             <PostComment
               key={comment.id}
@@ -31,13 +33,14 @@ const CommentSection = ({ blogId, comments }: Props) => {
               comment={comment.content}
             />
           ))
-        : <div>No comments</div>}
+        ) : (
+          <div>No comments</div>
+        )}
       </div>
-      <div className='mx-3 pt-1 pb-3'>
-        <CommentInputField
-          onAddComment={addComment}
-          blogId={blogId}
-        />
+      <div
+        className={`mx-3 pt-1 pb-3 ${isReadOnly && "pointer-events-none opacity-50"}`}
+      >
+        <CommentInputField onAddComment={addComment} blogId={blogId} />
       </div>
     </div>
   );

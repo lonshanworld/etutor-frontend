@@ -45,9 +45,11 @@ export default function DashboardTemplate({
       <div className="py-3 pr-4 hidden lg:block">
         <DashboardAppbar />
       </div>
-      <div className={`px-4 py-2 ${checkHaveAccess() ? "block lg:hidden" : "hidden sm:block lg:hidden"}`}>
-          <DashboardAppbarMobile onClickMenu={openSidebar} />
-        </div>
+      <div
+        className={`px-4 py-2 ${checkHaveAccess() ? "block lg:hidden" : "hidden sm:block lg:hidden"}`}
+      >
+        <DashboardAppbarMobile onClickMenu={openSidebar} />
+      </div>
       <div className="flex flex-row w-full h-full">
         <div className="w-56 h-full hidden flex-col gap-2 items-start pr-5 bg-opacity-50 lg:flex">
           <SideBarContainer />
