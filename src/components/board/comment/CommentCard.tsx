@@ -1,25 +1,29 @@
 "use client";
 
-import Image from "next/image";
-import placeholderProfile from "@/assets/images/placeholder-profile.png";
+import ProfilePic from "@/components/ProfilePic";
 
 interface Props {
   username: string;
   profilePic: string | null;
   time: string;
   comment: string;
+  isSending?: boolean;
 }
-const CommentCard = ({ username, profilePic, time, comment }: Props) => {
+const CommentCard = ({
+  username,
+  profilePic,
+  time,
+  comment,
+  isSending = false,
+}: Props) => {
   return (
     <div className='py-3'>
       <div className='flex gap-4'>
         <div className='w-10 h-10 rounded-full overflow-hidden'>
-          <Image
-            src={profilePic || placeholderProfile}
-            alt={`${username}'s profile`}
-            width={40}
-            height={40}
-            className='object-cover'
+          <ProfilePic
+            profileUrl={profilePic}
+            size={40}
+            alt={`${username} profile picture`}
           />
         </div>
 
@@ -28,9 +32,14 @@ const CommentCard = ({ username, profilePic, time, comment }: Props) => {
             <p className='font-semibold'>{username}</p>
             <p className='text-xsm'>{time}</p>
           </div>
-          <div className='bg-boardFile p-2 rounded-sm break-words'>
-            {comment}
+          <div className='flex'>
+            <div className='bg-boardFile px-4 py-1.5 break-words rounded-xl'>
+              {comment}
+            </div>
           </div>
+          {isSending && (
+            <p className='text-gray-400 text-xs italic mt-1'>sending...</p>
+          )}
         </div>
       </div>
     </div>

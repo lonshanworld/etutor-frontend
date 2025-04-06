@@ -35,7 +35,7 @@ export default async function StudentListPage({
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Students"
-          url={AppRouter.staffDashboardStudents}
+          url={AppRouter.staffStudents}
         />
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />

@@ -79,7 +79,7 @@ const DraggableButton = () => {
     setViewUser(null);
     // router.push();
     Cookies.remove("viewUser");
-    window.location.href = AppRouter.staffDashboardStaff;
+    window.location.href = AppRouter.staffStaff;
   };
 
   return (

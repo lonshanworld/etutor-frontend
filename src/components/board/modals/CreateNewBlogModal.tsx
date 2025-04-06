@@ -4,6 +4,7 @@ import Toast from "@/components/customtoast/CustomToast";
 import HorizontalDivider from "@/components/dividers/HorizontalDivider";
 import ProfilePic from "@/components/ProfilePic";
 import Spinner from "@/components/Spinner";
+import { useBlogStore } from "@/stores/useBlogStore";
 import { useToast } from "@/stores/useToast";
 import { formatTime } from "@/utils/formatData";
 import { useEffect, useState } from "react";
@@ -46,11 +47,8 @@ const CreateNewBlogModal = ({
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-  const { toast, showToast } = useToast();
-
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
+  const { showToast } = useToast();
+  const { setCommentCount, setIsLiked, setLikeCount } = useBlogStore();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
@@ -123,8 +121,13 @@ const CreateNewBlogModal = ({
         comments: response.comments,
         likeCount: response.likes.length,
         commentCount: response.comments.length,
-        isLiked: false, // Assume no likes initially until user interacts
+        isOwnBlog: true,
+        isLiked: false,
       };
+
+      setLikeCount(response.id, 0);
+      setCommentCount(response.comment, 0);
+      setIsLiked(response.id, false);
 
       showToast("New blog posted successfully", "success");
       onBlogPosted(formattedNewBlog);

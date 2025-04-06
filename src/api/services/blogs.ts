@@ -1,8 +1,7 @@
 import {
-  Blog,
   blogFromJson,
   BlogResponse,
-  fileDataFromJson,
+  commentsFromJson,
   likedListFromJson,
   newBlogFromJson,
   newCommentFromJson,
@@ -43,7 +42,6 @@ export async function giveComment(
   blogId: number,
   comment: string
 ): Promise<any> {
-  console.log(blogId, comment);
   const response = await PostRequest(
     {
       blog_id: blogId,
@@ -71,7 +69,7 @@ export async function uploadFile(files: File[]): Promise<any> {
   if (isErrorModel(response)) {
     throw response;
   }
-  // const data = fileDataFromJson(response);
+
   return response;
 }
 
@@ -98,8 +96,7 @@ export async function addBlog(
 }
 
 export async function fetchLikedList(blogId: number): Promise<any> {
-  const url = `${APIS.GET.getBlogs}/${blogId}`;
-  const response = await GetRequest(url);
+  const response = await GetRequest(APIS.GET.getBlogById(blogId));
 
   if (isErrorModel(response)) {
     throw response;
@@ -107,4 +104,25 @@ export async function fetchLikedList(blogId: number): Promise<any> {
 
   const data = likedListFromJson(response);
   return data;
+}
+
+export async function fetchComments(blogId: number): Promise<any> {
+  const response = await GetRequest(APIS.GET.getBlogById(blogId));
+
+  if (isErrorModel(response)) {
+    throw response;
+  }
+
+  const data = commentsFromJson(response);
+  return data;
+}
+
+export async function deleteBlog(blogId: number): Promise<any> {
+  const response = await PostRequest({}, APIS.POST.deleteBlog(blogId));
+
+  if (isErrorModel(response)) {
+    throw response;
+  }
+
+  return response;
 }

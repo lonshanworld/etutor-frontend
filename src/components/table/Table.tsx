@@ -148,11 +148,11 @@ export default function TableDemo({
     } else if (loggedInUser && loggedInUser.role === UserRole.staff) {
       switch (role) {
         case UserRole.student:
-          return AppRouter.staffDashboardStudents;
+          return AppRouter.staffStudents;
         case UserRole.tutor:
-          return AppRouter.staffDashboardTutors;
+          return AppRouter.staffTutors;
         case UserRole.staff:
-          return AppRouter.staffDashboardStaff;
+          return AppRouter.staffStaff;
       }
     } else if (loggedInUser?.role === UserRole.student) {
       return AppRouter.studentPeople;

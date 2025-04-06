@@ -114,7 +114,7 @@ const StudentTable = ({ data, pageCount, currentPage }: TableProps) => {
           <PaginationDemo
             pageCount={pageCount}
             currentPage={currentPage}
-            url={AppRouter.staffDashboardAllocateStudent}
+            url={AppRouter.staffAllocateStudent}
           />
         )}
         {/* {!isSearch && (
