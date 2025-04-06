@@ -10,10 +10,13 @@ export const AppRouter = {
   resetPassword: "/reset-password",
 
   staffDashboard: "/dashboard/staff",
-  staffDashboardStudents: "/dashboard/staff/students",
-  staffDashboardTutors: "/dashboard/staff/tutors",
-  staffDashboardStaff: "/dashboard/staff/staffs",
-  staffDashboardAllocate: "/dashboard/staff/allocate",
+  staffStudents: "/dashboard/staff/students",
+  staffTutors: "/dashboard/staff/tutors",
+  staffStaff: "/dashboard/staff/staffs",
+  staffAllocate: "/dashboard/staff/allocate",
+  staffActiveUsers: "/dashboard/staff/active-users",
+  staffBrowsers : "/dashboard/staff/viewed-browsers",
+  staffPages : "/dashboard/staff/viewed-pages",
 
   studentDashboard: "/dashboard/student",
   studentChat: "/dashboard/student/chat",

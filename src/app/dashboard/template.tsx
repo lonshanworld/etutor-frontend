@@ -49,7 +49,7 @@ export default function DashboardTemplate({
           <DashboardAppbarMobile onClickMenu={openSidebar} />
         </div>
       <div className="flex flex-row w-full h-full">
-        <div className="w-56 h-full hidden flex-col gap-2 items-start pr-5 bg-opacity-50 lg:flex">
+        <div className="w-64 h-full hidden flex-col gap-2 items-start pr-4 bg-opacity-50 lg:flex">
           <SideBarContainer />
         </div>
         <div>

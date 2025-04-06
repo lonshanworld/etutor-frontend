@@ -1,3 +1,4 @@
+import { getBrowsersUsage } from "./services/report";
 
 export const APIS = {
   GET: {
@@ -12,6 +13,8 @@ export const APIS = {
     getSubjects: "subjects",
     getMajorsWithSubjects: "majors-with-subjects",
     getBlogs: "blogs",
+    getReportActiveUsers: "reports/active-users",
+    getBrowsersUsage : "reports/browser-usage",
   },
   POST: {
     login: "auth/login",

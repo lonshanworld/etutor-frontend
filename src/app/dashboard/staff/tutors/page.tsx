@@ -39,7 +39,7 @@ export default async function TutorListPage({
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
           placeholder="Search Tutors"
-          url={AppRouter.staffDashboardTutors}
+          url={AppRouter.staffTutors}
         />
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray -me-6 ms-2 z-10" />

@@ -42,7 +42,7 @@ export default async function UserHomePage({
       <div className="flex flex-wrap gap-x-5 gap-y-3 max-sm:ms-3">
         <SearchBar
           placeholder="Search Students"
-          url={AppRouter.staffDashboardStudents}
+          url={AppRouter.staffStudents}
         />
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
