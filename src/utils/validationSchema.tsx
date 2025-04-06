@@ -14,9 +14,19 @@ export const UserRoleSchema: z.ZodNativeEnum<typeof UserRole> =
 
 export const CreateFormSchema = z
   .object({
-    firstName: z.string().min(2, { message: "First Name is required" }),
+    firstName: z
+      .string()
+      .min(2, { message: "First Name is required" })
+      .regex(/^[a-zA-Z\s'-]+$/, {
+        message: "First Name cannot include special characters",
+      }),
     middleName: z.string().nullable(),
-    lastName: z.string().min(2, { message: "Last Name is required" }),
+    lastName: z
+      .string()
+      .min(2, { message: "Last Name is required" })
+      .regex(/^[a-zA-Z\s'-]+$/, {
+        message: "First Name cannot include special characters",
+      }),
     address: z.string().min(2, { message: "Address is required" }),
     nationality: z
       .string()
@@ -66,9 +76,19 @@ export const CreateFormSchema = z
 export type CreateFormSchemaType = z.infer<typeof CreateFormSchema>;
 
 export const UpdateFormSchema = z.object({
-  firstName: z.string().min(2, { message: "First Name is required" }),
+  firstName: z
+    .string()
+    .min(2, { message: "First Name is required" })
+    .regex(/^[a-zA-Z\s'-]+$/, {
+      message: "First Name cannot include special characters",
+    }),
   middleName: z.string().nullable(),
-  lastName: z.string().min(2, { message: "Last Name is required" }),
+  lastName: z
+    .string()
+    .min(2, { message: "Last Name is required" })
+    .regex(/^[a-zA-Z\s'-]+$/, {
+      message: "First Name cannot include special characters",
+    }),
   address: z.string().min(2, { message: "Address is required" }),
   nationality: z.string().min(2, { message: "Nationality field is required" }),
   gender: z.string().min(1, { message: "Gender is required" }),

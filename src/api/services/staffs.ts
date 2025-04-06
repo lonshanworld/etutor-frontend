@@ -30,6 +30,6 @@ export async function updateStaff(body: any, id: number): Promise<any> {
 }
 
 export async function deactivateStaff(body: any): Promise<any> {
-  const response = await PostRequest(body, APIS.PATCH.deactivateStaff);
+  const response = await PostRequest(body, APIS.PATCH.deactivateStudent);
   return response;
 }

@@ -26,7 +26,7 @@ const ChangePasswordInput = ({
         type="password"
         placeholder={placeholder}
         {...register}
-        className="peer w-full col-span-2 border-0 outline-none px-2 sm:px-5 py-2"
+        className="peer bg-transparent w-full col-span-2 border-0 outline-none px-2 sm:px-5 py-2"
       />
     </div>
   );

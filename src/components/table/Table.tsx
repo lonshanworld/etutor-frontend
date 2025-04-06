@@ -78,7 +78,6 @@ export default function TableDemo({
 
   useEffect(() => {
     if (selectedUser) {
-      console.log("selectedUser", selectedUser);
       setUserProfile({
         id: selectedUser.id,
         firstName: selectedUser.firstName,
@@ -101,13 +100,11 @@ export default function TableDemo({
   }, [selectedUser]);
 
   const getSelectedUser = (id: number) => {
-    console.log("current users", users);
     const currentUser = users.filter((user) => user.id === id);
     setSelectedUser(currentUser[0]);
   };
 
   const showUserDetail = (id: number) => {
-    console.log("show user detail");
     loggedInUser?.id === id ? setProfileDetailPopup(true) : setShowDetail(true);
     getSelectedUser(id);
   };
@@ -171,7 +168,6 @@ export default function TableDemo({
       } else if (selectedUser?.role === UserRole.staff) {
         response = await deactivateStaff({ user_id: selectedUser.id });
       }
-      console.log("deactivate", response);
       if (response.message === "success") {
         showToast("User Deactivated Successfully", "success");
         setTimeout(() => {
@@ -180,13 +176,12 @@ export default function TableDemo({
         setShowWarning(false);
         setActiveRow(null, null);
       } else {
-        showToast(response.errorText, "error");
+        showToast("User Deactivation Failed", "error");
       }
     } catch (error) {
       showToast("Error occurred while deactivating the user", "error");
     }
   };
-  console.log("porfile user", loggedInUser?.role);
 
   return (
     <div className="sm:rounded-t-xl overflow-hidden">

@@ -78,7 +78,6 @@ export default function UserProfile({
   } = useForm<ChangePasswordSchemaType>({
     resolver: zodResolver(ChangePasswordSchema),
   });
-
   const otherUserAbout: UserType[] = getOtherUserAbout(profileData);
   const currentUserAbout: UserType[] = getCurrentUserAbout(profileData);
   const emgContacts: UserType[] = getEmgContact(profileData);
@@ -153,7 +152,6 @@ export default function UserProfile({
 
   const viewDashboard = (profileData: Profile) => {
     // setViewUser(profileData);
-    console.log("view dashboard", profileData);
     Cookies.set("viewUser", JSON.stringify(profileData), { expires: 7 });
     if (profileData.role === UserRole.student) {
       router.push(AppRouter.studentBoard);
@@ -393,7 +391,7 @@ export default function UserProfile({
               </div>
             </div>
 
-            {showDetail && (
+            {showDetail && profileData.role !== UserRole.staff && (
               <div
                 className="float-right mb-5 mt-3 me-5"
                 onClick={() => viewDashboard(profileData)}

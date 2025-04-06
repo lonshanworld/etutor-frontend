@@ -36,13 +36,13 @@ const DataComponent = ({
           >
             <p
               className={twMerge(
-                "font-bold text-gray-600 text-base",
+                "font-bold text-profileTextColor text-base",
                 showDetail ? "mb-2" : ""
               )}
             >
               {item.label}
             </p>
-            <p className="text-sm text-gray-500 font-bold">
+            <p className="text-sm text-profileTextColor font-bold">
               {item.label === dataLabels.major
                 ? getName(majors, item.value)
                 : item.label === dataLabels.subject
