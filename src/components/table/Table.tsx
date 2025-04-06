@@ -47,7 +47,7 @@ export default function TableDemo({
   const { activeRowId, position, setActiveRow, closeOptionBox } =
     useOptionBoxStore();
 
-  const { user: loggedInUser } = useUserStore();
+  const { user: loggedInUser, viewUser } = useUserStore();
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
   const { selectedUser, setSelectedUser } = useSelectedUser();
@@ -139,13 +139,25 @@ export default function TableDemo({
   };
 
   const getUrl = () => {
-    switch (role) {
-      case UserRole.student:
-        return AppRouter.staffDashboardStudents;
-      case UserRole.tutor:
-        return AppRouter.staffDashboardTutors;
-      case UserRole.staff:
-        return AppRouter.staffDashboardStaff;
+    if (viewUser) {
+      if (viewUser.role === UserRole.student) {
+        return AppRouter.studentPeople;
+      } else if (viewUser.role === UserRole.tutor) {
+        return AppRouter.tutorPeople;
+      }
+    } else if (loggedInUser && loggedInUser.role === UserRole.staff) {
+      switch (role) {
+        case UserRole.student:
+          return AppRouter.staffDashboardStudents;
+        case UserRole.tutor:
+          return AppRouter.staffDashboardTutors;
+        case UserRole.staff:
+          return AppRouter.staffDashboardStaff;
+      }
+    } else if (loggedInUser?.role === UserRole.student) {
+      return AppRouter.studentPeople;
+    } else if (loggedInUser?.role === UserRole.tutor) {
+      return AppRouter.tutorPeople;
     }
   };
 
@@ -350,14 +362,14 @@ export default function TableDemo({
           <PaginationDemo
             pageCount={pageCount}
             currentPage={currentPage}
-            url={getUrl()}
+            url={getUrl() ?? AppRouter.loginPage}
           />
         )}
         {!isSearch && (
           <PaginationDemo
             pageCount={pageCount}
             currentPage={currentPage}
-            url={getUrl()}
+            url={getUrl() ?? AppRouter.loginPage}
           />
         )}
       </div>

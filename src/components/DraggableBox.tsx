@@ -1,3 +1,4 @@
+"use client";
 import { AppRouter } from "@/router";
 import { useUserStore } from "@/stores/useUserStore";
 import { useRouter } from "next/navigation";

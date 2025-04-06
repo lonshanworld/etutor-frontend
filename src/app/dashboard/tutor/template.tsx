@@ -1,4 +1,5 @@
 "use client";
+
 import Cookies from "js-cookie";
 import { UserRole } from "@/model/user";
 import { useEffect } from "react";
@@ -15,7 +16,6 @@ export default function StaffDashboardTemplate({
   const { user, setViewUser, setReadOnly } = useUserStore();
   const router = useRouter();
 
-  console.log("logged in user", user);
   useEffect(() => {
     const viewUser = Cookies.get("viewUser");
     console.log("view User", viewUser);

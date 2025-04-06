@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import FilterBox from "@/components/filterbox/FilterBox";
 import SearchBar from "@/components/searchbar/SearchBar";
 import TableDemo from "@/components/table/Table";
@@ -57,13 +56,6 @@ export default async function TutorListPage({
           pageCount={pageCount}
           role={UserRole.tutor}
         />
-      </div>
-
-      <div>
-        <div className="mt-5 flex justify-end">
-          <CreateFormButton role={UserRole.tutor} />
-        </div>
-        <Form />
       </div>
     </div>
   );

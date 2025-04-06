@@ -15,8 +15,9 @@ const DataComponent = ({
 
   const getName = (data: any[], id: number) => {
     const selectedItem = data.filter((item) => item.id === id);
-    return selectedItem[0].name;
+    return selectedItem[0].name ?? "-";
   };
+
   return (
     <div
       className={twMerge(

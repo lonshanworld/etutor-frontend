@@ -27,7 +27,6 @@ export default async function StaffListPage({
     const response = await getStaffs(page, name);
     staffData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
-    console.log("staff data", staffData);
   } catch (error) {
     console.error("Failed to fetch staffs:", error);
   }

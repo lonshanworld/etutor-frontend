@@ -1,6 +1,5 @@
 "use client";
 
-import { getProfile } from "@/api/services/getProfile";
 import DashboardAppbar from "@/components/appbar/DashboardAppbar";
 import DashboardAppbarMobile from "@/components/appbar/DashboardAppbarMobile";
 import MobileSideBar from "@/components/sidebar/MobileSideBar";
@@ -9,7 +8,12 @@ import SideBarContainer from "@/components/sidebar/SidebarContainer";
 import { AppRouter } from "@/router";
 import { usePathname } from "next/navigation";
 
-import { useState } from "react";
+import { getMajors } from "@/api/services/students";
+import { getSubjects } from "@/api/services/tutors";
+import { majorSubjectFromJson } from "@/model/major";
+
+import { useEffect, useState } from "react";
+import { useMajor } from "@/stores/useMajor";
 
 export default function DashboardTemplate({
   children,
@@ -19,6 +23,8 @@ export default function DashboardTemplate({
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [sidebarStyle, setSidebarStyle] = useState<string>("");
   const pathName = usePathname();
+
+  const { setMajors, setSubjects } = useMajor();
 
   const openSidebar = () => {
     setSidebarStyle("left-0");
@@ -39,6 +45,28 @@ export default function DashboardTemplate({
       return true;
     }
   }
+
+  let majors: any = [];
+  let subjects: any = [];
+  const fetchMajors = async () => {
+    try {
+      const majorResponse = await getMajors();
+      const subjectResponse = await getSubjects();
+      majors = majorResponse?.data.map(majorSubjectFromJson);
+      subjects = subjectResponse?.data.map(majorSubjectFromJson);
+
+      if (majors && subjects) {
+        setMajors(majors);
+        setSubjects(subjects);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMajors();
+  }, []);
 
   return (
     <>

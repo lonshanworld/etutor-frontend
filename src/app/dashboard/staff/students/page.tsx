@@ -1,8 +1,6 @@
 import FilterBox from "@/components/filterbox/FilterBox";
 import SearchBar from "@/components/searchbar/SearchBar";
 import TableDemo from "@/components/table/Table";
-import Form from "@/components/form/Form";
-import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
 import { User, userFromJson, UserRole } from "@/model/user";
 import { getStudents } from "@/api/services/students";
@@ -56,11 +54,6 @@ export default async function StudentListPage({
           role={UserRole.student}
         />
       </div>
-
-      <div className="mt-5 flex justify-end">
-        <CreateFormButton role={UserRole.student} />
-      </div>
-      <Form />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import AllocateTutorPage from "./tutor/page";
 
 export default async function AllocatePage({

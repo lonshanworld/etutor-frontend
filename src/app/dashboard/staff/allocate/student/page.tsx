@@ -24,7 +24,6 @@ export default async function AllocateStudentPage({
     const response = await getStudents(page, name);
     studentData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
-    console.log("students", studentData);
   } catch (error) {
     console.error("Failed to fetch students:", error);
   }

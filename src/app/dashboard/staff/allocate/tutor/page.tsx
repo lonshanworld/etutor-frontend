@@ -19,7 +19,6 @@ export default async function AllocateTutorPage({
 
   try {
     const response = await getTutors(page, name);
-    console.log("tutors", response);
     tutorData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
   } catch (error) {
