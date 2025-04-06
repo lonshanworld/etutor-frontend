@@ -40,6 +40,7 @@ const roleRoutes = {
     AppRouter.studentNote,
     AppRouter.studentPeople,
     AppRouter.studentChatBox,
+    AppRouter.tutorChatBox,
   ],
   tutor: [
     AppRouter.tutorBoard,
@@ -50,6 +51,7 @@ const roleRoutes = {
     AppRouter.tutorNote,
     AppRouter.tutorPeople,
     AppRouter.tutorAllocatedStudents,
+    AppRouter.studentChatBox,
   ],
 };
 

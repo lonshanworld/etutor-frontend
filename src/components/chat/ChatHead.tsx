@@ -71,7 +71,12 @@ export default function ChatHead(
                 user && <>
                     <button
             onClick={()=>{
-                router.push(`${AppRouter.studentChatBox}?id=${chat._id}`);
+                console.log("user role", user.role);
+                if(user.role === "student"){
+                    router.push(`${AppRouter.studentChatBox}?id=${chat._id}`);
+                }else if(user.role === "tutor"){
+                    router.push(`${AppRouter.tutorChatBox}?id=${chat._id}`);
+                }
             }}
             className="flex sm:hidden flex-row justify-center items-center hover:bg-gray-400 hover:bg-opacity-30 px-3 py-2 rounded-l-xl hover:border-r-[6px] border-theme">
                 <div
