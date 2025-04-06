@@ -118,6 +118,8 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
     [isLoading, cursor]
   );
 
+  
+
   // Detail page close
   const handleClose = () => {
     setClosing(true);
@@ -141,6 +143,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
       likes: likedList,
     });
   };
+  console.log("blogs", blogs);
 
   return (
     <>
@@ -167,15 +170,15 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         />
       )}
 
-      <div className='flex h-full w-full'>
+      <div className="flex h-full w-full">
         {/* Main Board */}
-        <div className='md:w-1/2 h-full pt-16 mt-2 w-full'>
+        <div className="md:w-1/2 h-full pt-16 mt-2 w-full">
           <div
-            id='postContainer'
-            className='flex flex-col md:gap-3 gap-1.5 h-[98.5%] overflow-y-auto scrollbar-cus-2 pb-4 md:pr-1 max-md:scrollbar-none'
+            id="postContainer"
+            className="flex flex-col md:gap-3 gap-1.5 h-[98.5%] overflow-y-auto scrollbar-cus-2 pb-4 md:pr-1 max-md:scrollbar-none"
           >
             {/* Posts */}
-            {blogs.length > 0 ?
+            {blogs.length > 0 ? (
               blogs.map((blog, index) => (
                 <UserBlog
                   key={blog.id}
@@ -200,12 +203,13 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   ref={index === blogs.length - 1 ? lastBlogElementRef : null}
                 />
               ))
-            : <div className='text-center py-3'>
+            ) : (
+              <div className="text-center py-3">
                 It’s quiet here… why not write something?
               </div>
-            }
+            )}
             {isLoading && (
-              <div className='text-center py-3'>Loading more posts...</div>
+              <div className="text-center py-3">Loading more posts...</div>
             )}
           </div>
         </div>
@@ -218,35 +222,32 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         ></div>
 
         {/* Post Details */}
-        <div className='md:w-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative'>
+        <div className="md:w-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative">
           <div
             className={`flex h-full w-full opacity-logo items-center justify-center z-0 absolute `}
           >
-            <Image
-              src={logo}
-              alt='Logo'
-            />
+            <Image src={logo} alt="Logo" />
           </div>
 
           <div
             className={`fixed max-md:top-[57px] md:mt-3 left-0 w-full h-full max-md:h-[calc(100%-56px)] bg-secondaryBackground z-10 md:px-1 overflow-y-auto scrollbar-none md:relative md:basis-1/2 md:block transition-transform duration-500 ease-in-out transform ${
-              selectedBlog && !isClosing ?
-                "translate-x-0 opacity-100"
-              : "translate-x-full md:opacity-100"
+              selectedBlog && !isClosing
+                ? "translate-x-0 opacity-100"
+                : "translate-x-full md:opacity-100"
             }`}
           >
             {selectedBlog && (
               <>
                 {/* Back button for mobile */}
-                <div className='max-md:sticky bg-background top-0 left-0 right-0 p-3'>
+                <div className="max-md:sticky bg-background top-0 left-0 right-0 p-3">
                   <button
-                    className='flex items-center gap-2 text-gray-500 md:hover:text-gray-800'
+                    className="flex items-center gap-2 text-gray-500 md:hover:text-gray-800"
                     onClick={handleClose}
                   >
-                    <div className='flex gap-2 md:hidden'>
+                    <div className="flex gap-2 md:hidden">
                       <IoArrowBack size={24} /> <span>Back</span>
                     </div>
-                    <div className='flex gap-2 items-center max-md:hidden'>
+                    <div className="flex gap-2 items-center max-md:hidden">
                       <RxCross1 size={20} /> <span>Close</span>
                     </div>
                   </button>

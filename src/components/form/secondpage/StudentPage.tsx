@@ -40,13 +40,11 @@ export default function StudentPage({ setPageForm }: Props) {
     setStudentData,
     setUpdateStudentData,
     isUpdateFormRendered,
-    isUpdateFormModified,
-    setUpdateFormModified,
-    resetFormData,
     setSelectedMajor,
     updatedData,
   } = useFormStore();
-  const { selectedUser } = useSelectedUser();
+  const { selectedUser, lastSelectedUserId, setLastSelectedUserId } =
+    useSelectedUser();
 
   const {
     register,
@@ -69,15 +67,22 @@ export default function StudentPage({ setPageForm }: Props) {
       majorId: selectedUser.info.major_id,
     };
   };
+  useEffect(() => {
+    const subscription = watch((data) => {
+      setStudentData(data); // Save current form data to global state
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setStudentData]);
 
   useEffect(() => {
-    if (selectedUser && !isUpdateFormModified) {
+    if (selectedUser && selectedUser.id !== lastSelectedUserId) {
       const infoData = getInfoFields(selectedUser);
       setUpdateStudentData(infoData);
       setSelectedMajor(selectedUser.info.major_id);
       reset(infoData);
+      setLastSelectedUserId(selectedUser.id);
     }
-  }, [selectedUser, setUpdateStudentData]);
+  }, [selectedUser, setUpdateStudentData, reset]);
 
   useEffect(() => {
     if (studentData?.majorId) {
@@ -93,8 +98,6 @@ export default function StudentPage({ setPageForm }: Props) {
   const onSubmit: SubmitHandler<StudentSchemaType> = async (data, e: any) => {
     e.preventDefault();
     setStudentData(data);
-    errors && console.log(errors);
-
     setShowForm();
     setPageForm(1);
     const studentData = {
@@ -156,7 +159,6 @@ export default function StudentPage({ setPageForm }: Props) {
           }).filter(([_, value]) => value !== null && value !== undefined)
         );
 
-        console.log("updating student data...", finalUpdatedData);
         if (Object.keys(finalUpdatedData).length > 0) {
           try {
             const response = await updateStudent(
@@ -169,11 +171,9 @@ export default function StudentPage({ setPageForm }: Props) {
                 location.reload();
               }, 3000);
             } else {
-              console.log("res error", response.errorText);
               showToast(response.errorText, "error");
             }
           } catch (error: any) {
-            console.log("catch error", error);
             showToast(error.message, "error");
           }
         } else {

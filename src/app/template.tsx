@@ -35,14 +35,13 @@ export default function MainTemplate({
         setUser(user);
         console.log("profile", user);
         hideLoading();
-        if(role === "staff" && !pathName.includes("staff")){
-          // router.push(AppRouter.staffDashboard);
-          router.push(pathName);
-        }else if(role === "student" && !pathName.includes("student")){
-          router.push(AppRouter.studentDashboard);
-        }else if(role === "tutor" && !pathName.includes("tutor")){
-          router.push(AppRouter.tutorDashboard);
-        }
+        // if(role === "staff" && !pathName.includes("staff")){
+        //   router.push(pathName);
+        // }else if(role === "student" && !pathName.includes("student")){
+        //   router.push(AppRouter.studentDashboard);
+        // }else if(role === "tutor" && !pathName.includes("tutor")){
+        //   router.push(AppRouter.tutorDashboard);
+        // }
       }else{
         if(!pathName.includes(AppRouter.loginPage)){
           setTimeout(()=>{

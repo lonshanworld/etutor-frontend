@@ -10,10 +10,15 @@ export const AppRouter = {
   resetPassword: "/reset-password",
 
   staffDashboard: "/dashboard/staff",
-  staffDashboardStudents: "/dashboard/staff/students",
-  staffDashboardTutors: "/dashboard/staff/tutors",
-  staffDashboardStaff: "/dashboard/staff/staffs",
-  staffDashboardAllocate: "/dashboard/staff/allocate",
+  staffStudents: "/dashboard/staff/students",
+  staffTutors: "/dashboard/staff/tutors",
+  staffStaff: "/dashboard/staff/staffs",
+  staffAllocate: "/dashboard/staff/allocate",
+  staffActiveUsers: "/dashboard/staff/active-users",
+  staffBrowsers : "/dashboard/staff/viewed-browsers",
+  staffPages : "/dashboard/staff/viewed-pages",
+  staffAllocateTutor: "/dashboard/staff/allocate/tutor",
+  staffAllocateStudent: "/dashboard/staff/allocate/student",
 
   studentDashboard: "/dashboard/student",
   studentChat: "/dashboard/student/chat",
@@ -21,7 +26,7 @@ export const AppRouter = {
   studentMeeting: "/dashboard/student/meeting",
   studentNote: "/dashboard/student/note",
   studentPeople: "/dashboard/student/people",
-  studentChatBox : "/dashboard/student/chat/chatbox",
+  studentChatBox: "/dashboard/student/chat/chatbox",
 
   tutorDashboard: "/dashboard/tutor",
   tutorChat: "/dashboard/tutor/chat",
@@ -30,5 +35,5 @@ export const AppRouter = {
   tutorNote: "/dashboard/tutor/note",
   tutorPeople: "/dashboard/tutor/people",
   tutorAllocatedStudents: "/dashboard/tutor/allocatedstudent",
-  tutorChatBox : "/dashboard/tutor/chat/chatbox",
+  tutorChatBox: "/dashboard/tutor/chat/chatbox",
 };

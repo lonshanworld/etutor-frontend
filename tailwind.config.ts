@@ -45,6 +45,9 @@ export default {
         secondaryText: "var(--secondary-text)",
         boardFile: "var(--board-file)",
         meetingCard: "var(--meeting-card)",
+        selectedTab: "var(--selected-tab)",
+        tabBg: "var(--tab-bg)",
+        unassign: "var(--unassign)",
         homeItem: "var(--home-item)",
         card: {
           DEFAULT: "hsl(var(--card))",

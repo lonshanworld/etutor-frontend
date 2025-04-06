@@ -16,6 +16,8 @@ export const APIS = {
     getMyStudents: (tutorId: number) => `tutors/${tutorId}/students`,
     getActiveMeetings: "meetings/active",
     getHistoryMeetings: "meetings/old",
+    getReportActiveUsers: "reports/active-users",
+    getBrowsersUsage: "reports/browser-usage",
   },
   POST: {
     login: "auth/login",
@@ -28,6 +30,9 @@ export const APIS = {
     giveComment: "blogs/give-comment",
     uploadAttachment: "upload-attachment",
     addBlog: "blogs/add",
+
+    unassignStudent: "staffs/unassign-student-tutor",
+    allocateStudent: "staffs/allocate-student-tutor",
     deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
     createMeeting: "meetings/create",
   },

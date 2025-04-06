@@ -28,7 +28,7 @@ export const DayPicker = ({
       setCurrentDate(value);
     }
   }, [value]);
-  console.log("selected date", value);
+  // console.log("selected date", value);
 
   return (
     <div>
@@ -42,17 +42,25 @@ export const DayPicker = ({
             error.name === input && !date
               ? "border-red-500 focus:border-red-500 focus:ring-red-500"
               : "border-inputBorder focus:!border-theme focus:ring-theme",
-            "px-8 border-[1px] w-full min-w-[150px] h-[45px] bg-transparent rounded-md flex items-center focus:outline-none focus:ring-1"
+            "peer px-8 border-[1px] w-full min-w-[150px] h-[45px] bg-transparent rounded-md flex items-center focus:outline-none focus:ring-1"
           )}
+          placeholderText="Select Date"
           selected={parsedDate} // Watch the dob value from react-hook-form
           value={currentDate || ""}
           onChange={(date: Date | null) => {
+            console.log("date", date);
             setDate(date);
             setCurrentDate(date);
             if (date) {
-              setValue(input, format(date, "yyyy-MM-dd"));
+              setValue(input, date ? format(date, "yyyy-MM-dd") : "");
             }
           }}
+          onBlur={() => {
+            if (!watch(input)) {
+              setValue(input, ""); // Ensure error validation runs
+            }
+          }}
+          isClearable
         />
         <input
           type="hidden"
@@ -61,7 +69,10 @@ export const DayPicker = ({
           {...register}
         />
       </div>
-      {error && !date && <p className="text-red-500">{error.message}</p>}
+
+      {error && !date && (
+        <p className="text-red-500 text-sm">{error.message}</p>
+      )}
     </div>
   );
 };

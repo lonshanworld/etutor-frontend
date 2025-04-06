@@ -5,7 +5,6 @@ export function checkUpdatedValue(data: any, selectedUser: any) {
 
   Object.entries(data).forEach(([key, value]) => {
     const originalValue = selectedUser[key as keyof typeof selectedUser];
-    console.log("original value", originalValue);
     // Convert both to strings for safer comparison (or handle dates, numbers separately if needed)
     if (value !== undefined && String(value) !== String(originalValue)) {
       updatedFields[key] = value;
@@ -16,6 +15,7 @@ export function checkUpdatedValue(data: any, selectedUser: any) {
 
   // If there are changed fields, move to next step
   if (Object.keys(updatedFields).length > 0) {
+    console.log("updated fields", updatedFields);
     return updatedFields;
   }
   return null;

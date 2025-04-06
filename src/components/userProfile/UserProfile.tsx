@@ -5,7 +5,7 @@ import Close from "@/assets/svgs/close.svg";
 import Email from "@/assets/svgs/email.svg";
 import Phone from "@/assets/svgs/phone.svg";
 import StatusIcon from "../statusicon/StatusIcon";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useUserStore } from "@/stores/useUserStore";
 import { Profile } from "@/model/profile";
@@ -38,6 +38,7 @@ import useLoading from "@/stores/useLoading";
 import { createConversation } from "../../../convex/chatRoom";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import Cookies from "js-cookie";
 
 export type UserType = {
   label: string;
@@ -50,12 +51,15 @@ type ErrorType = {
 
 export default function UserProfile({
   profileData,
+  showDetail = false,
   setShowDetail,
+  setProfileDetailPopup,
 }: {
   profileData: Profile | null;
-  setShowDetail: any;
+  showDetail?: boolean;
+  setShowDetail?: any;
+  setProfileDetailPopup?: any;
 }) {
-  const { showDetail, setProfileDetailPopup } = useUserStore();
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
@@ -63,8 +67,8 @@ export default function UserProfile({
   const [about, setAbout] = useState<UserType[] | null>(null);
   const [info, setInfo] = useState<UserType[] | null>(null);
   const router = useRouter();
-  const {showLoading, hideLoading} = useLoading();
-  const {user} = useUserStore();
+  const { showLoading, hideLoading } = useLoading();
+  const { user, setViewUser } = useUserStore();
 
   const {
     register,
@@ -81,8 +85,7 @@ export default function UserProfile({
   const staffInfo: UserType[] = getStaffInfo(profileData);
   const studentInfo: UserType[] = getStudentInfo(profileData);
   const tutorInfo: UserType[] = getTutorInfo(profileData);
-  const createConversation = useMutation(api.chatRoom.createConversation)
-  
+  const createConversation = useMutation(api.chatRoom.createConversation);
 
   const getInfoName = (role: any) => {
     switch (role) {
@@ -148,6 +151,17 @@ export default function UserProfile({
     }
   };
 
+  const viewDashboard = (profileData: Profile) => {
+    // setViewUser(profileData);
+    console.log("view dashboard", profileData);
+    Cookies.set("viewUser", JSON.stringify(profileData), { expires: 7 });
+    if (profileData.role === UserRole.student) {
+      router.push(AppRouter.studentBoard);
+    } else if (profileData.role == UserRole.tutor) {
+      router.push(AppRouter.tutorBoard);
+    }
+  };
+
   if (!profileData) return <div>Loading...</div>;
   return (
     <div>
@@ -160,59 +174,58 @@ export default function UserProfile({
         )}
       >
         <div className="h-[80px] bg-theme w-full sm:rounded-t-lg relative">
-          {
-           ( profileData && user?.role !== "staff" && user?.role !== "admin") && <button
-           onClick={async()=>{
-              if(user && profileData){
-                showLoading();
-                try{
-                  const chatId = await createConversation({
-                    user1 : {
-                      userId : user.id,
-                      firstName : user.firstName!,
-                      middleName : user.middleName ?? undefined,
-                      lastName : user.lastName ?? undefined,
-                      email : user.email,
-                      role : user.role!,
-                      profileImagePath : user.profileImagePath ?? undefined,
-                      gender : user.gender,
-                    },
-                    user2 :  {
-                      userId : profileData.id,
-                      firstName : profileData.firstName!,
-                      middleName : profileData.middleName ?? undefined,
-                      lastName : profileData.lastName ?? undefined,
-                      email : profileData.email,
-                      role : profileData.role!,
-                      profileImagePath : profileData.profileImagePath ?? undefined,
-                      gender : profileData.gender,
-                    },
-                  });
-                  hideLoading();
-                  if(user.role === "student"){
-                    router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
-                  }else if(user.role === "tutor"){
-                    router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
+          {profileData && user?.role !== "staff" && user?.role !== "admin" && (
+            <button
+              onClick={async () => {
+                if (user && profileData) {
+                  showLoading();
+                  try {
+                    const chatId = await createConversation({
+                      user1: {
+                        userId: user.id,
+                        firstName: user.firstName!,
+                        middleName: user.middleName ?? undefined,
+                        lastName: user.lastName ?? undefined,
+                        email: user.email,
+                        role: user.role!,
+                        profileImagePath: user.profileImagePath ?? undefined,
+                        gender: user.gender,
+                      },
+                      user2: {
+                        userId: profileData.id,
+                        firstName: profileData.firstName!,
+                        middleName: profileData.middleName ?? undefined,
+                        lastName: profileData.lastName ?? undefined,
+                        email: profileData.email,
+                        role: profileData.role!,
+                        profileImagePath:
+                          profileData.profileImagePath ?? undefined,
+                        gender: profileData.gender,
+                      },
+                    });
+                    hideLoading();
+                    if (user.role === "student") {
+                      router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+                    } else if (user.role === "tutor") {
+                      router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
+                    }
+                  } catch (err) {
+                    hideLoading();
+                    showToast(
+                      "Unexpected error occured. Please try again later",
+                      "Error"
+                    );
                   }
-                }catch(err){
-                  hideLoading();
-                  showToast("Unexpected error occured. Please try again later", "Error");
                 }
-                
-              }
-           }}
-           className="absolute flex flex-row justify-center items-center gap-3 -bottom-5 right-[60px] bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2">
-             <div
-             className="relative w-7 h-7 opacity-80">
-               <Image 
-               src={MessageIcon}
-               alt="Message"
-               fill={true}
-               />
-             </div>
-             <span className="text-base text-iconGray">Message</span>
-           </button>
-          }
+              }}
+              className="absolute flex flex-row justify-center items-center gap-3 -bottom-5 right-[60px] bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2"
+            >
+              <div className="relative w-7 h-7 opacity-80">
+                <Image src={MessageIcon} alt="Message" fill={true} />
+              </div>
+              <span className="text-base text-iconGray">Message</span>
+            </button>
+          )}
         </div>
         {!profileData && (
           <div className="text-2xl text-center mt-40">User Not Found</div>
@@ -293,19 +306,19 @@ export default function UserProfile({
                   {/* about tab */}
                   {(activeTab === tabLabels.about ||
                     activeTab === tabLabels.aboutMe) && (
-                    <DataComponent data={about} />
+                    <DataComponent data={about} showDetail={showDetail} />
                   )}
 
                   {/* Emergency Contact tab */}
                   {activeTab === tabLabels.emgContact && (
-                    <DataComponent data={emgContacts} />
+                    <DataComponent data={emgContacts} showDetail={showDetail} />
                   )}
 
                   {/* info tab */}
                   {(activeTab === tabLabels.staffInfo ||
                     activeTab === tabLabels.tutorInfo ||
                     activeTab === tabLabels.studentInfo) && (
-                    <DataComponent data={info} />
+                    <DataComponent data={info} showDetail={showDetail} />
                   )}
 
                   {/* change password tab */}
@@ -381,7 +394,10 @@ export default function UserProfile({
             </div>
 
             {showDetail && (
-              <div className="float-right mb-5 mt-3 me-5">
+              <div
+                className="float-right mb-5 mt-3 me-5"
+                onClick={() => viewDashboard(profileData)}
+              >
                 <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
                   View Dashboard
                 </button>
@@ -394,8 +410,8 @@ export default function UserProfile({
         <div
           className="absolute top-5 right-5 cursor-pointer"
           onClick={() => {
-            setShowDetail(false);
-            setProfileDetailPopup(false);
+            setProfileDetailPopup && setProfileDetailPopup(false);
+            showDetail && setShowDetail(false);
           }}
         >
           <img src={Close.src} className="text-backgroundOpposite" alt="" />
@@ -404,8 +420,8 @@ export default function UserProfile({
       <div
         className="fixed bg-black/70 z-[15] top-0 left-0 w-svw h-svh"
         onClick={() => {
-          setProfileDetailPopup(false);
-          setShowDetail(false);
+          setProfileDetailPopup && setProfileDetailPopup(false);
+          showDetail && setShowDetail(false);
         }}
       ></div>
     </div>

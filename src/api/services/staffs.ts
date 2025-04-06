@@ -15,6 +15,7 @@ export async function getStaffs(
   };
   const URL = geturl();
   const response = await GetRequest(URL);
+  console.log("res", response);
   return response;
 }
 

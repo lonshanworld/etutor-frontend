@@ -13,10 +13,19 @@ export type User = {
   passport: string;
   profileImagePath?: string;
   status: any;
+  studentCount?: number;
+  tutorStatus?: string;
   roleID?: string;
   role?: UserRole | null;
   gender: UserGender;
   info: any;
+  tutorSessionStatus?: string | null;
+  tutor?: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  student?: any;
 };
 
 export enum UserRole {
@@ -61,6 +70,8 @@ export function userFromJson(jsonData: any): User {
     roleID: jsonData.role.id,
     role: stringToUserRole(jsonData.role.name),
     status: jsonData.status,
+    studentCount: jsonData.student_count,
+    tutorStatus: jsonData.tutor_status,
     gender: jsonData.gender,
     info:
       jsonData.admin ||
@@ -68,6 +79,11 @@ export function userFromJson(jsonData: any): User {
       jsonData.student ||
       jsonData.tutor ||
       null,
+    tutorSessionStatus: jsonData.tutoring_session_status,
+    tutor:
+      jsonData?.tutoring_sessions?.length > 0 &&
+      jsonData?.tutoring_sessions[0]?.tutor,
+    student: jsonData?.tutoring_sessions,
   };
 
   return data;
