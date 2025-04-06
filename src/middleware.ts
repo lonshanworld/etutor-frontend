@@ -6,12 +6,12 @@ import { cookies } from "next/headers";
 const roleRoutes = {
   staff: [
     AppRouter.staffDashboard,
-    AppRouter.staffDashboardStudents,
-    AppRouter.staffDashboardTutors,
-    AppRouter.staffDashboardStaff,
-    AppRouter.staffDashboardAllocate,
-    AppRouter.staffDashboardAllocateTutor,
-    AppRouter.staffDashboardAllocateStudent,
+    AppRouter.staffStudents,
+    AppRouter.staffTutors,
+    AppRouter.staffStaff,
+    AppRouter.staffAllocate,
+    AppRouter.staffAllocateTutor,
+    AppRouter.staffAllocateStudent,
 
     AppRouter.studentDashboard,
     AppRouter.studentChat,
@@ -28,6 +28,9 @@ const roleRoutes = {
     AppRouter.tutorNote,
     AppRouter.tutorPeople,
     AppRouter.tutorAllocatedStudents,
+    AppRouter.staffActiveUsers,
+    AppRouter.staffBrowsers,
+    AppRouter.staffPages,
   ],
   student: [
     AppRouter.studentDashboard,
@@ -41,6 +44,7 @@ const roleRoutes = {
   tutor: [
     AppRouter.tutorBoard,
     AppRouter.tutorChat,
+    AppRouter.tutorChatBox,
     AppRouter.tutorDashboard,
     AppRouter.tutorMeeting,
     AppRouter.tutorNote,
@@ -68,14 +72,12 @@ export async function middleware(req: NextRequest) {
       new URL(AppRouter.loginPage, req.nextUrl.origin)
     );
   } else {
-    // If the role is missing or not recognized, redirect to login
     if (!role || !(role in roleRoutes)) {
       return NextResponse.redirect(
         new URL(AppRouter.loginPage, req.nextUrl.origin)
       );
     }
 
-    // Allow role-specific routes only
     const allowedRoutes = roleRoutes[role as keyof typeof roleRoutes];
     if (!allowedRoutes.includes(req.nextUrl.pathname)) {
       return NextResponse.redirect(

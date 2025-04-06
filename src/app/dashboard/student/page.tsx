@@ -1,4 +1,4 @@
 export default function StaffMainPage() {
-    return <div>student home</div>;
+    return <div></div>;
   }
   

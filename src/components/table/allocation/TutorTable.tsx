@@ -113,7 +113,7 @@ const TutorTable = ({ data, pageCount, currentPage }: TableProps) => {
           <PaginationDemo
             pageCount={pageCount}
             currentPage={currentPage}
-            url={AppRouter.staffDashboardAllocateTutor}
+            url={AppRouter.staffAllocateTutor}
           />
         )}
         {/* {!isSearch && (

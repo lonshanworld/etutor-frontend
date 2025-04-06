@@ -35,7 +35,7 @@ export default async function AllocateStudentPage({
       <div className="search flex justify-end mb-3 px-[4%]">
         <AllocateSearchBar
           placeholder="Search Students"
-          url={AppRouter.staffDashboardAllocateStudent}
+          url={AppRouter.staffAllocateStudent}
         />
       </div>
       <div className="w-full sm:w-[95%] mx-auto">

@@ -16,7 +16,7 @@ const Tab = ({ selectedTab }: { selectedTab: string }) => {
             selectedTab === "tutor" ? "bg-theme text-white" : "bg-transparent"
           )}
           onClick={() => {
-            router.push(AppRouter.staffDashboardAllocateTutor);
+            router.push(AppRouter.staffAllocateTutor);
           }}
         >
           Tutor
@@ -27,7 +27,7 @@ const Tab = ({ selectedTab }: { selectedTab: string }) => {
             selectedTab === "student" ? "bg-theme text-white" : "bg-transparent"
           )}
           onClick={() => {
-            router.push(AppRouter.staffDashboardAllocateStudent);
+            router.push(AppRouter.staffAllocateStudent);
           }}
         >
           Student

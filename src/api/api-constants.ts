@@ -1,3 +1,4 @@
+
 export const APIS = {
   GET: {
     getStudentList: "students",
@@ -12,6 +13,8 @@ export const APIS = {
     getMajorsWithSubjects: "majors-with-subjects",
     getBlogs: "blogs",
     getBlogById: (blogId: number) => `blogs/${blogId}`,
+    getReportActiveUsers: "reports/active-users",
+    getBrowsersUsage : "reports/browser-usage",
   },
   POST: {
     login: "auth/login",

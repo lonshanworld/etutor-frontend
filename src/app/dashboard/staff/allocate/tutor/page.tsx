@@ -32,7 +32,7 @@ export default async function AllocateTutorPage({
       <div className="search flex justify-end mb-3 px-[4%]">
         <AllocateSearchBar
           placeholder="Search Tutors"
-          url={AppRouter.staffDashboardAllocateTutor}
+          url={AppRouter.staffAllocateTutor}
         />
       </div>
       <div className="w-full sm:w-[95%] mx-auto">
