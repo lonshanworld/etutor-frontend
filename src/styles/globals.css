@@ -33,6 +33,7 @@
   --selected-tab: #d4d4d4;
   --tab-bg: #ffffff;
   --unassign: #ff5555;
+  --noti-bg: white;
 }
 
 .dark {
@@ -66,6 +67,7 @@
   --selected-tab: #202020;
   --tab-bg: #454545;
   --unassign: #ff5555;
+  --noti-bg: #414141;
 }
 
 body {

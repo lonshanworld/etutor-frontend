@@ -48,6 +48,7 @@ export default {
         selectedTab: "var(--selected-tab)",
         tabBg: "var(--tab-bg)",
         unassign: "var(--unassign)",
+        notiBg: "var(--noti-bg)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
