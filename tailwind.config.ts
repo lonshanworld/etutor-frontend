@@ -49,6 +49,8 @@ export default {
         tabBg: "var(--tab-bg)",
         unassign: "var(--unassign)",
         homeItem: "var(--home-item)",
+        notiBg: "var(--noti-bg)",
+        profileTextColor: "var(--profile-text)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

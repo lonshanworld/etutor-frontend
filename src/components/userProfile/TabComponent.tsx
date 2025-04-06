@@ -16,7 +16,7 @@ const TabComponent = ({ activeTab, setActiveTab, tabs }: Props) => {
               "max-sm:text-sm font-bold py-2 col-span-2 border-b-2 cursor-pointer ",
               activeTab === tab
                 ? "text-theme border-theme"
-                : "border-gray-600 text-gray-600"
+                : "border-profileTextColor text-profileTextColor"
             )}
             onClick={() => setActiveTab(tab)}
             key={index}

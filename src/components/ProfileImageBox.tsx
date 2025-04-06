@@ -10,7 +10,6 @@ export default function ProfileImageBox() {
   const profileRef = useRef<HTMLDivElement>(null);
   const [profilePopup, setProfilePopup] = useState(false);
   const [profileDetailPopup, setProfileDetailPopup] = useState(false);
-
   return (
     <div>
       <div

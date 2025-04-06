@@ -34,6 +34,8 @@
   --selected-tab: #d4d4d4;
   --tab-bg: #ffffff;
   --unassign: #ff5555;
+  --noti-bg: white;
+  --profile-text: #4b5563;
 }
 
 .dark {
@@ -68,6 +70,8 @@
   --selected-tab: #202020;
   --tab-bg: #454545;
   --unassign: #ff5555;
+  --noti-bg: #414141;
+  --profile-text: white;
 }
 
 body {

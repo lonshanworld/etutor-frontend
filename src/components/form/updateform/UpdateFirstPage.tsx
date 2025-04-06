@@ -37,7 +37,8 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
 
   useEffect(() => {
     if (selectedUser && !isUpdateFormModified) {
-      setUpdateFormData(selectedUser);
+      console.log("form, update", selectedUser);
+      setUpdateFormData({ ...selectedUser, passportNo: selectedUser.passport });
     }
   }, [selectedUser, setUpdateFormData]);
 
@@ -76,6 +77,7 @@ export default function UpdateFirstPage({ setPageForm }: Props) {
         });
       });
     }
+    console.log("formdata", formData);
   }, [formData, setValue]);
 
   const onSubmit: SubmitHandler<any> = (data, e: any) => {
