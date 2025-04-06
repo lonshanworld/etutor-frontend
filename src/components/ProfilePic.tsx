@@ -9,18 +9,26 @@ interface Props {
   userId?: number;
   onClick?: () => void;
   alt?: string;
+  className?: string;
 }
-const ProfilePic = ({ profileUrl, size = 40, alt, userId, onClick }: Props) => {
+const ProfilePic = ({
+  className,
+  profileUrl,
+  size = 40,
+  alt,
+  userId,
+  onClick,
+}: Props) => {
   return (
     <div
-      className={`h-[${size}px] w-[${size}px] rounded-full overflow-hidden `}
+      className='rounded-full overflow-clip relative'
+      style={{ height: `${size}px`, width: `${size}px` }}
     >
       <Image
         src={profileUrl || placeholderProfile}
         alt={alt || "Profile picture"}
-        width={size}
-        height={size}
-        className='object-cover'
+        fill
+        className={`object-cover ${className}`}
       />
     </div>
   );

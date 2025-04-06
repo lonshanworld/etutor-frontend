@@ -3,164 +3,193 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import NoResultFound from "../searchbar/NoResultFound";
+import { useEffect, useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-
-const files = [
-  {
-    id: 1,
-    filename: "The Goblet of Fire",
-    uploadedAt: "3 hours ago",
-    uploadedBy: "Harry Potter",
-  },
-  {
-    id: 2,
-    filename: "The Prisoner of Azkaban",
-    uploadedAt: "4 hours ago",
-    uploadedBy: "Hermione Granger",
-  },
-  {
-    id: 3,
-    filename: "Hogwarts Letter",
-    uploadedAt: "2 hours ago",
-    uploadedBy: "Ron Weasley",
-  },
-  {
-    id: 4,
-    filename: "Dark Arts Spells",
-    uploadedAt: "1 hour ago",
-    uploadedBy: "Luna Lovegood",
-  },
-  {
-    id: 5,
-    filename: "Quidditch World Cup Highlights",
-    uploadedAt: "6 hours ago",
-    uploadedBy: "Ginny Weasley",
-  },
-  {
-    id: 6,
-    filename: "Secrets of the Marauder's Map",
-    uploadedAt: "7 hours ago",
-    uploadedBy: "Fred Weasley",
-  },
-  {
-    id: 7,
-    filename: "Potions Mastery Guide",
-    uploadedAt: "5 hours ago",
-    uploadedBy: "Severus Snape",
-  },
-  {
-    id: 8,
-    filename: "Magical Creatures: A Comprehensive Guide",
-    uploadedAt: "8 hours ago",
-    uploadedBy: "Hagrid",
-  },
-  {
-    id: 9,
-    filename: "The Triwizard Tournament",
-    uploadedAt: "9 hours ago",
-    uploadedBy: "Cedric Diggory",
-  },
-  {
-    id: 10,
-    filename: "Dumbledore's Army Secret Meeting Minutes",
-    uploadedAt: "10 hours ago",
-    uploadedBy: "Neville Longbottom",
-  },
-  {
-    id: 11,
-    filename: "Horcruxes and Dark Magic",
-    uploadedAt: "11 hours ago",
-    uploadedBy: "Tom Riddle",
-  },
-  {
-    id: 12,
-    filename: "The Tales of Beedle the Bard",
-    uploadedAt: "12 hours ago",
-    uploadedBy: "Professor Dumbledore",
-  },
-  {
-    id: 13,
-    filename: "Famous Witches and Wizards",
-    uploadedAt: "13 hours ago",
-    uploadedBy: "Professor McGonagall",
-  },
-  {
-    id: 14,
-    filename: "The Forbidden Forest: Secrets Revealed",
-    uploadedAt: "14 hours ago",
-    uploadedBy: "Aragog",
-  },
-  {
-    id: 15,
-    filename: "The Last Will and Testament of Sirius Black",
-    uploadedAt: "15 hours ago",
-    uploadedBy: "Sirius Black",
-  },
-];
+import NoResultFound from "../searchbar/NoResultFound";
+import { getFiles } from "@/api/services/blogs";
+import { File } from "@/model/blog";
+import { PaginationLMT } from "../pagination/PaginationLMT";
+import ActionPopup from "./popup/ActionPopup";
+import { formatTime } from "@/utils/formatData";
 
 const FileTable = () => {
+  const [files, setFiles] = useState<File[]>([]);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [actionPopupVisible, setActionPopupVisible] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [popupPosition, setPopupPosition] = useState<{
+    top: number;
+    left: number;
+  }>({
+    top: 0,
+    left: 0,
+  });
+
+  const popupRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const fetchFiles = async (page = 1) => {
+    setLoading(true);
+    try {
+      const response = await getFiles(page);
+      setFiles(response.files);
+      setPageCount(response.meta.last_page);
+      setCurrentPage(response.meta.current_page);
+    } catch (error) {
+      console.error("Error fetching files:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFiles();
+  }, []);
+
+  useEffect(() => {
+    // Close popup when clicking outside of it
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setActionPopupVisible(false);
+        setSelectedFile(null); // Clear selected file when clicking outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handlePageChange = (selectedPage: number) => {
+    fetchFiles(selectedPage);
+  };
+
+  const handleFileClick = (file: File, event: React.MouseEvent) => {
+    setSelectedFile(file);
+
+    // Get the position of the clicked button
+    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    setPopupPosition({
+      top: rect.top + window.scrollY + rect.height, // Position below the button
+      left: rect.left + window.scrollX - 100, // Adjust for alignment (optional)
+    });
+
+    setActionPopupVisible((prev) => !prev); // Toggle visibility on click
+  };
+
+  const closeActionPopup = () => {
+    setActionPopupVisible(false);
+    setSelectedFile(null); // Clear selected file when closing popup
+  };
+
+  const handleDownload = (file: File) => {
+    // Assuming the file has a download_url property
+    window.open(file.url_link, "_blank");
+  };
+
+  const handleDelete = (file: File) => {
+    if (
+      window.confirm(`Are you sure you want to delete "${file.file_name}"?`)
+    ) {
+      // Call your delete API here
+      console.log("File deleted:", file.id);
+      // Fetch files again after deletion
+      fetchFiles();
+    }
+  };
+
   return (
-    <div>
-      <Table className='border-collapse w-full bg-background rounded-t-lg overflow-hidden'>
-        <TableHeader className='bg-theme py-3 rounded-lg '>
-          <TableRow className=''>
-            <TableHead className='max-sm:text-sm w-[70px] ps-5 lg:w-[100px] lg:ps-8 sm:rounded-tl-md text-left'>
-              No
-            </TableHead>
-            <TableHead className='max-sm:text-sm text-left'>
-              File Name
-            </TableHead>
-            <TableHead className='max-sm:text-sm text-left'>
-              Uploaded At
-            </TableHead>
-            <TableHead className='max-sm:text-sm text-left'>
-              Uploaded By
-            </TableHead>
-            <TableHead className='max-sm:text-sm sm:rounded-tr-md'>
-              Action
-            </TableHead>
+    <div className='sm:rounded-t-xl overflow-hidden'>
+      <Table className='border-collapse w-full bg-background sm:rounded-t-lg'>
+        <TableHeader className='bg-theme py-3'>
+          <TableRow>
+            <TableHead className='ps-5 w-[70px] text-left'>No</TableHead>
+            <TableHead className='text-left'>File Name</TableHead>
+            <TableHead className='text-left'>Uploaded At</TableHead>
+            <TableHead className='text-left'>Uploaded By</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className='max-sm:text-[11px]'>
-          {files.length > 0 ? (
+        <TableBody>
+          {loading ?
+            <TableRow>
+              <TableCell
+                colSpan={5}
+                className='text-center py-10'
+              >
+                Loading...
+              </TableCell>
+            </TableRow>
+          : files.length > 0 ?
             files.map((file, index) => (
               <TableRow
-                key={index}
-                className='border-[1px] border-tableRowBorder h-[70px]'
+                key={file.id}
+                className='border border-tableRowBorder'
               >
-                <TableCell className='font-medium ps-5 lg:ps-8'>
-                  {index + 1}
-                </TableCell>
-                <TableCell>{file.filename}</TableCell>
-                <TableCell>{file.uploadedAt}</TableCell>
-                <TableCell>{file.uploadedBy}</TableCell>
-                <TableCell className='flex justify-center items-center mt-1 h-[70px]'>
-                  <button className='p-2 rounded-md hover:bg-optionBgHover'>
+                <TableCell className='ps-5'>{index + 1}</TableCell>
+                <TableCell>{file.file_name}</TableCell>
+                <TableCell>{formatTime(file.created_at)}</TableCell>
+                <TableCell>{file.user?.name}</TableCell>
+                <TableCell className='text-center'>
+                  <button
+                    ref={buttonRef}
+                    className='p-2 rounded-md hover:bg-optionBgHover'
+                    onClick={(e) => handleFileClick(file, e)}
+                  >
                     <BsThreeDots />
                   </button>
                 </TableCell>
               </TableRow>
             ))
-          ) : (
-            <TableRow>
+          : <TableRow>
               <TableCell
-                colSpan={6}
+                colSpan={5}
                 className='text-center h-[450px]'
               >
                 <NoResultFound />
               </TableCell>
             </TableRow>
-          )}
+          }
         </TableBody>
       </Table>
+
+      {/* Pagination */}
+      <div className='flex justify-end mt-3'>
+        <PaginationLMT
+          pageCount={pageCount}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      </div>
+
+      {/* Action Popup */}
+      {selectedFile && (
+        <div
+          ref={popupRef}
+          style={{ top: popupPosition.top, left: popupPosition.left }}
+        >
+          <ActionPopup
+            isOpen={actionPopupVisible}
+            onClose={closeActionPopup}
+            file={selectedFile}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
+          />
+        </div>
+      )}
     </div>
   );
 };
