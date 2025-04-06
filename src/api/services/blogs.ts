@@ -2,6 +2,7 @@ import {
   blogFromJson,
   BlogResponse,
   commentsFromJson,
+  filesFromJson,
   likedListFromJson,
   newBlogFromJson,
   newCommentFromJson,
@@ -125,4 +126,18 @@ export async function deleteBlog(blogId: number): Promise<any> {
   }
 
   return response;
+}
+
+export async function getFiles(page: number): Promise<any> {
+  const url = page ? `${APIS.GET.getFiles}?page=${page}` : APIS.GET.getFiles;
+  const response = await GetRequest(url);
+
+  if (isErrorModel(response)) {
+    throw response;
+  }
+
+  const data = filesFromJson(response);
+
+  console.log(data);
+  return data;
 }

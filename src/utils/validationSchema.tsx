@@ -102,3 +102,53 @@ export const ChangePasswordSchema = z
   );
 
 export type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>;
+
+export const meetingSchema = z
+  .object({
+    subject: z.string().min(1, "Subject is required"),
+    time: z.string().nonempty("Time is required"),
+    date: z.string().nonempty("Date is required"),
+    location: z.string().nullable(),
+    platform: z.string().nullable(),
+    meetingType: z.enum(["Virtual", "In-Person"]),
+    link: z.string().nonempty("Link is required"),
+    students: z
+      .array(
+        z.object({
+          userId: z.number(),
+          studentId: z.number(),
+          name: z.string(),
+          profile_picture: z.string().nullable(),
+        })
+      )
+      .min(1, "At least one student must be assigned"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.meetingType === "Virtual") {
+      if (!data.platform || data.platform.trim() === "") {
+        ctx.addIssue({
+          path: ["platform"],
+          message: "Platform is required for Virtual meetings",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+
+      if (!data.link || data.link.trim() === "") {
+        ctx.addIssue({
+          path: ["link"],
+          message: "Link is required for Virtual meetings",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+    }
+
+    if (data.meetingType === "In-Person") {
+      if (!data.location || data.location.trim() === "") {
+        ctx.addIssue({
+          path: ["location"],
+          message: "Location is required for In-Person meetings",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+    }
+  });

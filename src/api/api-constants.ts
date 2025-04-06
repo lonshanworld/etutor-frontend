@@ -12,6 +12,10 @@ export const APIS = {
     getMajorsWithSubjects: "majors-with-subjects",
     getBlogs: "blogs",
     getBlogById: (blogId: number) => `blogs/${blogId}`,
+    getFiles: "blogs/files",
+    getMyStudents: (tutorId: number) => `tutors/${tutorId}/students`,
+    getActiveMeetings: "meetings/active",
+    getHistoryMeetings: "meetings/old",
   },
   POST: {
     login: "auth/login",
@@ -25,6 +29,7 @@ export const APIS = {
     uploadAttachment: "upload-attachment",
     addBlog: "blogs/add",
     deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
+    createMeeting: "meetings/create",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

@@ -95,7 +95,6 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
 
     useEffect(() => {
       if (!isDetail) {
-        console.log("use");
         setLikeCount(blogId, initialLikeCount);
         setCommentCount(blogId, initialCommentCount);
         setIsLiked(blogId, initialIsLiked);

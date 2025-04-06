@@ -45,6 +45,7 @@ export default {
         secondaryText: "var(--secondary-text)",
         boardFile: "var(--board-file)",
         meetingCard: "var(--meeting-card)",
+        homeItem: "var(--home-item)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -83,11 +84,11 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-        grayToggle : "var(--gray-toggle)",
-        iconGray : "#939393",
-        chatTutor : "#FFA500",
-        chatMyTutor : "#9D69E1",
-        chatStudent : "#FF1493",
+        grayToggle: "var(--gray-toggle)",
+        iconGray: "#939393",
+        chatTutor: "#FFA500",
+        chatMyTutor: "#9D69E1",
+        chatStudent: "#FF1493",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -98,6 +99,7 @@ export default {
         left: "-7px 0 10px rgba(0, 0, 0, 0.5)",
         cusShadow:
           "0px 6px 12px -2px rgba(50,50,93,0.25), 0px 3px 7px -3px rgba(0,0,0,0.3)",
+        cusShadow2: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       },
       fontSize: {
         xss: "0.65rem",

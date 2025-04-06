@@ -6,12 +6,13 @@ import CreateMeetingForm from "./CreateMeetingForm";
 import { activeMeetingData, historyMeetingData } from "./data";
 import MeetingDetail from "./MeetingDetail";
 import { meetingProps } from "./MeetingDetail";
+import { Meeting as MeetingType } from "@/model/meeting";
 
 const Meeting = () => {
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
   const [viewDetail, setViewDetail] = useState<meetingProps | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
-  const [meetings, setMeetings] = useState(activeMeetingData);
+  const [meetings, setMeetings] = useState<MeetingType[]>(activeMeetingData);
 
   useEffect(() => {
     setMeetings(
@@ -64,7 +65,7 @@ const Meeting = () => {
                 <Button
                   onClick={() => setOpenCreate(true)}
                   size='default'
-                  className='mr-12 mb-8 max-lg:mb-4 max-md:mr-4'
+                  className='mr-12 mb-8 max-lg:mb-4 max-md:mr-4 text-primaryText text-lg md:p-6'
                 >
                   Create Meeting
                 </Button>
