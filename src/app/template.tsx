@@ -1,7 +1,7 @@
 "use client";
 import { getProfile } from "@/api/services/getProfile";
 import LoadingSpinner from "@/components/loadingspinner/LoadingSpinner";
-import { getTokenCookies } from "@/lib/tokenCookies";
+import { deleteTokensInCookie, getTokenCookies } from "@/lib/tokenCookies";
 import { ConvexClientProvider } from "@/provider/ConvexClientProvider";
 import { AppRouter } from "@/router";
 import useLoading from "@/stores/useLoading";
@@ -21,31 +21,45 @@ export default function MainTemplate({
   const { showLoading, hideLoading } = useLoading();
   const router = useRouter();
   const pathName = usePathname();
-  const { toast } = useToast();
+  const { toast, showToast } = useToast();
 
   useEffect(() => {
     async function getUser() {
-      console.log("get");
-      const { sessionToken, role } = await getTokenCookies();
-      console.log("got token", sessionToken, role);
-      if (sessionToken && role) {
-        showLoading();
-        const user = await getProfile();
-        setUser(user);
-        hideLoading();
-        // if(role === "staff" && !pathName.includes("staff")){
-        //   router.push(pathName);
-        // }else if(role === "student" && !pathName.includes("student")){
-        //   router.push(AppRouter.studentDashboard);
-        // }else if(role === "tutor" && !pathName.includes("tutor")){
-        //   router.push(AppRouter.tutorDashboard);
-        // }
-      } else {
-        if (!pathName.includes(AppRouter.loginPage)) {
-          setTimeout(() => {
-            router.push(AppRouter.loginPage);
-          }, 3000);
+      try {
+        const { sessionToken, role } = await getTokenCookies();
+        // console.log("got token", sessionToken, role);
+        if (sessionToken && role) {
+          showLoading();
+          const user = await getProfile();
+          if (!user) {
+            throw new Error("User not found");
+          }
+          setUser(user); // store in global state
+
+          // auto redirect ig
+          if (role === "staff" && !pathName.includes("staff")) {
+            router.push(pathName);
+          } else if (role === "student" && !pathName.includes("student")) {
+            router.push(AppRouter.studentDashboard);
+          } else if (role === "tutor" && !pathName.includes("tutor")) {
+            router.push(AppRouter.tutorDashboard);
+          }
+        } else {
+          // for redirect from intro page to login
+          if (pathName === AppRouter.introPage) {
+            // console.log("redirecting to login");
+            setTimeout(() => {
+              router.push(AppRouter.loginPage);
+            }, 3000);
+          }
         }
+      } catch (error) {
+        console.log("error in template", error);
+        showToast("Please login again", "Session Expire");
+        deleteTokensInCookie();
+        router.push(AppRouter.loginPage);
+      } finally {
+        hideLoading();
       }
     }
     getUser();
@@ -53,7 +67,12 @@ export default function MainTemplate({
   return (
     <ConvexClientProvider>
       <LoadingSpinner />
-      {toast && <Toast message={toast?.message} type={toast?.type} />}
+      {toast && (
+        <Toast
+          message={toast?.message}
+          type={toast?.type}
+        />
+      )}
 
       {children}
     </ConvexClientProvider>
