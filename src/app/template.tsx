@@ -44,20 +44,26 @@ export default function MainTemplate({
           } else if (role === "tutor" && !pathName.includes("tutor")) {
             router.push(AppRouter.tutorDashboard);
           }
-        } else {
-          // for redirect from intro page to login
-          if (pathName === AppRouter.introPage) {
-            // console.log("redirecting to login");
-            setTimeout(() => {
-              router.push(AppRouter.loginPage);
-            }, 3000);
-          }
         }
+        // dont think we need that part since middleware is handling
+        // else {
+        //   if (
+        //     pathName !== AppRouter.introPage &&
+        //     pathName !== AppRouter.loginPage
+        //   ) {
+        //     router.push(AppRouter.loginPage);
+        //   }
+        // }
       } catch (error) {
-        console.log("error in template", error);
-        showToast("Please login again", "Session Expire");
+        console.log("cookie cannot be used", error);
         deleteTokensInCookie();
-        router.push(AppRouter.loginPage);
+        if (
+          pathName !== AppRouter.introPage &&
+          pathName !== AppRouter.loginPage
+        ) {
+          showToast("Please login again", "Warning");
+          router.push(AppRouter.loginPage);
+        }
       } finally {
         hideLoading();
       }

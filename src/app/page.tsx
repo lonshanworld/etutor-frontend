@@ -12,17 +12,17 @@ export default function Home() {
   const [seconds, setSeconds] = useState(3);
 
   useEffect(() => {
-    const countdown = setInterval(() => {
-      setSeconds((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdown);
-        }
-        return prev - 1;
-      });
+    if (seconds === 0) {
+      router.push(AppRouter.loginPage);
+      return;
+    }
+
+    const countdown = setTimeout(() => {
+      setSeconds((prev) => prev - 1);
     }, 1000);
 
-    return () => clearInterval(countdown);
-  }, [router]);
+    return () => clearTimeout(countdown);
+  }, [seconds, router]);
 
   const skipRedirect = () => {
     router.push(AppRouter.loginPage);
