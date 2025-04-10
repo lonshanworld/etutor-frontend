@@ -1,18 +1,17 @@
 "use client";
 
+import { getMyStudents } from "@/api/services/home";
 import { useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import ProfilePic from "../ProfilePic";
 import StudentListItem from "./StudentListItem";
-import { getMyStudents } from "@/api/services/meeting";
-import { useUserStore } from "@/stores/useUserStore";
+import { formatName } from "@/utils/formatData";
 
-interface myStudent {
+export interface myStudent {
   userId: number;
-  studentId: number;
   name: string;
-  profile_picture: string;
+  profileUrl: string | null;
 }
 
 interface Props {
@@ -26,13 +25,19 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
   const [assignedStudents, setAssignedStudents] =
     useState<myStudent[]>(preSelectedStudents);
   const [searchTerm, setSearchTerm] = useState("");
-  const { user, getUserId } = useUserStore();
 
   const fetchMyStudent = async () => {
-    if (user) {
-      const response = await getMyStudents(user.id);
-      setMyStudentList(response.myStudent);
-    }
+    const response = await getMyStudents();
+    const formattedData = response.myStudents.map((student) => ({
+      userId: student.user_id,
+      name: formatName(
+        student.first_name,
+        student.middle_name,
+        student.last_name
+      ),
+      profileUrl: student.profile_picture,
+    }));
+    setMyStudentList(formattedData);
   };
 
   useEffect(() => {
@@ -45,14 +50,14 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
 
   const handleSelect = (student: myStudent) => {
     setAssignedStudents((prev) => {
-      return prev.some((s) => s.studentId === student.studentId) ?
-          prev.filter((s) => s.studentId !== student.studentId)
+      return prev.some((s) => s.userId === student.userId) ?
+          prev.filter((s) => s.userId !== student.userId)
         : [...prev, student];
     });
   };
 
   const handleRemove = (id: number) => {
-    setAssignedStudents((prev) => prev.filter((s) => s.studentId !== id));
+    setAssignedStudents((prev) => prev.filter((s) => s.userId !== id));
   };
 
   const filteredStudents = myStudentList.filter((student) =>
@@ -66,7 +71,7 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
         onClick={onBack}
       ></div>
 
-      <div className='fixed top-0 right-0 h-screen bg-formBackground md:w-[750px] p-14 w-svw z-20'>
+      <div className='fixed top-0 right-0 h-screen bg-formBackground md:w-[750px] p-9 sm:p-14 w-svw z-20'>
         <div className='flex flex-col h-full'>
           {/* Back Button */}
           <div className='pb-8 flex justify-between items-center'>
@@ -76,7 +81,7 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
               onClick={onBack}
             />
             <button
-              className='bg-theme px-4 py-2 text-white'
+              className='bg-theme px-6 py-2 text-white'
               onClick={() => onAdd(assignedStudents)}
             >
               Add
@@ -91,18 +96,20 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
             {assignedStudents.length > 0 ?
               assignedStudents.map((student) => (
                 <div
-                  key={student.studentId}
+                  key={student.userId}
                   className='flex items-center gap-2 px-3 bg-meetingCard h-8 text-white rounded-sm'
                 >
-                  <ProfilePic
-                    profileUrl={student.profile_picture}
-                    size={20}
-                  />
-                  <span className=''>{student.name}</span>
+                  <div className='max-sm:hidden'>
+                    <ProfilePic
+                      profileUrl={student.profileUrl}
+                      size={20}
+                    />
+                  </div>
+                  <span className='max-sm:text-sm'>{student.name}</span>
                   <RxCross2
-                    size={22}
+                    size={20}
                     className='cursor-pointer'
-                    onClick={() => handleRemove(student.studentId)}
+                    onClick={() => handleRemove(student.userId)}
                   />
                 </div>
               ))
@@ -118,11 +125,11 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
               htmlFor=''
               className='pr-3 text-[17px] text-secondaryText'
             >
-              Search:{" "}
+              Search:
             </label>
             <input
               type='text'
-              className='text-primaryText bg-transparent border-b border-theme px-2 py-1 focus:outline-none'
+              className='text-primaryText bg-transparent border-b border-theme px-2 py-1.5 focus:outline-none'
               placeholder=''
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -136,17 +143,33 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
 
           {/* Student List */}
           <p className='py-2 text-primaryText font-semibold'>Your Students</p>
+          <div className='flex justify-end gap-4 pb-2'>
+            <button
+              className='text-sm text-theme hover:underline'
+              onClick={() => setAssignedStudents(myStudentList)}
+            >
+              Select All
+            </button>
+            <button
+              className='text-sm text-red-500 hover:underline'
+              onClick={() => setAssignedStudents([])}
+            >
+              Clear All
+            </button>
+          </div>
+          {/* Select All / Clear All */}
+
           <div className='flex flex-col gap-2 overflow-y-auto scrollbar-cus-1'>
             {filteredStudents.length > 0 ?
               filteredStudents.map((student) => (
                 <StudentListItem
-                  key={student.studentId}
-                  id={student.studentId}
+                  key={student.userId}
+                  id={student.userId}
                   name={student.name}
-                  profileUrl={student.profile_picture}
+                  profileUrl={student.profileUrl}
                   onSelect={() => handleSelect(student)}
                   isSelected={assignedStudents.some(
-                    (s) => s.studentId === student.studentId
+                    (s) => s.userId === student.userId
                   )}
                 />
               ))

@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDate, formatTime } from "@/utils/formatData";
 import { getMeetingIcon } from "@/utils/getMeetingIcon";
 import Image from "next/image";
 import React from "react";
@@ -42,9 +43,13 @@ const MeetingBox = ({
           <span className='h-10 font-semibold text-primaryText line-clamp-2 text-base leading-5'>
             {meetingName}
           </span>
-          <div className='flex justify-between'>
-            <span className='text-sm text-secondaryText truncate'>{time}</span>
-            <span className='text-sm text-secondaryText truncate'>{date}</span>
+          <div className='flex justify-between gap-4'>
+            <span className='text-sm text-secondaryText truncate'>
+              {formatTime(time)}
+            </span>
+            <span className='text-sm text-secondaryText truncate'>
+              {formatDate(date)}
+            </span>
           </div>
         </div>
       </div>

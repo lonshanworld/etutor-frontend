@@ -8,7 +8,7 @@ import ProfilePic from "../ProfilePic";
 
 interface Props {
   id: number;
-  profileUrl: string;
+  profileUrl: string | null;
   name: string;
   onSelect: (id: number) => void;
   isSelected: boolean;
@@ -26,18 +26,21 @@ const StudentListItem = ({
       className={`flex items-center gap-2 p-3 border-b border-b-gray-600 cursor-pointer mr-3`}
       onClick={() => onSelect(id)}
     >
-      {/* Show tick icon if selected */}
-      {isSelected ?
-        <MdOutlineCheckBox
-          size={24}
-          className='text-teal-600'
-        />
-      : <MdOutlineCheckBoxOutlineBlank
-          size={24}
-          className='text-secondaryText'
-        />
-      }
-      <div className='flex items-center gap-3'>
+      <div>
+        {isSelected ?
+          <MdOutlineCheckBox
+            size={24}
+            className='text-teal-600'
+          />
+        : <MdOutlineCheckBoxOutlineBlank
+            size={24}
+            color='gray'
+            className='text-secondaryText'
+          />
+        }
+      </div>
+
+      <div className='flex items-center gap-3 select-none'>
         <ProfilePic
           profileUrl={profileUrl}
           size={36}

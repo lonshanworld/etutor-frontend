@@ -29,6 +29,7 @@ const ProfilePic = ({
         alt={alt || "Profile picture"}
         fill
         className={`object-cover ${className}`}
+        sizes={`${size}px`}
       />
     </div>
   );

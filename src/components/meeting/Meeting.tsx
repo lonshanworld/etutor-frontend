@@ -3,42 +3,48 @@ import NavBar from "./NavBar";
 import MeetingList from "./MeetingList";
 import { Button } from "../ui/button";
 import CreateMeetingForm from "./CreateMeetingForm";
-import { activeMeetingData, historyMeetingData } from "./data";
 import MeetingDetail from "./MeetingDetail";
-import { meetingProps } from "./MeetingDetail";
 import { Meeting as MeetingType } from "@/model/meeting";
+import { useUserStore } from "@/stores/useUserStore";
+import { getActiveMeetings, getHistoryMeetings } from "@/api/services/meeting";
 
 const Meeting = () => {
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
-  const [viewDetail, setViewDetail] = useState<meetingProps | null>(null);
+  const [viewDetail, setViewDetail] = useState<MeetingType | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
-  const [meetings, setMeetings] = useState<MeetingType[]>(activeMeetingData);
+  const [meetings, setMeetings] = useState<MeetingType[]>([]);
+  const { user } = useUserStore();
+
+  const fetchActiveMeetings = async () => {
+    try {
+      const response = await getActiveMeetings();
+      setMeetings(response.meetings);
+    } catch (error) {
+      console.log("Error Fetching active meetings");
+    }
+  };
+
+  const fetchHistoryMeetings = async () => {
+    try {
+      const response = await getHistoryMeetings();
+      setMeetings(response.meetings);
+    } catch (error) {
+      console.log("Error Fetching history meetings");
+    }
+  };
+
+  const handleNewMeetingCreated = (newMeeting: any) => {
+    setMeetings((prevMeetings) => [newMeeting, ...prevMeetings]);
+  };
 
   useEffect(() => {
-    setMeetings(
-      activeTab === "active" ? activeMeetingData : historyMeetingData
-    );
+    activeTab === "active" ? fetchActiveMeetings() : fetchHistoryMeetings();
   }, [activeTab]);
 
-  const handleViewDetail = (id: number) => {
-    console.log("ID", id);
-    // route.push?
-
-    const meetingDetail: meetingProps = {
-      id: 1,
-      profileUrl: "https://i.pravatar.cc/300?img=18",
-      tutorName: "Serius Black",
-      tutorQualification: "Qualification",
-      subject: "Mobile App Development",
-      time: "12/2/2025 12:00pm",
-      studentList: ["student 1", "student 2"],
-      meetingType: "Virtual",
-      location: "",
-      platform: "Google Meet",
-      meetingLink: "www.google.com",
-    };
-
-    setViewDetail(meetingDetail);
+  const handleViewDetail = (meeting: MeetingType) => {
+    if (meeting) {
+      setViewDetail(meeting);
+    }
   };
 
   return (
@@ -48,9 +54,9 @@ const Meeting = () => {
           {viewDetail ?
             <MeetingDetail
               onBack={() => setViewDetail(null)}
-              {...viewDetail}
+              meeting={viewDetail}
             />
-          : <div className='flex flex-col md:px-8 w-full'>
+          : <div className='flex flex-col w-full'>
               <NavBar
                 onSelectTab={setActiveTab}
                 selectedTab={activeTab}
@@ -58,23 +64,28 @@ const Meeting = () => {
 
               <MeetingList
                 meetings={meetings}
-                viewDetail={handleViewDetail}
+                viewDetail={(meeting) => handleViewDetail(meeting)}
               />
 
-              <div className='flex justify-end pt-4 w-full bg-secondaryBackground absolute bottom-0 right-0'>
-                <Button
-                  onClick={() => setOpenCreate(true)}
-                  size='default'
-                  className='mr-12 mb-8 max-lg:mb-4 max-md:mr-4 text-primaryText text-lg md:p-6'
-                >
-                  Create Meeting
-                </Button>
-              </div>
+              {user?.role === "tutor" && (
+                <div className='flex justify-end pt-4 w-full bg-secondaryBackground absolute bottom-0 right-0'>
+                  <Button
+                    onClick={() => setOpenCreate(true)}
+                    size='default'
+                    className='mr-12 mb-8 max-lg:mb-4 max-md:mr-4 text-primaryText sm:text-lg md:p-6 text-white'
+                  >
+                    Create Meeting
+                  </Button>
+                </div>
+              )}
 
-              <CreateMeetingForm
-                isOpen={openCreate}
-                onBack={() => setOpenCreate(false)}
-              />
+              {user?.role === "tutor" && (
+                <CreateMeetingForm
+                  isOpen={openCreate}
+                  onBack={() => setOpenCreate(false)}
+                  onNewMeetingCreated={handleNewMeetingCreated}
+                />
+              )}
             </div>
           }
         </div>

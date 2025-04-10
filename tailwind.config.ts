@@ -51,6 +51,7 @@ export default {
         homeItem: "var(--home-item)",
         notiBg: "var(--noti-bg)",
         profileTextColor: "var(--profile-text)",
+        blogCommentBox: "var(--blog-comment-box)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

@@ -4,7 +4,7 @@ export const APIS = {
     getTutorList: "tutors",
     getStaffList: "staffs",
     getMyProfile: "user/profile", // get own user profile
-    getProfile: (id: string) => `user/${id}/profile`, // get user profile by id
+    getProfile: (id: number) => `user/${id}/profile`, // get user profile by id
     checkEmail: "check-email",
     confirmOtp: "confirm-otp",
     getMajors: "majors",
@@ -13,9 +13,10 @@ export const APIS = {
     getBlogs: "blogs",
     getBlogById: (blogId: number) => `blogs/${blogId}`,
     getFiles: "blogs/files",
-    getMyStudents: (tutorId: number) => `tutors/${tutorId}/students`,
-    getActiveMeetings: "meetings/active",
-    getHistoryMeetings: "meetings/old",
+    getMyStudents: "tutors/my_students",
+    getMyTutor: "students/my_tutor",
+    getActiveMeetings: "meetings",
+    getHistoryMeetings: "meetings/recent",
     getReportActiveUsers: "reports/active-users",
     getBrowsersUsage: "reports/browser-usage",
   },

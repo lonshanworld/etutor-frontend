@@ -5,6 +5,7 @@ import { Send } from "lucide-react";
 import { useUserStore } from "@/stores/useUserStore";
 import { Comment } from "@/model/blog";
 import { giveComment } from "@/api/services/blogs";
+import { AiOutlineSend } from "react-icons/ai";
 
 interface Props {
   blogId: number;
@@ -19,6 +20,7 @@ const CommentInputField = ({
 }: Props) => {
   const [commentContent, setcommentContent] = useState("");
   const commentSectionRef = useRef<HTMLDivElement | null>(null);
+  const { isReadOnly } = useUserStore();
 
   const handleSubmit = async () => {
     if (commentContent.trim() === "") return;
@@ -49,20 +51,20 @@ const CommentInputField = ({
 
   return (
     <>
-      <div className='flex items-center border border-gray-500 rounded-lg px-3 py-2 w-full'>
+      <div className='flex items-center border border-inputBorder  rounded-lg px-3 py-2 w-full bg-blogCommentBox'>
         <input
           type='text'
-          placeholder='Comment...'
-          className='flex-1 bg-transparent outline-none placeholder-gray-400'
+          placeholder='Write a comment...'
+          className={`flex-1 bg-transparent outline-none placeholder-gray-400  ${isReadOnly && "pointer-events-none opacity-50"}`}
           value={commentContent}
           onChange={(e) => setcommentContent(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <button
-          className='text-gray-600 transition'
+          className={`text-gray-600 transition flex rounded-full p-1 ${isReadOnly ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
           onClick={handleSubmit}
         >
-          <Send size={18} />
+          <AiOutlineSend size={20} />
         </button>
       </div>
       <div

@@ -15,7 +15,7 @@ import { getFiles } from "@/api/services/blogs";
 import { File } from "@/model/blog";
 import { PaginationLMT } from "../pagination/PaginationLMT";
 import ActionPopup from "./popup/ActionPopup";
-import { formatTime } from "@/utils/formatData";
+import { formatTimeStamp } from "@/utils/formatData";
 
 const FileTable = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -141,7 +141,7 @@ const FileTable = () => {
               >
                 <TableCell className='ps-5'>{index + 1}</TableCell>
                 <TableCell>{file.file_name}</TableCell>
-                <TableCell>{formatTime(file.created_at)}</TableCell>
+                <TableCell>{formatTimeStamp(file.created_at)}</TableCell>
                 <TableCell>{file.user?.name}</TableCell>
                 <TableCell className='text-center'>
                   <button

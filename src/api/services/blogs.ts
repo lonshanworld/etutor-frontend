@@ -137,7 +137,5 @@ export async function getFiles(page: number): Promise<any> {
   }
 
   const data = filesFromJson(response);
-
-  console.log(data);
   return data;
 }
