@@ -1,14 +1,16 @@
-import { useEffect, useState, useRef, TouchEvent, useId } from "react";
+import { useEffect, useState, useRef, TouchEvent, useMemo } from "react";
 import { BiSolidPhone } from "react-icons/bi";
 import { MdEmail, MdOutlineMessage } from "react-icons/md";
 import ProfilePic from "../ProfilePic";
 import { capitalizeFirstLetter, formatName } from "@/utils/formatData";
 import { useUserStore } from "@/stores/useUserStore";
-import { useProfileStore } from "@/stores/useProfileStore";
+import { ProfileData, useProfileStore } from "@/stores/useProfileStore";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { AppRouter } from "@/router";
 import { useRouter } from "next/navigation";
+import { IoOpenOutline } from "react-icons/io5";
+import ProfileDetailView from "./ProfileDetailView"; // Import our new component
 
 interface Props {
   className?: string;
@@ -16,87 +18,58 @@ interface Props {
   onClose: () => void;
 }
 
+type UserChatInfo = {
+  userId: number;
+  firstName: string;
+  middleName?: string;
+  lastName?: string;
+  email: string;
+  role: string;
+  profileImagePath?: string;
+  gender?: string;
+};
+
+interface DragState {
+  isDragging: boolean;
+  dragStartY: number;
+  currentTranslate: number;
+  touchStartedOnHeader: boolean;
+  isAtTopEdge: boolean;
+}
+
 const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
+  const [profileState, setProfileState] = useState<ProfileData | null>(null);
   const [isLoading, setLoading] = useState(false);
-  const [username, setUsername] = useState<string>("-");
-  const [email, setEmail] = useState<string>("-");
-  const [phone, setPhone] = useState<string>("-");
-  const [role, setRole] = useState<string>("-");
-  const [profileUrl, setProfileUrl] = useState<string | null>("");
-  const [status, setStatus] = useState<string>("");
-  const [birthday, setBirthday] = useState<string>("-");
-  const [gender, setGender] = useState<string>("-");
-  const [address, setAddress] = useState<string>("-");
-  const [nationality, setNationality] = useState<string>("-");
-  const [passport, setPassport] = useState<string>("-");
-  const [emergencyName, setEmergencyName] = useState<string>("-");
-  const [emergencyPhone, setEmrgencyPhone] = useState<string>("-");
-  const [major, setMajor] = useState<string>("-");
-  const [enrollDate, setEnrollDate] = useState<string>("-");
-  const [qualification, setQualification] = useState<string>("-");
-  const [experience, setExperience] = useState<string>("-");
-  const [subject, setSubject] = useState<string>("-");
-
   const [isOwnProfile, setIsOwnProfile] = useState(false);
-  const [isViewerTutor, setIsViewerTutor] = useState(false);
-
-  const [isMobile, setIsMobile] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [showOverlay, setShowOverlay] = useState(false);
+  const [showDetailProfile, setShowDetailProfile] = useState(false); // State to control detailed profile view
   const router = useRouter();
-
-  // Store
   const { getUserId, user } = useUserStore();
   const { fetchProfile } = useProfileStore();
-
-  // Chat
   const createConversation = useMutation(api.chatRoom.createConversation);
-  const [user1, setUser1] = useState<userChat | null>(null);
-  const [user2, setUser2] = useState<userChat | null>(null);
 
-  // For drag functionality
+  // Animation
+  const [uiState, setUiState] = useState({
+    isVisible: false,
+    showOverlay: false,
+    isMobile: false,
+  });
   const sheetRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const dragStartY = useRef<number>(0);
-  const currentTranslate = useRef<number>(0);
-  const isDragging = useRef<boolean>(false);
-  const touchStartedOnHeader = useRef<boolean>(false);
-  const isAtTopEdge = useRef<boolean>(false);
-
-  type userChat = {
-    userId: number;
-    firstName: string;
-    middleName?: string;
-    lastName?: string;
-    email: string;
-    role: string;
-    profileImagePath?: string;
-    gender?: string;
-  };
-
-  // set user1 on load
-  useEffect(() => {
-    if (user) {
-      setUser1({
-        userId: user.id,
-        firstName: user.firstName!,
-        middleName: user.middleName ?? undefined,
-        lastName: user.lastName ?? undefined,
-        email: user.email,
-        role: user.role!,
-        profileImagePath: user.profileImagePath ?? undefined,
-        gender: user.gender,
-      });
-    }
-  }, [user]);
+  const dragState = useRef<DragState>({
+    isDragging: false,
+    dragStartY: 0,
+    currentTranslate: 0,
+    touchStartedOnHeader: false,
+    isAtTopEdge: false,
+  });
 
   useEffect(() => {
     loadProfile();
 
-    // Check if we're on mobile
+    // Check on mobile
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setUiState((prev) => ({ ...prev, isMobile: window.innerWidth < 1024 }));
     };
 
     checkMobile();
@@ -104,9 +77,9 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
 
     // Set visible after a small delay to trigger animation
     setTimeout(() => {
-      setShowOverlay(true);
+      setUiState((prev) => ({ ...prev, showOverlay: true }));
       setTimeout(() => {
-        setIsVisible(true);
+        setUiState((prev) => ({ ...prev, isVisible: true }));
       }, 50);
     }, 10);
 
@@ -115,20 +88,107 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     };
   }, [user, userId]);
 
-  // Monitor scroll position to detect when at top
+  const loadProfile = async () => {
+    try {
+      setLoading(true);
+      if (userId && user) {
+        const profile = await fetchProfile(userId, user);
+        setProfileState(profile);
+        setIsOwnProfile(getUserId() === userId);
+      }
+    } catch (error) {
+      console.error("Error loading profile:", error);
+      setTimeout(() => onClose(), 1000); // auto close popup if error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // user1 data for chat
+  const currentUserInfo = useMemo<UserChatInfo | null>(() => {
+    if (!user) return null;
+
+    return {
+      userId: user.id,
+      firstName: user.firstName!,
+      middleName: user.middleName ?? undefined,
+      lastName: user.lastName ?? undefined,
+      email: user.email,
+      role: user.role!,
+      profileImagePath: user.profileImagePath ?? undefined,
+      gender: user.gender,
+    };
+  }, [user]);
+
+  // user2 data for chat
+  const otherUserInfo = useMemo<UserChatInfo | null>(() => {
+    if (!profileState) return null;
+
+    return {
+      userId: profileState.userId,
+      firstName: profileState.firstName,
+      middleName: profileState.middleName ?? undefined,
+      lastName: profileState.lastName ?? undefined,
+      email: profileState.email,
+      role: profileState.role,
+      profileImagePath: profileState.profileUrl ?? undefined,
+      gender: profileState.gender,
+    };
+  }, [profileState]);
+
+  const handleChat = async () => {
+    if (!currentUserInfo || !otherUserInfo) return;
+
+    try {
+      const chatId = await createConversation({
+        user1: currentUserInfo,
+        user2: otherUserInfo,
+      });
+
+      if (currentUserInfo.role === "student") {
+        router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+      } else if (currentUserInfo.role === "tutor") {
+        router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
+      }
+    } catch (error) {
+      console.error("error in chat", error);
+    }
+  };
+
+  // Handler for view detail button
+  const handleViewDetail = () => {
+    setShowDetailProfile(true);
+  };
+
+  const handleClose = () => {
+    setUiState((prev) => ({ ...prev, isVisible: false }));
+    setTimeout(() => {
+      setUiState((prev) => ({ ...prev, showOverlay: false }));
+      setTimeout(() => {
+        onClose();
+      }, 100);
+    }, 200);
+  };
+
+  // Close detailed profile view
+  const handleCloseDetailView = () => {
+    setShowDetailProfile(false);
+  };
+
+  // Below are all animmation related
   useEffect(() => {
     const contentElement = contentRef.current;
 
     const handleScroll = () => {
       if (contentElement) {
-        isAtTopEdge.current = contentElement.scrollTop === 0;
+        dragState.current.isAtTopEdge = contentElement.scrollTop === 0;
       }
     };
 
     if (contentElement) {
       contentElement.addEventListener("scroll", handleScroll);
       // Initialize the value
-      isAtTopEdge.current = contentElement.scrollTop === 0;
+      dragState.current.isAtTopEdge = contentElement.scrollTop === 0;
     }
 
     return () => {
@@ -136,104 +196,23 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
         contentElement.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [isVisible, isMobile]);
+  }, [uiState.isVisible, uiState.isMobile]);
 
-  const loadProfile = async () => {
-    try {
-      setLoading(true);
-      if (userId && user) {
-        const profile = await fetchProfile(userId, user);
-
-        setIsOwnProfile(getUserId() === userId);
-
-        const fullName = formatName(
-          profile.firstName,
-          profile.middleName,
-          profile.lastName
-        );
-        setUsername(fullName);
-        setEmail(profile.email);
-        setPhone(profile.phone || "-");
-        setRole(profile.role);
-        setProfileUrl(profile.profileUrl);
-        setStatus(profile.status);
-        setBirthday(profile.dob || "-");
-        setGender(profile.gender || "-");
-        setNationality(profile.nationality || "-");
-
-        setAddress(profile.address || "-");
-        setPassport(profile.passport || "-");
-
-        // Student
-        setEmergencyName(profile.emergencyName || "-");
-        setEmrgencyPhone(profile.emergencyPhone || "-");
-        setMajor(profile.major || "-");
-        setEnrollDate(profile.enrollDate || "-");
-
-        // Tutor
-        setQualification(profile.qualification || "-");
-        setExperience(profile.experience || "-");
-        setSubject(profile.subject || "-");
-
-        setUser2({
-          userId: profile.userId,
-          firstName: profile.firstName,
-          middleName: profile.middleName ?? undefined,
-          lastName: profile.lastName ?? undefined,
-          email: profile.email,
-          role: profile.role,
-          profileImagePath: profile.profileUrl ?? undefined,
-          gender: profile.gender,
-        });
-      }
-    } catch (err) {
-      setTimeout(() => onClose(), 1000);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChat = async () => {
-    if (user1 && user2) {
-      const chatId = await createConversation({
-        user1,
-        user2,
-      });
-      if (user1.role === "student") {
-        router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
-      } else if (user1.role === "tutor") {
-        router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
-      }
-    }
-  };
-
-  // Below are all animation effects
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      setShowOverlay(false);
-      setTimeout(() => {
-        onClose();
-      }, 100);
-    }, 200); // Match this timing with the CSS transition duration
-  };
-
-  const Skeleton = ({ className = "" }) => (
-    <div className={`animate-pulse bg-muted rounded ${className}`} />
-  );
-
-  // Handle touch start for drag
   const handleTouchStart = (e: TouchEvent) => {
-    if (!isMobile) return;
+    if (!uiState.isMobile) return;
 
-    // Check if the touch started on the header or drag indicator
     const target = e.target as Node;
-    touchStartedOnHeader.current = headerRef.current?.contains(target) || false;
+    dragState.current.touchStartedOnHeader =
+      headerRef.current?.contains(target) || false;
 
-    if (!touchStartedOnHeader.current && !isAtTopEdge.current) return;
+    if (
+      !dragState.current.touchStartedOnHeader &&
+      !dragState.current.isAtTopEdge
+    )
+      return;
 
-    isDragging.current = true;
-    dragStartY.current = e.touches[0].clientY;
+    dragState.current.isDragging = true;
+    dragState.current.dragStartY = e.touches[0].clientY;
 
     // Disable transitions during drag
     if (sheetRef.current) {
@@ -241,48 +220,49 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     }
   };
 
-  // Handle touch move for drag
   const handleTouchMove = (e: TouchEvent) => {
+    const { isDragging, touchStartedOnHeader, isAtTopEdge } = dragState.current;
+
     if (
-      !isDragging.current ||
-      !isMobile ||
-      (!touchStartedOnHeader.current && !isAtTopEdge.current)
+      !isDragging ||
+      !uiState.isMobile ||
+      (!touchStartedOnHeader && !isAtTopEdge)
     )
       return;
 
     const currentY = e.touches[0].clientY;
-    const diff = currentY - dragStartY.current;
+    const diff = currentY - dragState.current.dragStartY;
 
     // Only allow dragging downward (positive diff)
     if (diff < 0) return;
 
-    currentTranslate.current = diff;
+    dragState.current.currentTranslate = diff;
 
     if (sheetRef.current) {
       sheetRef.current.style.transform = `translateY(${diff}px)`;
     }
-
-    // Prevent default scrolling behavior when we're in drag mode
-    // e.preventDefault();
   };
 
-  // Handle touch end for drag
   const handleTouchEnd = () => {
+    const { isDragging, touchStartedOnHeader, isAtTopEdge, currentTranslate } =
+      dragState.current;
+
     if (
-      !isDragging.current ||
-      !isMobile ||
-      (!touchStartedOnHeader.current && !isAtTopEdge.current)
+      !isDragging ||
+      !uiState.isMobile ||
+      (!touchStartedOnHeader && !isAtTopEdge)
     )
       return;
-    isDragging.current = false;
-    touchStartedOnHeader.current = false;
+
+    dragState.current.isDragging = false;
+    dragState.current.touchStartedOnHeader = false;
 
     if (sheetRef.current) {
       // Add transition back
       sheetRef.current.style.transition = "transform 0.3s ease-out";
 
       // If dragged down more than 100px, close the popup
-      if (currentTranslate.current > 100) {
+      if (currentTranslate > 100) {
         sheetRef.current.style.transform = "translateY(100%)";
         handleClose();
       } else {
@@ -291,13 +271,204 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
       }
     }
 
-    currentTranslate.current = 0;
+    dragState.current.currentTranslate = 0;
   };
 
-  // Main content of the profile box that's shared between mobile and desktop
+  // Components
+  const Skeleton = ({ className = "" }: { className?: string }) => (
+    <div className={`animate-pulse bg-muted rounded ${className}`} />
+  );
+
+  const InfoItem = ({
+    label,
+    value,
+    isLast = false,
+  }: {
+    label: string;
+    value: string;
+    isLast?: boolean;
+  }) => (
+    <div className={!isLast ? "pb-4" : ""}>
+      <p className='text-sm font-semibold'>{label}</p>
+      <p className='text-sm'>{value}</p>
+    </div>
+  );
+
+  const PersonalInfoSection = () => {
+    if (!profileState) return null;
+
+    return (
+      <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
+        <InfoItem
+          label='Date of Birthday'
+          value={profileState.dob || "-"}
+        />
+        <InfoItem
+          label='Gender'
+          value={profileState.gender || "-"}
+        />
+        <InfoItem
+          label='Nationality'
+          value={profileState.nationality || "-"}
+          isLast={!isOwnProfile}
+        />
+        {
+          // not sure whether tutor can look at student passport and address
+          isOwnProfile && (
+            <>
+              <InfoItem
+                label='Passport'
+                value={profileState.passport || "-"}
+              />
+              <InfoItem
+                label='Address'
+                value={profileState.address || "-"}
+                isLast
+              />
+            </>
+          )
+        }
+      </div>
+    );
+  };
+
+  const StudentInfoSection = () => {
+    if (!profileState || profileState.role !== "student") return null;
+
+    return (
+      <>
+        <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText mb-6'>
+          <InfoItem
+            label='Emergency Contact Name'
+            value={profileState.emergencyName || "-"}
+          />
+          <InfoItem
+            label='Emergency Contact Phone'
+            value={profileState.emergencyPhone || "-"}
+            isLast
+          />
+        </div>
+
+        <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
+          <InfoItem
+            label='Major'
+            value={profileState.major || "-"}
+          />
+          <InfoItem
+            label='Enrollment Date'
+            value={profileState.enrollDate || "-"}
+            isLast
+          />
+        </div>
+      </>
+    );
+  };
+
+  const TutorInfoSection = () => {
+    if (!profileState || profileState.role !== "tutor") return null;
+
+    return (
+      <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
+        <InfoItem
+          label='Qualification'
+          value={profileState.qualification || "-"}
+        />
+        <InfoItem
+          label='Experience'
+          value={profileState.experience || "-"}
+        />
+        <InfoItem
+          label='Subject'
+          value={profileState.subject || "-"}
+          isLast
+        />
+      </div>
+    );
+  };
+
+  const ProfileHeader = () => {
+    if (isLoading) {
+      return (
+        <div className='mt-8 px-5 py-6 space-y-4'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-3'>
+              <Skeleton className='w-[120px] h-[24px]' />
+              <Skeleton className='w-[60px] h-[20px]' />
+            </div>
+            <div className='flex items-center gap-2'>
+              <Skeleton className='h-2 w-2 rounded-full' />
+              <Skeleton className='w-[60px] h-[16px]' />
+            </div>
+          </div>
+          <div className='pt-1 space-y-2'>
+            <Skeleton className='w-[200px] h-[18px]' />
+            <Skeleton className='w-[140px] h-[18px]' />
+          </div>
+        </div>
+      );
+    }
+
+    if (!profileState) return null;
+
+    const fullName = formatName(
+      profileState.firstName,
+      profileState.middleName,
+      profileState.lastName
+    );
+
+    return (
+      <div className='mt-8 px-5 py-6'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <p className='font-semibold text-xl text-primaryText'>{fullName}</p>
+            <div className='text-sm px-1.5 bg-theme rounded-sm text-white'>
+              {capitalizeFirstLetter(profileState.role)}
+            </div>
+          </div>
+          <div className='flex items-center gap-1'>
+            <div
+              className={`rounded-full h-2 w-2 ${profileState.status === "activated" ? "bg-green-600" : "bg-red-600"}`}
+            ></div>
+            <span className='text-sm'>
+              {capitalizeFirstLetter(profileState.status)}
+            </span>
+          </div>
+        </div>
+        <div className='pt-1 space-y-1'>
+          <div className='flex items-end gap-1.5'>
+            <MdEmail className='text-theme' />
+            <p className='text-sm underline text-secondaryText'>
+              {profileState.email}
+            </p>
+          </div>
+          <div className='flex items-end gap-1.5'>
+            <BiSolidPhone
+              size={17}
+              className='text-theme'
+            />
+            <p className='text-sm text-secondaryText'>
+              {profileState.phone || "-"}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Main content of the profile box
   const profileContent = (
     <>
-      <div className='h-[80px] bg-theme w-full'></div>
+      <div className='h-[80px] bg-theme w-full'>
+        {!uiState.isMobile && (
+          <div
+            onClick={handleViewDetail}
+            className='w-full flex justify-end p-2 cursor-pointer'
+            aria-label='View detailed profile'
+          >
+            <IoOpenOutline color='white' />
+          </div>
+        )}
+      </div>
       <div>
         {/* profile photo */}
         <div className='absolute top-9 left-5'>
@@ -305,18 +476,19 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
             {isLoading ?
               <Skeleton className='rounded-full w-[80px] h-[80px]' />
             : <ProfilePic
-                profileUrl={profileUrl}
+                profileUrl={profileState?.profileUrl || ""}
                 size={80}
               />
             }
           </div>
         </div>
 
-        {!isOwnProfile && (
+        {!isOwnProfile && profileState && (
           <div className='absolute top-[60px] right-4'>
             <button
               onClick={handleChat}
-              className='px-4 py-2 bg-secondaryBackground rounded-lg flex items-end gap-1.5 text-primaryText'
+              className='px-4 py-2 bg-secondaryBackground rounded-lg flex items-end gap-1.5 text-primaryText hover:bg-opacity-80 transition-colors'
+              aria-label='Message user'
             >
               <MdOutlineMessage size={20} />
               Message
@@ -324,161 +496,44 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
           </div>
         )}
 
-        {isLoading ?
-          <div className='mt-8 px-5 py-6 space-y-4'>
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center gap-3'>
-                <Skeleton className='w-[120px] h-[24px]' />
-                <Skeleton className='w-[60px] h-[20px]' />
-              </div>
-              <div className='flex items-center gap-2'>
-                <Skeleton className='h-2 w-2 rounded-full' />
-                <Skeleton className='w-[60px] h-[16px]' />
-              </div>
-            </div>
-            <div className='pt-1 space-y-2'>
-              <Skeleton className='w-[200px] h-[18px]' />
-              <Skeleton className='w-[140px] h-[18px]' />
-            </div>
+        <ProfileHeader />
+
+        {uiState.isMobile && (isOwnProfile || user?.role !== "student") && (
+          <div className='px-5 pb-6 space-y-6'>
+            <PersonalInfoSection />
+            <StudentInfoSection />
+            <TutorInfoSection />
           </div>
-        : <div>
-            <div className='mt-8 px-5 py-6'>
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-3'>
-                  <p className='font-semibold text-xl text-primaryText'>
-                    {username}
-                  </p>
-                  <div className='text-sm px-1.5 bg-theme rounded-sm text-white'>
-                    {capitalizeFirstLetter(role)}
-                  </div>
-                </div>
-                <div className='flex items-center gap-1'>
-                  {status === "activated" ?
-                    <div className='rounded-full h-2 w-2 bg-green-600'></div>
-                  : <div className='rounded-full h-2 w-2 bg-red-600'></div>}
-                  <span className='text-sm'>
-                    {capitalizeFirstLetter(status)}
-                  </span>
-                </div>
-              </div>
-              <div className='pt-1 space-y-1'>
-                <div className='flex items-end gap-1.5'>
-                  <MdEmail className='text-theme' />
-                  <p className='text-sm underline text-secondaryText'>
-                    {email}
-                  </p>
-                </div>
-                <div className='flex items-end gap-1.5'>
-                  <BiSolidPhone
-                    size={17}
-                    className='text-theme'
-                  />
-                  <p className='text-sm text-secondaryText'>{phone}</p>
-                </div>
-              </div>
-            </div>
-
-            {isMobile && (isOwnProfile || user?.role !== "student") && (
-              <>
-                <div className='px-5 pb-6'>
-                  <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
-                    <div className='pb-4'>
-                      <p className='text-sm font-semibold'>Date of Birthday</p>
-                      <p className='text-sm'>{birthday}</p>
-                    </div>
-                    <div className='pb-4'>
-                      <p className='text-sm font-semibold'>Gender</p>
-                      <p className='text-sm'>{gender}</p>
-                    </div>
-                    <div className='pb-4'>
-                      <p className='text-sm font-semibold'>Nationality</p>
-                      <p className='text-sm'>{nationality}</p>
-                    </div>
-                    <div className='pb-4'>
-                      <p className='text-sm font-semibold'>Passport</p>
-                      <p className='text-sm'>{passport}</p>
-                    </div>
-                    <div className=''>
-                      <p className='text-sm font-semibold'>Address</p>
-                      <p className='text-sm'>{address}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {role === "student" && (
-                  <>
-                    <div className='px-5 pb-6'>
-                      <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
-                        <div className='pb-4'>
-                          <p className='text-sm font-semibold'>
-                            Emergency Name
-                          </p>
-                          <p className='text-sm'>{emergencyName}</p>
-                        </div>
-                        <div>
-                          <p className='text-sm font-semibold'>
-                            Emergency Phone
-                          </p>
-                          <p className='text-sm'>{emergencyPhone}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className='px-5 pb-6'>
-                      <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
-                        <div className='pb-4'>
-                          <p className='text-sm font-semibold'>Major</p>
-                          <p className='text-sm'>{major}</p>
-                        </div>
-                        <div>
-                          <p className='text-sm font-semibold'>
-                            Enrollment Date
-                          </p>
-                          <p className='text-sm'>{enrollDate}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {role === "tutor" && (
-                  <>
-                    <div className='px-5 pb-6'>
-                      <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
-                        <div className='pb-4'>
-                          <p className='text-sm font-semibold'>Qualification</p>
-                          <p className='text-sm'>{qualification}</p>
-                        </div>
-                        <div className='pb-4'>
-                          <p className='text-sm font-semibold'>Experience</p>
-                          <p className='text-sm'>{experience}</p>
-                        </div>
-                        <div className=''>
-                          <p className='text-sm font-semibold'>Subject</p>
-                          <p className='text-sm'>{subject}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        }
+        )}
       </div>
     </>
   );
 
-  if (isMobile) {
+  // Render detailed profile view if requested
+  if (showDetailProfile && profileState && !uiState.isMobile) {
+    return (
+      <ProfileDetailView
+        profile={profileState}
+        onClose={handleCloseDetailView}
+        onChat={handleChat}
+        isOwnProfile={isOwnProfile}
+        isStaff={user?.role === "staff"}
+        isTutor={user?.role === "tutor"}
+      />
+    );
+  }
+
+  if (uiState.isMobile) {
     return (
       <>
         {/* Mobile overlay with conditional rendering to prevent flash */}
-        {showOverlay && (
+        {uiState.showOverlay && (
           <div
             className={`fixed inset-0 bg-black transition-opacity duration-300 z-40 ${
-              isVisible ? "opacity-50" : "opacity-0"
+              uiState.isVisible ? "opacity-50" : "opacity-0"
             }`}
             onClick={handleClose}
+            aria-hidden='true'
           ></div>
         )}
 
@@ -486,19 +541,25 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
         <div
           ref={sheetRef}
           className={`fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl shadow-xl transition-transform duration-300 ease-out ${
-            isVisible ? "translate-y-0" : "translate-y-full"
+            uiState.isVisible ? "translate-y-0" : "translate-y-full"
           }`}
           style={{ maxHeight: "80vh" }}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          role='dialog'
+          aria-modal='true'
+          aria-label='User Profile'
         >
           {/* Drag handle header - this is the primary draggable area */}
           <div
             ref={headerRef}
             className='sticky top-0 z-10 pt-3 pb-1 flex justify-center bg-theme w-full'
           >
-            <div className='w-12 h-1 bg-gray-300 rounded-full'></div>
+            <div
+              className='w-12 h-1 bg-gray-300 rounded-full'
+              aria-label='Drag to close'
+            ></div>
           </div>
 
           {/* Scrollable content container */}
@@ -517,19 +578,23 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
   return (
     <div className={`absolute ${className}`}>
       {/* Desktop overlay with conditional rendering */}
-      {showOverlay && (
+      {uiState.showOverlay && (
         <div
           onClick={handleClose}
           className={`fixed top-0 left-0 w-full h-full z-40 select-none transition-opacity duration-300 ${
-            isVisible ? "bg-black bg-opacity-30" : "bg-opacity-0"
+            uiState.isVisible ? "bg-black bg-opacity-30" : "bg-opacity-0"
           }`}
+          aria-hidden='true'
         ></div>
       )}
 
       {/* Desktop popup box with subtle slide animation */}
       <div
         className={`relative bg-background sm:rounded-lg min-w-[300px] sm:w-[350px] min-h-[240px] rounded-lg overflow-clip shadow-xl z-50 
-          transition-all duration-300 ease-out ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
+          transition-all duration-300 ease-out ${uiState.isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
+        role='dialog'
+        aria-modal='true'
+        aria-label='User Profile'
       >
         {profileContent}
       </div>
