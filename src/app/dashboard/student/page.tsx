@@ -7,13 +7,22 @@ import MeetingDetail from "@/components/meeting/MeetingDetail";
 import ProfilePic from "@/components/ProfilePic";
 import { MyTutor } from "@/model/home";
 import { Meeting } from "@/model/meeting";
+import { useUserStore } from "@/stores/useUserStore";
+import { formatName } from "@/utils/formatData";
+import { useMutation } from "convex/react";
 import { useEffect, useState } from "react";
 import { MdOutlineMessage } from "react-icons/md";
+import { api } from "../../../../convex/_generated/api";
+import { AppRouter } from "@/router";
+import { useRouter } from "next/navigation";
 
 export default function StudentMainPage() {
   const [activeMeetings, setActiveMeetings] = useState<Meeting[]>([]);
-  const [myTutorInfo, setMyTutorInfo] = useState<MyTutor>();
+  const [myTutorInfo, setMyTutorInfo] = useState<MyTutor | null>(null);
   const [viewMeeting, setViewMeeting] = useState<Meeting | null>(null);
+  const { user } = useUserStore();
+  const createConversation = useMutation(api.chatRoom.createConversation);
+  const router = useRouter();
 
   useEffect(() => {
     fetchMyMeetings();
@@ -25,22 +34,62 @@ export default function StudentMainPage() {
       const response = await getActiveMeetings();
       setActiveMeetings(response.meetings);
     } catch (error) {
-      console.log("error fetching meetings");
+      console.log("error fetching meetings", error);
     }
   };
 
   const fetchMyTutor = async () => {
     try {
-      // const response = await getMyTutor();
-      // setMyTutorInfo(response)
+      const response = await getMyTutor();
+      setMyTutorInfo(response);
     } catch (error) {
-      console.log(error);
+      console.log("error fetching my tutor", error);
     }
   };
 
   const handleView = (meeting: Meeting) => {
     if (meeting) {
       setViewMeeting(meeting);
+    }
+  };
+
+  const handleChat = async () => {
+    if (!user || !myTutorInfo) return;
+
+    const user1 = {
+      userId: user.id,
+      firstName: user.firstName!,
+      middleName: user.middleName ?? undefined,
+      lastName: user.lastName ?? undefined,
+      email: user.email,
+      role: user.role!,
+      profileImagePath: user.profileImagePath ?? undefined,
+      gender: user.gender,
+    };
+    const user2 = {
+      userId: myTutorInfo.user_id,
+      firstName: myTutorInfo.first_name!,
+      middleName: myTutorInfo.middle_name ?? undefined,
+      lastName: myTutorInfo.last_name ?? undefined,
+      email: myTutorInfo.email,
+      role: myTutorInfo.role_name!,
+      profileImagePath: myTutorInfo.profile_picture ?? undefined,
+      gender: myTutorInfo.gender ?? undefined,
+    };
+
+    try {
+      const chatId = await createConversation({
+        user1,
+        user2,
+      });
+
+      if (user.role === "student") {
+        router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+      } else if (user.role === "tutor") {
+        router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
+      }
+    } catch (error) {
+      console.error("error in chat", error);
     }
   };
 
@@ -76,21 +125,25 @@ export default function StudentMainPage() {
                 <div className='flex gap-4 items-center pb-4'>
                   <div className='sm:hidden'>
                     <ProfilePic
-                      profileUrl={"https://i.pravatar.cc/300?img=18"}
+                      profileUrl={myTutorInfo?.profile_picture || null}
                       size={40}
                     />
                   </div>
                   <div className='hidden sm:block'>
                     <ProfilePic
-                      profileUrl={"https://i.pravatar.cc/300?img=18"}
+                      profileUrl={myTutorInfo?.profile_picture || null}
                       size={60}
                     />
                   </div>
                   <div className='flex flex-col'>
                     <p className='sm:text-lg font-semibold text-primaryText'>
-                      Kristin
+                      {formatName(
+                        myTutorInfo?.first_name,
+                        myTutorInfo?.middle_name,
+                        myTutorInfo?.last_name
+                      )}
                     </p>
-                    <p className='text-sm'>active</p>
+                    {/* <p className='text-sm'>active</p> */}
                   </div>
                 </div>
 
@@ -98,48 +151,59 @@ export default function StudentMainPage() {
                 <div className='grid grid-cols-2 gap-4 flex-1'>
                   <div className='flex flex-col'>
                     <p className='text-base font-semibold pb-1'>Subject</p>
-                    <p className='text-secondaryText text-md'>History</p>
+                    <p className='text-secondaryText text-md'>
+                      {myTutorInfo?.subject_name || "-"}
+                    </p>
                   </div>
                   <div className='flex flex-col'>
                     <p className='text-base font-semibold pb-1'>
                       Qualification
                     </p>
                     <p className='text-secondaryText text-md'>
-                      B.Sc (Hons) Computing
+                      {myTutorInfo?.qualification || "-"}
                     </p>
                   </div>
                   <div className='flex flex-col'>
-                    <p className='text-base font-semibold pb-1'>Start Date</p>
-                    <p className='text-secondaryText text-md'>12/12/2000</p>
+                    <p className='text-base font-semibold pb-1'>Experience</p>
+                    <p className='text-secondaryText text-md'>
+                      {myTutorInfo?.experience || "-"}
+                    </p>
                   </div>
                   <div className='flex flex-col'>
-                    <p className='text-base font-semibold pb-1'>Experience</p>
-                    <p className='text-secondaryText text-md'>3 years</p>
+                    {/* <p className='text-base font-semibold pb-1'>Start Date</p>
+                    <p className='text-secondaryText text-md'>-</p> */}
                   </div>
                 </div>
               </div>
 
               {/* Right card - Contact Info */}
               <div className='flex flex-col rounded-3xl bg-homeItem p-4 flex-1'>
-                <div className='font-semibold text-base sm:text-lg mb-4'>
+                <div className='font-semibold text-base sm:text-lg sm:mb-10 mb-4'>
                   Contact Information
                 </div>
 
-                <div className='grid sm:grid-cols-2 gap-4 mb-4 flex-1'>
+                <div className='grid sm:grid-cols-2 gap-4 mb-4 h-auto'>
                   <div className='flex flex-col'>
-                    <p className='font-semibold'>Email</p>
-                    <p className='text-md'>kristin@example.com</p>
+                    <p className='font-semibold pb-1'>Email</p>
+                    <p className='text-md text-secondaryText'>
+                      {myTutorInfo?.email || "-"}
+                    </p>
                   </div>
                   <div className='flex flex-col'>
-                    <p className='font-semibold'>Phone No.</p>
-                    <p className='text-md'>123-456-777</p>
+                    <p className='font-semibold pb-1'>Phone No.</p>
+                    <p className='text-md text-secondaryText'>
+                      {myTutorInfo?.phone_number || "-"}
+                    </p>
                   </div>
                 </div>
 
-                <div>
-                  <button className='flex items-center gap-3 bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2'>
+                <div className='flex sm:pt-10'>
+                  <button
+                    onClick={handleChat}
+                    className='flex items-center gap-3 bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2'
+                  >
                     <MdOutlineMessage size={20} />
-                    <span className='text-base text-iconGray'>Message</span>
+                    <span className='text-base text-black'>Message</span>
                   </button>
                 </div>
               </div>

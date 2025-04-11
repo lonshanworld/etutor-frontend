@@ -31,7 +31,6 @@ export async function getHistoryMeetings(): Promise<MeetingJsonData> {
 
 export async function createMeeting(formData: any): Promise<any> {
   const response = await PostRequest(formData, APIS.POST.createMeeting);
-  console.log("res", response);
 
   if (isErrorModel(response)) {
     throw response;

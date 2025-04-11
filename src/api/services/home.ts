@@ -1,5 +1,5 @@
 import { isErrorModel } from "@/model/ErrorModel";
-import { MyStudent, myStudentsFromJson } from "@/model/home";
+import { MyStudent, myStudentsFromJson, myTutorFromJson } from "@/model/home";
 import { APIS } from "../api-constants";
 import { GetRequest } from "../general-api-services";
 
@@ -18,6 +18,7 @@ export async function getMyTutor(): Promise<any> {
   if (isErrorModel(response)) {
     throw response;
   }
-  // const data = myStudentsFromJson(response);
-  return response;
+
+  const data = myTutorFromJson(response);
+  return data;
 }

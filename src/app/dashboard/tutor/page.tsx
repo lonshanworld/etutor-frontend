@@ -26,7 +26,7 @@ export default function TutorMainPage() {
       const response = await getMyStudents();
       setMyStudents(response.myStudents);
     } catch (error) {
-      console.log("error fetching students");
+      console.log("error fetching students", error);
     }
   };
 
@@ -35,7 +35,7 @@ export default function TutorMainPage() {
       const response = await getActiveMeetings();
       setActiveMeetings(response.meetings);
     } catch (error) {
-      console.log("error fetching meetings");
+      console.log("error fetching meetings", error);
     }
   };
 

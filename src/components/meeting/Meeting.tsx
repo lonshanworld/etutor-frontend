@@ -20,7 +20,7 @@ const Meeting = () => {
       const response = await getActiveMeetings();
       setMeetings(response.meetings);
     } catch (error) {
-      console.log("Error Fetching active meetings");
+      console.log("Error Fetching active meetings", error);
     }
   };
 
@@ -29,7 +29,7 @@ const Meeting = () => {
       const response = await getHistoryMeetings();
       setMeetings(response.meetings);
     } catch (error) {
-      console.log("Error Fetching history meetings");
+      console.log("Error Fetching history meetings", error);
     }
   };
 

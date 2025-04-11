@@ -34,27 +34,30 @@ export type MyTutor = {
   middle_name: string | null;
   last_name: string | null;
   profile_picture: string | null;
-  subject: number;
+  subject_name: string;
   qualification: string | null;
-  start_date: string | null;
+  // start_date: string | null;
   experience: number;
   email: string;
   phone_number: string | null;
+  role_name: string;
   gender: string | null;
 };
 
-export function myTutorFromJson(jsonData: any): {
-  myStudents: MyTutor;
-} {
+export function myTutorFromJson(jsonData: any): MyTutor {
+  const data = jsonData.data;
   return {
-    myStudents: jsonData.data.map((student: any) => ({
-      user_id: student.user_id,
-      first_name: student.first_name,
-      middle_name: student.middle_name,
-      last_name: student.last_name,
-      profile_picture: student.profile_picture,
-      email: student.email,
-      phone_number: student.phone_number,
-    })),
+    user_id: data.user_id,
+    first_name: data.first_name,
+    middle_name: data.middle_name,
+    last_name: data.last_name,
+    profile_picture: data.profile_picture,
+    subject_name: data.subject_name,
+    qualification: data.qualification,
+    experience: data.qualification,
+    email: data.email,
+    phone_number: data.phone_number,
+    role_name: data.role_name,
+    gender: data.gender,
   };
 }

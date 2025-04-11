@@ -31,7 +31,7 @@ const CommentInputField = ({
       onAddComment(response);
       setcommentContent("");
     } catch (error) {
-      console.log(error);
+      console.log("comment error", error);
     } finally {
       // scroll to comment input
       setTimeout(() => {

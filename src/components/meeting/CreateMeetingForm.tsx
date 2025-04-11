@@ -86,7 +86,6 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
         data.meeting_type === "In-Person" ? null : data.meeting_link,
       users: assignedStudents.map((s) => s.userId),
     };
-    console.log("Form Submitted:", formattedData); // log
 
     try {
       const response = await createMeeting(formattedData);
@@ -94,7 +93,7 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
       showToast("Meeting created successfully", "success");
       onBack();
     } catch (error) {
-      console.log(error);
+      console.log("New meeting create error", error);
     }
   };
 
