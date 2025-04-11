@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
 import { ProfileData } from "@/stores/useProfileStore";
-import { FaUserCircle } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
+import { capitalizeFirstLetter, formatName } from "@/utils/formatData";
+import { useState } from "react";
 import { BiSolidPhone } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
-import { MdOutlineMessage } from "react-icons/md";
+import { MdEmail, MdOutlineMessage } from "react-icons/md";
 import ProfilePic from "../ProfilePic";
-import { capitalizeFirstLetter, formatName } from "@/utils/formatData";
 
 type TabOption = "About" | "Student Info" | "Tutor Info" | "Emergency Contact";
 

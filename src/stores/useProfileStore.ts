@@ -1,7 +1,7 @@
-import { create } from "zustand";
 import { getProfileById } from "@/api/services/getProfile";
-import { capitalizeFirstLetter, formatName } from "@/utils/formatData";
 import { Profile } from "@/model/profile";
+import { capitalizeFirstLetter } from "@/utils/formatData";
+import { create } from "zustand";
 
 interface BaseProfileData {
   fetchedAt: number;

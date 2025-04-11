@@ -21,7 +21,7 @@ const ProfilePic = ({
 }: Props) => {
   return (
     <div
-      className='rounded-full overflow-clip relative'
+      className='rounded-full overflow-clip relative select-none'
       style={{ height: `${size}px`, width: `${size}px` }}
     >
       <Image

@@ -1,25 +1,25 @@
 "use client";
 
+import { giveLike } from "@/api/services/blogs";
 import { Comment, File, Like } from "@/model/blog";
+import { useBlogStore } from "@/stores/useBlogStore";
+import { useUserStore } from "@/stores/useUserStore";
 import { getFileType } from "@/utils/classifyFiles";
 import { formatTimeStamp } from "@/utils/formatData";
 import Image from "next/image";
 import { forwardRef, useEffect, useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { BiCommentDetail } from "react-icons/bi";
-import { MdOutlineFileDownload } from "react-icons/md";
+import { MdOutlineOpenInNew } from "react-icons/md";
 import { VscOpenPreview } from "react-icons/vsc";
 import HorizontalDivider from "../dividers/HorizontalDivider";
+import ProfileBoxPopup from "../popup/ProfileBoxPopup";
+import ProfilePic from "../ProfilePic";
 import CommentSection from "./comment/CommentSection";
 import FileIcon from "./FileIcon";
 import ImageWithSkeleton from "./loadingskeleton/ImageWithSkeleton";
 import MediaModal from "./modals/MediaModal";
 import PostOptionsMenu from "./modals/PostOptionMenu";
-import { useBlogStore } from "@/stores/useBlogStore";
-import { giveLike } from "@/api/services/blogs";
-import { useUserStore } from "@/stores/useUserStore";
-import ProfileBoxPopup from "../popup/ProfileBoxPopup";
-import ProfilePic from "../ProfilePic";
 
 interface Props {
   blogId: number;
@@ -300,7 +300,7 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
           {!isDetail ?
             files.length > 0 && (
               <div
-                className={`sm:mx-4 grid gap-1 mb-3 ${
+                className={`sm:mx-4 grid gap-1 mb-3 select-none ${
                   mediaFiles.length === 1 ? "grid-cols-1"
                   : mediaFiles.length === 2 ? "grid-cols-2"
                   : mediaFiles.length === 3 ? "grid-cols-2 grid-rows-2"
@@ -356,7 +356,7 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
               </div>
             )
           : files.length > 0 && (
-              <div className='grid grid-cols-1 gap-2'>
+              <div className='grid grid-cols-1 gap-2 py-4'>
                 {mediaFiles.map((file, index) => (
                   <div
                     key={index}
@@ -391,7 +391,7 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
 
           {/* Attachments */}
           {fileCategories.otherFiles.length > 0 && (
-            <div className='sm:mx-4 mx-2 py-2 select-none'>
+            <div className='sm:mx-4 mx-2 py-2'>
               <div className='grid grid-cols-2 gap-5'>
                 {fileCategories.otherFiles.map((doc, index) => (
                   <div
@@ -406,12 +406,10 @@ const UserBlog = forwardRef<HTMLDivElement, Props>(
                     </div>
                     <a
                       href={doc.url}
+                      target='_blank'
                       className='flex items-center justify-center cursor-pointer'
                     >
-                      <MdOutlineFileDownload
-                        size={20}
-                        className='text-secondaryText'
-                      />
+                      <MdOutlineOpenInNew className='text-secondaryText' />
                     </a>
                   </div>
                 ))}
