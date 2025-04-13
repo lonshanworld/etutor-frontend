@@ -10,7 +10,7 @@ import { api } from "../../../convex/_generated/api";
 import { AppRouter } from "@/router";
 import { useRouter } from "next/navigation";
 import { IoOpenOutline } from "react-icons/io5";
-import ProfileDetailView from "./ProfileDetailView"; // Import our new component
+import ProfileDetailView from "./ProfileDetailView";
 
 interface Props {
   className?: string;
@@ -43,7 +43,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [showDetailProfile, setShowDetailProfile] = useState(false); // State to control detailed profile view
   const router = useRouter();
-  const { getUserId, user } = useUserStore();
+  const { getUserId, user, isReadOnly } = useUserStore();
   const { fetchProfile } = useProfileStore();
   const createConversation = useMutation(api.chatRoom.createConversation);
 
@@ -337,17 +337,19 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
 
     return (
       <>
-        <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText mb-6'>
-          <InfoItem
-            label='Emergency Contact Name'
-            value={profileState.emergencyName || "-"}
-          />
-          <InfoItem
-            label='Emergency Contact Phone'
-            value={profileState.emergencyPhone || "-"}
-            isLast
-          />
-        </div>
+        {user?.role === "staff" && (
+          <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText mb-6'>
+            <InfoItem
+              label='Emergency Contact Name'
+              value={profileState.emergencyName || "-"}
+            />
+            <InfoItem
+              label='Emergency Contact Phone'
+              value={profileState.emergencyPhone || "-"}
+              isLast
+            />
+          </div>
+        )}
 
         <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
           <InfoItem
@@ -487,11 +489,15 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
           <div className='absolute top-[60px] right-4'>
             <button
               onClick={handleChat}
-              className='px-4 py-2 bg-secondaryBackground rounded-lg flex items-end gap-1.5 text-primaryText hover:bg-opacity-80 transition-colors'
+              className={`px-4 py-2 bg-secondaryBackground rounded-lg flex  text-primaryText hover:bg-opacity-80 transition-colors ${isReadOnly ? "pointer-events-none" : "cursor-pointer"}`}
               aria-label='Message user'
             >
-              <MdOutlineMessage size={20} />
-              Message
+              <div
+                className={`flex items-end gap-1.5 ${isReadOnly && "opacity-50"}`}
+              >
+                <MdOutlineMessage size={20} />
+                <span>Message</span>
+              </div>
             </button>
           </div>
         )}

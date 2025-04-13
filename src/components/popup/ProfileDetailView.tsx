@@ -5,6 +5,7 @@ import { BiSolidPhone } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { MdEmail, MdOutlineMessage } from "react-icons/md";
 import ProfilePic from "../ProfilePic";
+import { useUserStore } from "@/stores/useUserStore";
 
 type TabOption = "About" | "Student Info" | "Tutor Info" | "Emergency Contact";
 
@@ -26,6 +27,7 @@ const ProfileDetailView = ({
   isTutor = false,
 }: ProfileDetailViewProps) => {
   const [activeTab, setActiveTab] = useState<TabOption>("About");
+  const { isReadOnly } = useUserStore();
 
   // Determine which tabs to show based on role
   const getTabs = (): TabOption[] => {
@@ -34,7 +36,9 @@ const ProfileDetailView = ({
     if (profile.role === "student") {
       if (isTutor || isStaff || isOwnProfile) {
         tabs.push("Student Info");
-        tabs.push("Emergency Contact");
+        if (isStaff) {
+          tabs.push("Emergency Contact");
+        }
       }
     } else if (profile.role === "tutor") {
       tabs.push("Tutor Info");
@@ -54,7 +58,7 @@ const ProfileDetailView = ({
       ></div>
 
       {/* Detail View */}
-      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background shadow-xl rounded-lg z-50 w-[600px] max-w-[90vw] min-h-[675px] max-h-[90vh] overflow-hidden'>
+      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background shadow-xl rounded-lg z-50 w-[600px] max-w-[90vw] min-h-[690px] max-h-[90vh] overflow-hidden'>
         {/* Header */}
         <div className='h-[120px] bg-theme w-full rounded-t-lg relative'>
           <button
@@ -68,10 +72,14 @@ const ProfileDetailView = ({
           {!isOwnProfile && (
             <button
               onClick={onChat}
-              className='absolute -bottom-5 right-8 bg-secondaryBackground flex items-center gap-2 px-4 py-2 rounded-lg shadow-md text-primaryText hover:bg-opacity-80 transition-colors'
+              className={`absolute -bottom-5 right-8 bg-secondaryBackground flex items-center gap-2 px-4 py-2 rounded-lg shadow-md text-primaryText hover:bg-opacity-80 transition-colors ${isReadOnly ? "pointer-events-none" : "cursor-pointer"}`}
             >
-              <MdOutlineMessage size={20} />
-              <span>Message</span>
+              <div
+                className={`flex items-end gap-1.5 ${isReadOnly && "opacity-50"}`}
+              >
+                <MdOutlineMessage size={20} />
+                <span>Message</span>
+              </div>
             </button>
           )}
         </div>
@@ -132,7 +140,7 @@ const ProfileDetailView = ({
           </div>
 
           {/* Tabs */}
-          <div className='px-8 pb-6'>
+          <div className='px-8 pb-6 pt-3'>
             <div className='flex border-b border-gray-200 mb-4'>
               {tabs.map((tab) => (
                 <button

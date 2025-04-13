@@ -24,10 +24,12 @@ interface BaseProfileData {
 }
 
 interface StudentExtras {
-  emergencyName: string | null;
-  emergencyPhone: string | null;
   major: string | null;
   enrollDate: string | null;
+
+  // sensitive
+  emergencyName: string | null;
+  emergencyPhone: string | null;
 }
 
 interface TutorExtras {
@@ -102,10 +104,16 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
 
       if (profileRole === "student" && permissions.canViewExtendedInfo) {
         extraData = {
-          emergencyName: response.info?.emergency_contact_name || null,
-          emergencyPhone: response.info?.emergency_contact_phone || null,
           major: response.info?.major_name || null,
           enrollDate: response.info?.enrollment_date || null,
+          emergencyName:
+            permissions.canViewSensitiveInfo ?
+              response.info?.emergency_contact_name || null
+            : null,
+          emergencyPhone:
+            permissions.canViewSensitiveInfo ?
+              response.info?.emergency_contact_phone || null
+            : null,
         };
       } else if (profileRole === "tutor" && permissions.canViewExtendedInfo) {
         extraData = {
