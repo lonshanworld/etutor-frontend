@@ -1,10 +1,17 @@
 import { isErrorModel } from "@/model/ErrorModel";
 import { MyStudent, myStudentsFromJson, myTutorFromJson } from "@/model/home";
 import { APIS } from "../api-constants";
-import { GetRequest } from "../general-api-services";
+import { GetRequest, PostRequest } from "../general-api-services";
 
-export async function getMyStudents(): Promise<{ myStudents: MyStudent[] }> {
-  const response = await GetRequest(APIS.GET.getMyStudents);
+export async function getMyStudents(
+  userId: number
+): Promise<{ myStudents: MyStudent[] }> {
+  const response = await PostRequest(
+    {
+      user_id: userId,
+    },
+    APIS.POST.getMyStudents
+  );
 
   if (isErrorModel(response)) {
     throw response;
@@ -13,8 +20,13 @@ export async function getMyStudents(): Promise<{ myStudents: MyStudent[] }> {
   return data;
 }
 
-export async function getMyTutor(): Promise<any> {
-  const response = await GetRequest(APIS.GET.getMyTutor);
+export async function getMyTutor(userId: number): Promise<any> {
+  const response = await PostRequest(
+    {
+      user_id: userId,
+    },
+    APIS.POST.getMyTutor
+  );
   if (isErrorModel(response)) {
     throw response;
   }

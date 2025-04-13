@@ -10,13 +10,11 @@ export const APIS = {
     getMajors: "majors",
     getSubjects: "subjects",
     getMajorsWithSubjects: "majors-with-subjects",
+
     getBlogs: "blogs",
     getBlogById: (blogId: number) => `blogs/${blogId}`,
     getFiles: "blogs/files",
-    getMyStudents: "tutors/my-students",
-    getMyTutor: "students/my-tutor",
-    getActiveMeetings: "meetings",
-    getHistoryMeetings: "meetings/recent",
+
     getReportActiveUsers: "reports/active-users",
     getBrowsersUsage: "reports/browser-usage",
   },
@@ -27,6 +25,7 @@ export const APIS = {
     createTutor: "tutors/account/create",
     createStaff: "staffs/account/create",
     changePassword: "user/change-password",
+
     giveLike: "blogs/give-like",
     giveComment: "blogs/give-comment",
     uploadAttachment: "upload-attachment",
@@ -36,6 +35,12 @@ export const APIS = {
     allocateStudent: "staffs/allocate-student-tutor",
     deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
     createMeeting: "meetings/create",
+
+    getActiveMeetings: "meetings",
+    getHistoryMeetings: "meetings/recent",
+
+    getMyStudents: "tutors/my-students",
+    getMyTutor: "students/my-tutor",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

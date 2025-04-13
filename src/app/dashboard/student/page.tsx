@@ -15,35 +15,63 @@ import { MdOutlineMessage } from "react-icons/md";
 import { api } from "../../../../convex/_generated/api";
 import { AppRouter } from "@/router";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/stores/useToast";
+import Cookies from "js-cookie";
 
 export default function StudentMainPage() {
+  const createConversation = useMutation(api.chatRoom.createConversation);
   const [activeMeetings, setActiveMeetings] = useState<Meeting[]>([]);
   const [myTutorInfo, setMyTutorInfo] = useState<MyTutor | null>(null);
   const [viewMeeting, setViewMeeting] = useState<Meeting | null>(null);
-  const { user } = useUserStore();
-  const createConversation = useMutation(api.chatRoom.createConversation);
+  const [userId, setUserId] = useState<number | null>(null);
+  const { user, getUserId, viewUser } = useUserStore();
+  const { showToast } = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    // for staff accessing other ppl dashboard
+    if (viewUser) {
+      const encodedUser = Cookies.get("viewUser");
+      if (encodedUser) {
+        const decodedUser = decodeURIComponent(encodedUser);
+        const userObject = JSON.parse(decodedUser);
+        const viewUserId = userObject.id;
+
+        setUserId(viewUserId);
+      }
+      return;
+    }
+
+    const userId = getUserId();
+    if (userId) {
+      setUserId(userId);
+    }
+  }, [user, viewUser]);
 
   useEffect(() => {
     fetchMyMeetings();
     fetchMyTutor();
-  }, []);
+  }, [userId]);
 
   const fetchMyMeetings = async () => {
     try {
-      const response = await getActiveMeetings();
-      setActiveMeetings(response.meetings);
+      if (userId) {
+        const response = await getActiveMeetings(userId);
+        setActiveMeetings(response.meetings);
+      }
     } catch (error) {
-      console.log("error fetching meetings", error);
+      showToast("Error fetching meetings", "error");
     }
   };
 
   const fetchMyTutor = async () => {
     try {
-      const response = await getMyTutor();
-      setMyTutorInfo(response);
+      if (userId) {
+        const response = await getMyTutor(userId);
+        setMyTutorInfo(response);
+      }
     } catch (error) {
-      console.log("error fetching my tutor", error);
+      showToast("Error fetching my tutor info", "error");
     }
   };
 

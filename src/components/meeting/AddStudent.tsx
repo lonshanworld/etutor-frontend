@@ -7,6 +7,7 @@ import { RxCross1, RxCross2 } from "react-icons/rx";
 import ProfilePic from "../ProfilePic";
 import StudentListItem from "./StudentListItem";
 import { formatName } from "@/utils/formatData";
+import { useUserStore } from "@/stores/useUserStore";
 
 export interface myStudent {
   userId: number;
@@ -25,24 +26,28 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
   const [assignedStudents, setAssignedStudents] =
     useState<myStudent[]>(preSelectedStudents);
   const [searchTerm, setSearchTerm] = useState("");
+  const { getUserId, user } = useUserStore();
 
   const fetchMyStudent = async () => {
-    const response = await getMyStudents();
-    const formattedData = response.myStudents.map((student) => ({
-      userId: student.user_id,
-      name: formatName(
-        student.first_name,
-        student.middle_name,
-        student.last_name
-      ),
-      profileUrl: student.profile_picture,
-    }));
-    setMyStudentList(formattedData);
+    const userId = getUserId();
+    if (userId) {
+      const response = await getMyStudents(userId);
+      const formattedData = response.myStudents.map((student) => ({
+        userId: student.user_id,
+        name: formatName(
+          student.first_name,
+          student.middle_name,
+          student.last_name
+        ),
+        profileUrl: student.profile_picture,
+      }));
+      setMyStudentList(formattedData);
+    }
   };
 
   useEffect(() => {
     fetchMyStudent();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     setAssignedStudents(preSelectedStudents);

@@ -4,6 +4,7 @@ import { Meeting } from "@/model/meeting";
 import { formatDate, formatLink, formatTime } from "@/utils/formatData";
 import { IoChevronBackOutline } from "react-icons/io5";
 import ProfilePic from "../ProfilePic";
+import { useUserStore } from "@/stores/useUserStore";
 
 interface Props {
   meeting: Meeting;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const MeetingDetail = ({ meeting, onBack }: Props) => {
+  const { user } = useUserStore();
   return (
     <div className='flex flex-col w-full h-full'>
       {/* Back btn */}
@@ -33,7 +35,7 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
         <div className='py-3 text-2xl font-semibold'>{meeting.subject}</div>
 
         {/* tutor profile */}
-        <div className='flex gap-4 py-3'>
+        <div className='flex gap-4 py-3 items-center'>
           <div>
             <ProfilePic
               profileUrl={meeting.creator.profile_picture}
@@ -42,8 +44,8 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
           </div>
           <div className=''>
             <p className='font-semibold'>{meeting.creator.name}</p>
-            {/* <p className='text-sm'>{tutorQualification}</p> */}
-            <p className='text-sm'>Your Tutor</p>
+            {user?.role === "tutor" && <p className='text-sm'>You</p>}
+            {user?.role === "student" && <p className='text-sm'>Your Tutor</p>}
           </div>
         </div>
 
@@ -60,7 +62,7 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
           </div>
         )}
 
-        <table className='w-auto text-left border-2 border-inputBorder text-primaryText mt-2  tracking-wide text-[15px]'>
+        <table className='w-auto text-left border-2 border-inputBorder text-primaryText mt-2 tracking-wide text-[15px] min-w-[80%]'>
           <tbody>
             <tr className='bg-secondaryBackground  text-primaryText'>
               <th className='p-2 w-40 font-semibold border-r border-inputBorder'>

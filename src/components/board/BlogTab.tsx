@@ -15,6 +15,7 @@ import { RxCross1 } from "react-icons/rx";
 import CreateNewBlogModal from "./modals/CreateNewBlogModal";
 import LikeModal from "./modals/LikeModal";
 import ErrorPopup from "../ErrorPopup";
+import Cookies from "js-cookie";
 
 interface Props {
   isNewPostModalOpen: boolean;
@@ -27,6 +28,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   const [isLikedModalOpen, setLikeModalOpen] = useState(false);
   const [isClosing, setClosing] = useState(false); // For detail blog page closing sliding effect
   const [isLoading, setLoading] = useState(false); // loading new blogs
+  // const [userId, setUserId] = useState<number | null>(null);
   const [likedList, setLikeList] = useState<{
     blogId: number | null;
     likes: Like[];
@@ -38,14 +40,32 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastBlogRef = useRef(null);
   const { isError, setError } = errorStore();
-  const { getUserId, user } = useUserStore();
+  const { getUserId, user, viewUser } = useUserStore();
   const { showToast } = useToast();
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (user) {
+    const encodedUser = Cookies.get("viewUser");
+
+    if (encodedUser) {
+      const decodedUser = decodeURIComponent(encodedUser);
+      const userObject = JSON.parse(decodedUser);
+      const viewUserId = userObject.id;
+      setUserId(viewUserId);
+      return;
+    }
+
+    const userId = getUserId();
+    if (userId) {
+      setUserId(userId);
+    }
+  }, [user, viewUser]);
+
+  useEffect(() => {
+    if (userId) {
       getBlog();
     }
-  }, [user]); // need to wait user so can get userid from store
+  }, [userId]);
 
   const getBlog = async () => {
     if (isLoading) return;
@@ -70,9 +90,8 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         comments: blog.comments,
         likeCount: blog.likes ? blog.likes.length : 0,
         commentCount: blog.comments ? blog.comments.length : 0,
-        isOwnBlog: blog.author.id === getUserId(),
-        isLiked:
-          blog.likes?.some((like) => like.user.id === getUserId()) ?? false,
+        isOwnBlog: blog.author.id === userId,
+        isLiked: blog.likes?.some((like) => like.user.id === userId) ?? false,
       }));
       setBlogs((prev) => [...prev, ...formattedBlogs]);
       setCursor(response.meta.next_cursor || null); // Update cursor for next fetch

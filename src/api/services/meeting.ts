@@ -7,8 +7,15 @@ import {
 import { APIS } from "../api-constants";
 import { GetRequest, PostRequest } from "../general-api-services";
 
-export async function getActiveMeetings(): Promise<MeetingJsonData> {
-  const response = await GetRequest(APIS.GET.getActiveMeetings);
+export async function getActiveMeetings(
+  userId: number
+): Promise<MeetingJsonData> {
+  const response = await PostRequest(
+    {
+      user_id: userId,
+    },
+    APIS.POST.getActiveMeetings
+  );
 
   if (isErrorModel(response)) {
     throw response;
@@ -18,8 +25,15 @@ export async function getActiveMeetings(): Promise<MeetingJsonData> {
   return data;
 }
 
-export async function getHistoryMeetings(): Promise<MeetingJsonData> {
-  const response = await GetRequest(APIS.GET.getHistoryMeetings);
+export async function getHistoryMeetings(
+  userId: number
+): Promise<MeetingJsonData> {
+  const response = await PostRequest(
+    {
+      user_id: userId,
+    },
+    APIS.POST.getHistoryMeetings
+  );
 
   if (isErrorModel(response)) {
     throw response;

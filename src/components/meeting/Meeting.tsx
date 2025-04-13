@@ -7,39 +7,72 @@ import MeetingDetail from "./MeetingDetail";
 import { Meeting as MeetingType } from "@/model/meeting";
 import { useUserStore } from "@/stores/useUserStore";
 import { getActiveMeetings, getHistoryMeetings } from "@/api/services/meeting";
+import Cookies from "js-cookie";
 
 const Meeting = () => {
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
   const [viewDetail, setViewDetail] = useState<MeetingType | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
   const [meetings, setMeetings] = useState<MeetingType[]>([]);
-  const { user } = useUserStore();
+  const { user, getUserId, viewUser } = useUserStore();
+  const [userId, setUserId] = useState<null | number>(null);
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const encodedUser = Cookies.get("viewUser");
+
+    if (encodedUser) {
+      const decodedUser = decodeURIComponent(encodedUser);
+      const userObject = JSON.parse(decodedUser);
+      const viewUserId = userObject.id;
+      setUserId(viewUserId);
+      return;
+    }
+
+    const userId = getUserId();
+    if (userId) {
+      setUserId(userId);
+    }
+  }, [user, viewUser]);
 
   const fetchActiveMeetings = async () => {
+    setLoading(true);
     try {
-      const response = await getActiveMeetings();
-      setMeetings(response.meetings);
+      if (userId) {
+        const response = await getActiveMeetings(userId);
+        setMeetings(response.meetings);
+      }
     } catch (error) {
       console.log("Error Fetching active meetings", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchHistoryMeetings = async () => {
+    setLoading(true);
     try {
-      const response = await getHistoryMeetings();
-      setMeetings(response.meetings);
+      const userId = getUserId();
+      if (userId) {
+        const response = await getHistoryMeetings(userId);
+        setMeetings(response.meetings);
+      }
     } catch (error) {
       console.log("Error Fetching history meetings", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleNewMeetingCreated = (newMeeting: any) => {
-    setMeetings((prevMeetings) => [newMeeting, ...prevMeetings]);
+    if (activeTab === "active") {
+      setMeetings((prevMeetings) => [newMeeting, ...prevMeetings]);
+    }
   };
 
   useEffect(() => {
     activeTab === "active" ? fetchActiveMeetings() : fetchHistoryMeetings();
-  }, [activeTab]);
+  }, [activeTab, userId]);
 
   const handleViewDetail = (meeting: MeetingType) => {
     if (meeting) {
@@ -61,11 +94,15 @@ const Meeting = () => {
                 onSelectTab={setActiveTab}
                 selectedTab={activeTab}
               />
-
-              <MeetingList
-                meetings={meetings}
-                viewDetail={(meeting) => handleViewDetail(meeting)}
-              />
+              {isLoading ?
+                <div className='flex justify-center items-center w-full h-full'>
+                  Loading...
+                </div>
+              : <MeetingList
+                  meetings={meetings}
+                  viewDetail={(meeting) => handleViewDetail(meeting)}
+                />
+              }
 
               {user?.role === "tutor" && (
                 <div className='flex justify-end pt-4 w-full bg-secondaryBackground absolute bottom-0 right-0'>
