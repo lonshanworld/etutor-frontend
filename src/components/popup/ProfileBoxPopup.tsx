@@ -310,24 +310,21 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
         <InfoItem
           label='Nationality'
           value={profileState.nationality || "-"}
-          isLast={!isOwnProfile}
+          isLast={user?.role !== "staff" && !isOwnProfile}
         />
-        {
-          // not sure whether tutor can look at student passport and address
-          isOwnProfile && (
-            <>
-              <InfoItem
-                label='Passport'
-                value={profileState.passport || "-"}
-              />
-              <InfoItem
-                label='Address'
-                value={profileState.address || "-"}
-                isLast
-              />
-            </>
-          )
-        }
+        {(user?.role === "staff" || isOwnProfile) && (
+          <>
+            <InfoItem
+              label='Passport'
+              value={profileState.passport || "-"}
+            />
+            <InfoItem
+              label='Address'
+              value={profileState.address || "-"}
+              isLast
+            />
+          </>
+        )}
       </div>
     );
   };
@@ -337,7 +334,21 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
 
     return (
       <>
-        {user?.role === "staff" && (
+        {(isOwnProfile || user?.role === "tutor" || user?.role === "staff") && (
+          <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
+            <InfoItem
+              label='Major'
+              value={profileState.major || "-"}
+            />
+            <InfoItem
+              label='Enrollment Date'
+              value={profileState.enrollDate || "-"}
+              isLast={user?.role !== "staff" || !isOwnProfile}
+            />
+          </div>
+        )}
+
+        {(user?.role === "staff" || isOwnProfile) && (
           <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText mb-6'>
             <InfoItem
               label='Emergency Contact Name'
@@ -350,18 +361,6 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
             />
           </div>
         )}
-
-        <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
-          <InfoItem
-            label='Major'
-            value={profileState.major || "-"}
-          />
-          <InfoItem
-            label='Enrollment Date'
-            value={profileState.enrollDate || "-"}
-            isLast
-          />
-        </div>
       </>
     );
   };
@@ -504,7 +503,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
 
         <ProfileHeader />
 
-        {uiState.isMobile && (isOwnProfile || user?.role !== "student") && (
+        {uiState.isMobile && (
           <div className='px-5 pb-6 space-y-6'>
             <PersonalInfoSection />
             <StudentInfoSection />

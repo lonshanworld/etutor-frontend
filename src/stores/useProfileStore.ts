@@ -48,6 +48,7 @@ interface ProfileStore {
     userId: number,
     viewer: Profile
   ) => Promise<ProfileData | null>; // fetch from API
+  clearProfiles: () => void;
 }
 
 // Cache TTL
@@ -115,7 +116,7 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
               response.info?.emergency_contact_phone || null
             : null,
         };
-      } else if (profileRole === "tutor" && permissions.canViewExtendedInfo) {
+      } else if (profileRole === "tutor" && permissions.canViewBasicInfo) {
         extraData = {
           qualification: response.info?.qualifications || null,
           experience: response.info?.experience || null,
@@ -158,5 +159,9 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       console.error("Error fetching profile:", error);
       return null;
     }
+  },
+
+  clearProfiles: () => {
+    set({ profiles: {} });
   },
 }));

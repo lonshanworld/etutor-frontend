@@ -36,7 +36,7 @@ const ProfileDetailView = ({
     if (profile.role === "student") {
       if (isTutor || isStaff || isOwnProfile) {
         tabs.push("Student Info");
-        if (isStaff) {
+        if (isStaff || isOwnProfile) {
           tabs.push("Emergency Contact");
         }
       }
