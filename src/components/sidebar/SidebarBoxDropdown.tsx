@@ -11,6 +11,8 @@ import { FaArrowRight } from "react-icons/fa";
 export interface dropdownbtn {
     title : string,
     route : string,
+    icon : any,
+    iconClicked : any,
 }
 
 export default function SidebarBoxDropdown(
@@ -61,13 +63,12 @@ export default function SidebarBoxDropdown(
                         onClick={() => { router.push(item.route);}}
                         className={`w-full ${item.route === pathName ? "text-theme" : "text-cusGray"} hover:border hover:border-theme hover:border-opacity-30 rounded-lg  transition-colors flex flex-row justify-end items-center pr-3 pl-2 py-2 gap-1`}
                     >   
-                        {/* <Image
-                            src={btnIcon}
+                        <Image
+                            src={item.route === pathName ? item.iconClicked : item.icon}
                             width={22}
                             height={22}
-                            alt="Icon"
-                        /> */}
-                        <FaArrowRight className={`${item.route === pathName ? "text-theme" : "text-cusGray"} text-lg`}/>
+                            alt={item.title}
+                        />
                         <span>{item.title}</span>
                         
                     </button>

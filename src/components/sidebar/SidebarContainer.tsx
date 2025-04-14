@@ -38,6 +38,17 @@ import SidebarBoxDropdown, { dropdownbtn } from "./SidebarBoxDropdown";
 import ReportIcon from "@/assets/svgs/report.svg";
 import { useState } from "react";
 
+import Home from "@/assets/svgs/home.svg";
+import HomeClicked from "@/assets/svgs/home_selected.svg";
+
+import ViewPages from "@/assets/svgs/reports/carbon_view.svg";
+import ViewPagesClicked from "@/assets/svgs/reports/carbon_view-filled.svg";
+
+import ActiveUsers from "@/assets/svgs/reports/fluent_people-queue-28-regular.svg";
+import ActiveUsersClicked from "@/assets/svgs/reports/fluent_people-queue-28-filled.svg";
+
+import Browser from "@/assets/svgs/reports/ph_browser-duotone.svg";
+import BrowserClicked from "@/assets/svgs/reports/ph_browser-fill.svg";
 
 
 export default function SideBarContainer() {
@@ -53,14 +64,20 @@ export default function SideBarContainer() {
     {
       title : "Active Users",
       route : `${AppRouter.staffActiveUsers}?page=1`,
+      icon : ActiveUsers,
+      iconClicked : ActiveUsersClicked,
     },
     {
       title : "Browsers Usage",
       route : AppRouter.staffBrowsers,
+      icon : Browser,
+      iconClicked : BrowserClicked,
     },
     {
       title : "Viewed Pages",
       route : AppRouter.staffPages,
+      icon : ViewPages,
+      iconClicked : ViewPagesClicked,
     }
   ]; 
 
@@ -68,6 +85,18 @@ export default function SideBarContainer() {
     <div className="w-full flex flex-col gap-3 pl-4">
       {isStaffDashboard && (
         <>
+          <SideBarBox
+            icon={Home}
+            selectedIcon={HomeClicked}
+            isSelected={AppRouter.staffDashboard === pathName}
+            label="Home"
+            onClick={() => {
+              if(reportOpen){
+                setReportOpen(false);
+              }
+              router.push(AppRouter.staffDashboard);
+            }}
+          />
           <SideBarBox
             icon={Staff}
             selectedIcon={StaffClicked}
@@ -131,6 +160,18 @@ export default function SideBarContainer() {
       {isStudentDashboard && (
         <>
           <SideBarBox
+            icon={Home}
+            selectedIcon={HomeClicked}
+            isSelected={AppRouter.studentDashboard === pathName}
+            label="Home"
+            onClick={() => {
+              if(reportOpen){
+                setReportOpen(false);
+              }
+              router.push(AppRouter.studentDashboard);
+            }}
+          />
+          <SideBarBox
             icon={Board}
             selectedIcon={BoardClicked}
             isSelected={AppRouter.studentBoard === pathName}
@@ -181,6 +222,18 @@ export default function SideBarContainer() {
       {isTutorDashboard && (
         <>
           <SideBarBox
+            icon={Home}
+            selectedIcon={HomeClicked}
+            isSelected={AppRouter.tutorDashboard === pathName}
+            label="Home"
+            onClick={() => {
+              if(reportOpen){
+                setReportOpen(false);
+              }
+              router.push(AppRouter.tutorDashboard);
+            }}
+          />
+          <SideBarBox
             icon={Board}
             selectedIcon={BoardClicked}
             isSelected={AppRouter.tutorBoard === pathName}
@@ -189,7 +242,7 @@ export default function SideBarContainer() {
               router.push(AppRouter.tutorBoard);
             }}
           />
-          <SideBarBox
+          {/* <SideBarBox
             icon={AssignStudent}
             selectedIcon={AssignStudentClicked}
             isSelected={AppRouter.tutorAllocatedStudents === pathName}
@@ -197,7 +250,7 @@ export default function SideBarContainer() {
             onClick={() => {
               router.push(AppRouter.tutorAllocatedStudents);
             }}
-          />
+          /> */}
           <SideBarBox
             icon={Meeting}
             selectedIcon={MeetingClicked}

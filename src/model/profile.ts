@@ -25,16 +25,16 @@ export type StaffInfo = {
 
 export type Profile = {
   id: number;
-  firstName?: string; // not null
-  middleName?: string; // not null
-  lastName?: string; // not null
-  dateOfBirth?: string; // not null
-  email: string; // not null
-  nationality?: string;
-  gender?: string;
-  address?: string;
-  phoneNumber?: string;
-  profileImagePath?: string;
+  firstName: string;
+  middleName: string | null; // nullable
+  lastName: string | null; // nullable
+  dateOfBirth: string;
+  email: string;
+  nationality: string;
+  gender: string;
+  address: string;
+  phoneNumber: string;
+  profileImagePath: string | null; // nullable
   passport?: string;
   status: string;
   roleID?: string;

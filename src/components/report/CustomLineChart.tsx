@@ -54,35 +54,49 @@ const CustomTooltip = ({ active, payload, label } : {active : any, payload : any
   return null;
 };
 
-export default function CustomLineChart() {
+export default function CustomLineChart(
+  {
+    isSmallScreen = false,
+  } : {
+    isSmallScreen? : boolean,
+  } 
+) {
+  const reportData = isSmallScreen === true ? data.slice(0, 5) : data;
     return (
         <div
-        className="w-full h-[50%] md:h-full ">
-            <ResponsiveContainer width="100%" height="100%">
+        className={`w-full h-[360px] md:h-full `}>
+            <ResponsiveContainer
+          
+             width="100%" height="100%">
         <LineChart
           width={500}
           height={300}
-          data={data}
+          data={reportData}
           margin={{
             top: 5,
             right: 30,
             left: 20,
             bottom: 5,
           }}
+          
         >
           <CartesianAxis strokeDasharray="3 3" />
           <XAxis 
           dataKey="name"
           interval={0}
           angle={-70}
-          height={110}
+          height={isSmallScreen === true ? 20 : 110}
           fontSize={12}
           textAnchor="end" 
+          
           tick={(props) => {
             const { x, y, payload } = props;
             const label = routeLabels[payload.value]; // Get key name if path exists
         
-            return label ? (
+            return isSmallScreen === true ? 
+            <></> 
+            :
+            label ? (
               <text
                 x={x}
                 y={y + 10}
@@ -104,7 +118,8 @@ export default function CustomLineChart() {
               >
                 {payload.value} {/* Display the full path if not in the AppRouter */}
               </text>
-            );
+            )
+            ;
           }}
            />
           <YAxis 
@@ -113,7 +128,7 @@ export default function CustomLineChart() {
           content={({ active, payload, label })=> (<CustomTooltip  active={active} payload={payload} label={label}/>)} />
           <Legend />
           <Line
-           
+          
           type="monotone" dataKey="pv" stroke="#099797" activeDot={{ r: 8 }} />
         </LineChart>
       </ResponsiveContainer>

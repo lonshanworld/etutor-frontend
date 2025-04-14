@@ -29,26 +29,8 @@ export default function ChatList({
   chat?: {
     _id: string;
     _creationTime: number;
-    user1: {
-      userId: number;
-      firstName: string;
-      middleName?: string | null;
-      lastName?: string | null;
-      email: string;
-      role: string;
-      profileImagePath?: string | null;
-      gender?: string | null;
-    };
-    user2: {
-      userId: number;
-      firstName: string;
-      middleName?: string | null;
-      lastName?: string | null;
-      email: string;
-      role: string;
-      profileImagePath?: string | null;
-      gender?: string | null;
-    };
+    user1Id: number;
+    user2Id: number;
   };
   user: Profile;
 }) {

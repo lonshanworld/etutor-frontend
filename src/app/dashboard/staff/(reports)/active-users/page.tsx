@@ -1,28 +1,17 @@
-// "use client";
+import ActiveUsersPage from "@/components/report/pages/ActiveUserPage";
 
-import PageTitle from "@/components/PageTitle";
-import CustomTable from "@/components/report/CustomTable";
-// import dynamic from "next/dynamic";
 
-// const CustomTable = dynamic(() => import('@/components/report/CustomTable'), {
-//     ssr: false, // Disable server-side rendering
-//     loading: () => <p>Loading...</p>
-//   });
 
-export default async  function ActiveUsersPage({
-  searchParams,
-}: {
-  searchParams?: Promise<
-  { page?: number }>;
-}) {
-  const params = await searchParams;
-  const page = Number(params?.page) || 1;
 
-  return (
-          <div
-          className="w-full h-full px-4">
-              <PageTitle title="User Visited" />
-              <CustomTable numpage={1} />
-          </div>
-      );
+export default function Page(
+  {
+    searchParams,
+  } : {
+    searchParams?: any
+  }
+){
+    return (
+        <ActiveUsersPage isSmallScreen={false} searchParams={searchParams}/> 
+    );
 }
+

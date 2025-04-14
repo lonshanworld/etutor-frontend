@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CommentInputField from "./CommentInputField";
 import CommentCard from "./CommentCard";
 import { Comment } from "@/model/blog";
-import { formatName, formatTime } from "@/utils/formatData";
+import { formatName, formatTimeStamp } from "@/utils/formatData";
 import { fetchComments } from "@/api/services/blogs";
 import { useBlogStore } from "@/stores/useBlogStore";
 import { useUserStore } from "@/stores/useUserStore";
@@ -63,7 +63,7 @@ const CommentSection = ({ blogId, comments }: Props) => {
                 key={comment.id}
                 profilePic={comment.user.profile_picture}
                 username={comment.user.name}
-                time={formatTime(comment.created_at)}
+                time={formatTimeStamp(comment.created_at)}
                 comment={comment.content}
               />
             ))}

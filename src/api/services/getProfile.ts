@@ -14,6 +14,16 @@ export async function getProfile(): Promise<Profile> {
   return data;
 }
 
+export async function getProfileById(userId: number): Promise<Profile> {
+  const response = await GetRequest(APIS.GET.getProfile(userId));
+
+  if (isErrorModel(response)) {
+    throw response;
+  }
+  const data = profileFromJson(response);
+  return data;
+}
+
 export async function changePassword(body: any): Promise<any> {
   const response = await PostRequest(body, APIS.POST.changePassword);
 

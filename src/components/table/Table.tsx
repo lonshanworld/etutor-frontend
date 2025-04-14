@@ -81,7 +81,7 @@ export default function TableDemo({
       setUserProfile({
         id: selectedUser.id,
         firstName: selectedUser.firstName,
-        middleName: selectedUser.middleName,
+        middleName: selectedUser.middleName || null,
         lastName: selectedUser.lastName,
         dateOfBirth: selectedUser.dob,
         email: selectedUser.email,
@@ -89,7 +89,7 @@ export default function TableDemo({
         gender: selectedUser.gender,
         address: selectedUser.address,
         phoneNumber: selectedUser.phoneNo,
-        profileImagePath: selectedUser.profileImagePath,
+        profileImagePath: selectedUser.profileImagePath || null,
         passport: selectedUser.passport,
         status: selectedUser.status,
         roleID: selectedUser.roleID,

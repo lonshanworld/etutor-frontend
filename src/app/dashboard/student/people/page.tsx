@@ -40,7 +40,7 @@ export default async function PeoplePage({
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
             placeholder="Filter Users"
-            options={["Name", "Email"]}
+            url={AppRouter.studentPeople}
             className="ps-8 w-[200px]"
           />
         </div>
