@@ -179,27 +179,8 @@ export default function UserProfile({
                   showLoading();
                   try {
                     const chatId = await createConversation({
-                      user1: {
-                        userId: user.id,
-                        firstName: user.firstName!,
-                        middleName: user.middleName ?? undefined,
-                        lastName: user.lastName ?? undefined,
-                        email: user.email,
-                        role: user.role!,
-                        profileImagePath: user.profileImagePath ?? undefined,
-                        gender: user.gender,
-                      },
-                      user2: {
-                        userId: profileData.id,
-                        firstName: profileData.firstName!,
-                        middleName: profileData.middleName ?? undefined,
-                        lastName: profileData.lastName ?? undefined,
-                        email: profileData.email,
-                        role: profileData.role!,
-                        profileImagePath:
-                          profileData.profileImagePath ?? undefined,
-                        gender: profileData.gender,
-                      },
+                      user1Id: user.id,
+                      user2Id: profileData.id,
                     });
                     hideLoading();
                     if (user.role === "student") {

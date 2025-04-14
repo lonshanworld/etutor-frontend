@@ -4,26 +4,8 @@ import { v } from "convex/values";
 
 export const createConversation = mutation({
   args: {
-    user1: v.object({
-      userId : v.number(),
-      firstName: v.string(),
-      middleName : v.optional(v.string()),
-      lastName:   v.optional(v.string()),
-      email: v.string(),
-      role:  v.string(),
-      profileImagePath:  v.optional(v.string()),
-      gender:  v.optional(v.string()),
-  }),
-    user2: v.object({
-      userId : v.number(),
-      firstName: v.string(),
-      middleName : v.optional(v.string()),
-      lastName:   v.optional(v.string()),
-      email: v.string(),
-      role:  v.string(),
-      profileImagePath:  v.optional(v.string()),
-      gender:  v.optional(v.string()),
-  }),
+    user1Id: v.number(),
+    user2Id: v.number(),
   },
   handler: async (ctx, args) => {
     // Check if a conversation already exists between these users
@@ -31,8 +13,8 @@ export const createConversation = mutation({
       .query("conversations")
       .filter((q) =>
         q.or(
-          q.and(q.eq(q.field("user1.userId"), args.user1.userId), q.eq(q.field("user2.userId"), args.user2.userId)),
-          q.and(q.eq(q.field("user1.userId"), args.user2.userId), q.eq(q.field("user2.userId"), args.user1.userId)) // Ensure bidirectional uniqueness
+          q.and(q.eq(q.field("user1Id"), args.user1Id), q.eq(q.field("user2Id"), args.user2Id)),
+          q.and(q.eq(q.field("user1Id"), args.user2Id), q.eq(q.field("user2Id"), args.user1Id)) // Ensure bidirectional uniqueness
         )
       )
       .first();
@@ -44,8 +26,8 @@ export const createConversation = mutation({
 
     // Otherwise, create a new conversation
     const chatRoomId = await ctx.db.insert("conversations", {
-      user1: args.user1,
-      user2: args.user2,
+      user1Id: args.user1Id,
+      user2Id: args.user2Id,
     });
 
     return chatRoomId;
@@ -63,7 +45,7 @@ export const getConversationsWithLatestMessage = query({
     const conversations = await ctx.db
       .query("conversations")
       .filter((q) =>
-        q.or(q.eq(q.field("user1.userId"), args.userId), q.eq(q.field("user2.userId"), args.userId))
+        q.or(q.eq(q.field("user1Id"), args.userId), q.eq(q.field("user2Id"), args.userId))
       )
       .paginate(args.paginationOpts);
 

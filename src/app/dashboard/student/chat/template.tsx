@@ -19,9 +19,9 @@ export default function ChatTeimpelate({
     } else if (viewUser) {
       setAccOwner(viewUser);
     }
-  }, []);
+  }, [user]);
   console.log("user", accOwner);
   return (
-    <>{accOwner && <MainChat children={children} userData={accOwner} />}</>
+    <>{accOwner && <MainChat children={children} ownerData={accOwner} />}</>
   );
 }

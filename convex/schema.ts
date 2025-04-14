@@ -3,27 +3,9 @@ import { defineSchema, defineTable } from "convex/server";
 
 export default defineSchema({
     conversations: defineTable({
-        user1 : v.object({
-            userId : v.number(),
-            firstName: v.string(),
-            middleName : v.optional(v.string()),
-            lastName:   v.optional(v.string()),
-            email: v.string(),
-            role:  v.string(),
-            profileImagePath:  v.optional(v.string()),
-            gender:  v.optional(v.string()),
-        }),
-        user2 : v.object({
-            userId : v.number(),
-            firstName: v.string(),
-            middleName : v.optional(v.string()),
-            lastName:   v.optional(v.string()),
-            email: v.string(),
-            role:  v.string(),
-            profileImagePath:  v.optional(v.string()),
-            gender:  v.optional(v.string()),
-        }),
-    }),
+        user1Id : v.number(),
+        user2Id : v.number(),
+    }).index("by_users", ["user1Id", "user2Id"]),
     messages : defineTable({
         conversation_id : v.id("conversations"),
         sender_id : v.number(),

@@ -67,7 +67,13 @@ interface dataModel {
 //     { name: 'Group D', value: 200 },
 //   ];
 
-export default function CustomPie(){
+export default function CustomPie(
+    {
+        isSmallScreen = false,
+    } : {
+        isSmallScreen?: boolean;
+    }
+){
     const [data, setDat] = useState([] as dataModel[]);
     const {showLoading, hideLoading} = useLoading();
     const {showToast} = useToast();
@@ -100,18 +106,18 @@ export default function CustomPie(){
 
     return (
         <div
-        className="w-full h-full flex flex-col sm:flex-row justify-center items-center pb-10 sm:scrollbar-none overflow-y-auto custom-scrollbar">
+        className={`w-full h-full flex flex-col sm:flex-row justify-center items-center sm:scrollbar-none overflow-y-auto custom-scrollbar ${isSmallScreen === true ? "pb-0 pt-16 sm:pt-0" : "pb-10 "}`}>
             {
                 data.length > 0 && <div
-                className="basis-0 grow-[2] w-full h-full flex justify-center items-center pt-20 sm:pt-0">
+                className={`basis-0 grow-[2] w-full h-full flex justify-center items-center ${isSmallScreen === true ? "pt-3": "pt-20" } sm:pt-0`}>
                     <PieChart
-                    className="w-full h-full flex justify-center items-center" width={500} height={500} onMouseEnter={undefined}>
+                    className="w-full h-full flex justify-center items-center" width={isSmallScreen === true ? 250 : 500} height={isSmallScreen === true ? 250 : 500} onMouseEnter={undefined}>
                         <Pie
                         data={data}
-                        cx={250}
-                        cy={250}
-                        innerRadius={100}
-                        outerRadius={200}
+                        cx={isSmallScreen === true ? 100 : 250}
+                        cy={isSmallScreen === true ? 100 : 250}
+                        innerRadius={isSmallScreen === true ? 50 : 100}
+                        outerRadius={isSmallScreen === true ? 100 : 200}
                         fill="transparent"
                         paddingAngle={1}
                         dataKey="value"
@@ -126,9 +132,9 @@ export default function CustomPie(){
             
 
             <div
-            className="basis-0 grow w-full h-full   sm:overflow-y-auto custom-scrollbar  flex flex-col gap-2 pb-10">
+            className={`basis-0 grow w-full h-full  sm:overflow-y-auto custom-scrollbar  flex flex-col justify-center items-start gap-2 ${isSmallScreen === true? "pb-5" : "pb-10"}`}>
                 {
-                    data.map((item, index)=>(
+                    isSmallScreen === true && data.slice(0,4).map((item, index)=>(
                         <div key={index} className="grid grid-cols-[max-content_20px_auto] items-center text-sm py-1">
                             <div
                             className="flex flex-row items-center justify-center gap-2">
@@ -145,6 +151,29 @@ export default function CustomPie(){
                             
                         </div>
                     ))
+                }
+                {
+                    isSmallScreen !== true && data.map((item, index)=>(
+                        <div key={index} className="grid grid-cols-[max-content_20px_auto] items-center text-sm py-1">
+                            <div
+                            className="flex flex-row items-center justify-center gap-2">
+                                <div
+                                    className="w-4 h-4 rounded-full"
+                                    style={{ backgroundColor: colorList[index % colorList.length] }}
+                                ></div>
+                                <span>{item.name}</span>
+                            </div>
+                            <span
+                            className="w-6 text-center"> - </span>
+                            <div
+                            className="text-start ">{item.percentage} %</div>
+                            
+                        </div>
+                    ))
+                }
+
+                {
+                    isSmallScreen === true && <span className="text-3xl tracking-widest leading-none font-bold text-end"> ... </span>
                 }
             </div>
         </div>

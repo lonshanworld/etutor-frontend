@@ -62,9 +62,9 @@ export default function LoginPage() {
 
       // Redirect user to dashboard based on role
       if (user.role === "admin") {
-        router.push(AppRouter.staffStaff);
+        router.push(AppRouter.staffDashboard);
       } else if (user.role === "staff") {
-        router.push(AppRouter.staffStaff);
+        router.push(AppRouter.staffDashboard);
       } else if (user.role === "student") {
         router.push(AppRouter.studentDashboard);
       } else if (user.role === "tutor") {

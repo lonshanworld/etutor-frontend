@@ -1,6 +1,7 @@
 import { ErrorModel, isErrorModel } from "@/model/ErrorModel";
 import { APIS } from "../api-constants";
-import { ChatFilePostFormDataRequest } from "../general-api-services";
+import { ChatFilePostFormDataRequest, GetRequest } from "../general-api-services";
+import { ChatUserProfile, chatUserProfileFromJson } from "@/model/chatUserProfile";
 
 export async function sendChatFiles(formData : FormData) : Promise<string[]>{
     const response = await ChatFilePostFormDataRequest(formData, APIS.POST.uploadAttachment );
@@ -16,4 +17,13 @@ export async function sendChatFiles(formData : FormData) : Promise<string[]>{
     })
     console.log("checking path list", pathList);
     return pathList;
+}
+
+export async function getChatProfileById(id : number) : Promise<ChatUserProfile> {
+    const response = await GetRequest(APIS.GET.getChatProfile(id));
+    if(isErrorModel(response)){
+        throw response;
+    }
+
+    return chatUserProfileFromJson(response.data);
 }

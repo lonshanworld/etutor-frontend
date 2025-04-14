@@ -141,8 +141,8 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
 
     try {
       const chatId = await createConversation({
-        user1: currentUserInfo,
-        user2: otherUserInfo,
+        user1Id: currentUserInfo.userId,
+        user2Id: otherUserInfo.userId,
       });
 
       if (currentUserInfo.role === "student") {

@@ -84,31 +84,12 @@ export default function StudentMainPage() {
   const handleChat = async () => {
     if (!user || !myTutorInfo) return;
 
-    const user1 = {
-      userId: user.id,
-      firstName: user.firstName!,
-      middleName: user.middleName ?? undefined,
-      lastName: user.lastName ?? undefined,
-      email: user.email,
-      role: user.role!,
-      profileImagePath: user.profileImagePath ?? undefined,
-      gender: user.gender,
-    };
-    const user2 = {
-      userId: myTutorInfo.user_id,
-      firstName: myTutorInfo.first_name!,
-      middleName: myTutorInfo.middle_name ?? undefined,
-      lastName: myTutorInfo.last_name ?? undefined,
-      email: myTutorInfo.email,
-      role: myTutorInfo.role_name!,
-      profileImagePath: myTutorInfo.profile_picture ?? undefined,
-      gender: myTutorInfo.gender ?? undefined,
-    };
+   
 
     try {
       const chatId = await createConversation({
-        user1,
-        user2,
+        user1Id : user.id,
+        user2Id : myTutorInfo.user_id,
       });
 
       if (user.role === "student") {
