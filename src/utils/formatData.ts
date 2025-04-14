@@ -22,9 +22,9 @@ export const formatTime = (timeString: string): string => {
 
 // Combine first, middle, last name
 export const formatName = (
-  first?: string,
-  middle?: string,
-  last?: string
+  first?: string | null,
+  middle?: string | null,
+  last?: string | null
 ): string => {
   return [first, middle, last].filter((name) => name && name.trim()).join(" ");
 };

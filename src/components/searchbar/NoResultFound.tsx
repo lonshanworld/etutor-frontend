@@ -1,4 +1,3 @@
-import NoResultImage from "@/assets/svgs/noresultimage.svg";
 import NotFoundImage from "@/assets/images/Not_Found.png";
 export default function NoResultFound() {
   return (
