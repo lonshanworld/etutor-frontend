@@ -14,9 +14,9 @@ interface Props {
 const MeetingDetail = ({ meeting, onBack }: Props) => {
   const { user } = useUserStore();
   return (
-    <div className='flex flex-col w-full h-full'>
+    <div className='flex flex-col w-full h-full overflow-y-auto scrollbar-none'>
       {/* Back btn */}
-      <div className='flex items-center gap-1 py-1 pb-4'>
+      <div className='flex items-center gap-1 py-2 pb-2'>
         <div
           onClick={onBack}
           className='rounded-2xl flex items-center hover:bg-secondaryBackground'

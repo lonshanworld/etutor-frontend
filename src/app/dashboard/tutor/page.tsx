@@ -89,7 +89,7 @@ export default function TutorMainPage() {
                 myStudents={myStudents}
               />
             </div>
-            <div className='flex flex-col sm:h-auto h-[200px] overflow-hidden sm:flex-1 rounded-3xl bg-homeItem px-5 py-3 sm:py-5'>
+            <div className='flex flex-col sm:h-auto h-[240px] overflow-hidden sm:flex-1 rounded-3xl bg-homeItem p-4 sm:py-5'>
               <div className='col-span-2 row-span-4 sm:row-span-6 h-full'>
                 <MeetingSummary
                   meetings={activeMeetings}
