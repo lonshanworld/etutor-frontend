@@ -12,7 +12,7 @@ const Tab = ({ selectedTab }: { selectedTab: string }) => {
       <div className="bg-tabBg flex rounded-md overflow-hidden">
         <div
           className={twMerge(
-            " px-8 py-3 text-[18px] cursor-pointer",
+            "px-5 md:px-8 py-2 md:py-3 md:text-[18px]  cursor-pointer",
             selectedTab === "tutor" ? "bg-theme text-white" : "bg-transparent"
           )}
           onClick={() => {
@@ -23,7 +23,7 @@ const Tab = ({ selectedTab }: { selectedTab: string }) => {
         </div>
         <div
           className={twMerge(
-            " px-8 py-3 text-[18px] cursor-pointer",
+            "px-5 md:px-8 py-2 md:py-3 md:text-[18px] cursor-pointer",
             selectedTab === "student" ? "bg-theme text-white" : "bg-transparent"
           )}
           onClick={() => {

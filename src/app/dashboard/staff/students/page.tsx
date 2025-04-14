@@ -11,21 +11,23 @@ export default async function StudentListPage({
 }: {
   searchParams: Promise<{
     page?: number;
-    name?: string;
+    search?: string;
+    filter?: string;
   }>;
 }) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
-  const name = params.name || "";
+  const search = params.search || "";
+  const filter = params.filter || "";
 
   let studentData: User[] = [];
   let pageCount = 1;
 
   try {
-    const response = await getStudents(page, name);
+    const response = await getStudents(page, search, filter);
     studentData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
-    console.log("response", response);
+    console.log("student response", page, search, response);
   } catch (error) {
     console.error("Failed to fetch students:", error);
   }
@@ -34,14 +36,14 @@ export default async function StudentListPage({
     <div className="w-full sm:w-[95%] mx-auto">
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
-          placeholder="Search Students"
+          placeholder="Search with name, email"
           url={AppRouter.staffStudents}
         />
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
-            placeholder="Filter Users"
-            options={["Name", "Email"]}
+            placeholder="Filter Students"
+            url={AppRouter.staffStudents}
             className="ps-8 w-[200px]"
           />
         </div>

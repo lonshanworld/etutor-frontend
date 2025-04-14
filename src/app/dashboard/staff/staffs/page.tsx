@@ -15,16 +15,18 @@ export default async function StaffListPage({
 }: {
   searchParams: Promise<{
     page?: number;
-    name?: string;
+    search?: string;
+    filter?: string;
   }>;
 }) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
-  const name = params.name || "";
+  const search = params.search || "";
+  const filter = params.filter || "";
   let staffData: User[] = [];
   let pageCount: number = 1;
   try {
-    const response = await getStaffs(page, name);
+    const response = await getStaffs(page, search, filter);
     staffData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
   } catch (error) {
@@ -35,15 +37,15 @@ export default async function StaffListPage({
     <div className="w-full sm:w-[95%] mx-auto">
       <div className="flex flex-wrap gap-x-3 sm:gap-x-8 gap-y-3 max-sm:mx-3">
         <SearchBar
-          placeholder="Search Staffs"
+          placeholder="Search with name, email"
           url={AppRouter.staffStaff}
         />
         <div className="flex items-center sm:w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
-            placeholder="Filter Users"
-            options={["Name", "Email"]}
-            className="ps-8"
+            placeholder="Filter Staffs"
+            url={AppRouter.staffStaff}
+            className="ps-8 w-[200px]"
           />
         </div>
       </div>

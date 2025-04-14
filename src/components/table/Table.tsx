@@ -168,7 +168,7 @@ export default function TableDemo({
       } else if (selectedUser?.role === UserRole.staff) {
         response = await deactivateStaff({ user_id: selectedUser.id });
       }
-      if (response.message === "success") {
+      if (response.status === true) {
         showToast("User Deactivated Successfully", "success");
         setTimeout(() => {
           location.reload();
@@ -216,9 +216,13 @@ export default function TableDemo({
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
-                    <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] object-cover flex items-center">
+                    <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] sm:min-h-[30px] sm:min-w-[30px] rounded-full overflow-hidden">
                       {user.profileImagePath ? (
-                        <img src={user.profileImagePath} className="" alt="" />
+                        <img
+                          src={user.profileImagePath}
+                          className="w-full h-full object-cover rounded-full"
+                          alt=""
+                        />
                       ) : (
                         <FaUserCircle className="text-lg sm:text-3xl text-theme" />
                       )}

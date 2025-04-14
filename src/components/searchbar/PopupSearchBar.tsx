@@ -35,15 +35,18 @@ export default function PopupSearchBar({
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center max-sm:w-full">
+        <div className="relative flex items-center max-sm:w-full">
           <input
             id="searchbar"
             type="text"
             onChange={search}
-            className={`w-full sm:min-w-[250px] px-5 py-2 sm:py-2.5 border-b-[3px] bg-inputBackground border-inputBorder border-theme focus:outline-none  max-sm:text-sm ${className}`}
+            className={`w-full sm:min-w-[250px] px-5 pe-8 max-md:pe-10 py-2 sm:py-2.5 border-b-[3px] bg-inputBackground border-inputBorder border-theme focus:outline-none  max-sm:text-sm ${className}`}
             placeholder={placeholder}
           />
-          <div className="-ms-10 z-10 cursor-pointer" onClick={handleSearch}>
+          <div
+            className="absolute top-3 right-3 z-10 cursor-pointer"
+            onClick={handleSearch}
+          >
             <IoIosSearch className="text-lg sm:text-2xl text-cusGray" />
           </div>
         </div>

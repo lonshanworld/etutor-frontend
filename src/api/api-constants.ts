@@ -18,6 +18,7 @@ export const APIS = {
     getHistoryMeetings: "meetings/old",
     getReportActiveUsers: "reports/active-users",
     getBrowsersUsage: "reports/browser-usage",
+    getNoti: "notifications",
   },
   POST: {
     login: "auth/login",
@@ -35,6 +36,10 @@ export const APIS = {
     allocateStudent: "staffs/allocate-student-tutor",
     deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
     createMeeting: "meetings/create",
+
+    readNoti: "notifications/mark-read",
+
+    updateProfile: "user/profile-picture/update",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

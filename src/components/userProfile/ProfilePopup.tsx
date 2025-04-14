@@ -5,6 +5,8 @@ import { LuLogOut } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 import { AppRouter } from "@/router";
 import { useToast } from "@/stores/useToast";
+import Image from "next/image";
+import { FaUserCircle } from "react-icons/fa";
 
 const ProfilePopup = ({
   setProfilePopup,
@@ -56,8 +58,17 @@ const ProfilePopup = ({
               }}
             >
               {/* <img src={user.profileImagePath} alt="" /> */}
-              <div className="sm:w-[45px] sm:h-[45px] w-8 h-8 object-cover">
-                <img src={Profile.src} alt="" />
+              <div className="sm:w-[45px] sm:h-[45px] rounded-full w-8 h-8 max-w-8 max-h-8 overflow-hidden">
+                {user?.profileImagePath ? (
+                  <img
+                    src={user.profileImagePath}
+                    alt="Profile"
+                    // fill={true}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <FaUserCircle className="text-lg w-full h-full text-theme" />
+                )}
               </div>
               <div>
                 <p className="font-bold max-sm:text-sm">

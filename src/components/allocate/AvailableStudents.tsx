@@ -73,12 +73,21 @@ const AvailableStudents = ({
 
   useEffect(() => {
     if (searchCleared) {
-      loadStudents(1); // Force reload when search is cleared
-      setSearchCleared(false); // Reset the flag after loading
+      setPage(1);
+      setStudents([]);
+      setFilteredData([]);
+      setHasMore(true); // Allow loading next pages again
     } else {
       loadStudents(page); // Normal loading when page changes
     }
   }, [page, searchCleared]);
+
+  useEffect(() => {
+    if (searchCleared) {
+      loadStudents(1);
+      setSearchCleared(false);
+    }
+  }, [searchCleared]);
 
   const getMajorName = (id: number) => {
     if (id) {
@@ -167,7 +176,12 @@ const AvailableStudents = ({
         student_id: selectedUsers,
         tutor_id: activeUser?.info.id,
       });
-      showToast(response.message, "success");
+      console.log("assigned", response);
+      if (response.errorCode === 500) {
+        showToast(response.errorText, "error");
+      } else {
+        showToast(response.message, "success");
+      }
       if (!response?.errorCode) {
         setTimeout(() => {
           location.reload();
