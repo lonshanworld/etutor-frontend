@@ -133,26 +133,39 @@ export type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>;
 
 export const meetingSchema = z
   .object({
-    subject: z.string().min(1, "Subject is required"),
-    time: z.string().nonempty("Time is required"),
-    date: z.string().nonempty("Date is required"),
-    location: z.string().nullable(),
+    meeting_subject: z.string().trim().min(1, "Subject is required"),
+    meeting_date: z.string().nonempty("Date is required"),
+    meeting_time: z.string().nonempty("Time is required"),
+    meeting_type: z.enum(["Virtual", "In-Person"]),
+    location: z.string().trim().nullable(),
     platform: z.string().nullable(),
-    meetingType: z.enum(["Virtual", "In-Person"]),
-    link: z.string().nonempty("Link is required"),
-    students: z
-      .array(
-        z.object({
-          userId: z.number(),
-          studentId: z.number(),
-          name: z.string(),
-          profile_picture: z.string().nullable(),
-        })
-      )
-      .min(1, "At least one student must be assigned"),
+    meeting_link: z.string().trim().nullable(),
+    users: z.array(z.number()).min(1, "At least one student must be assigned"),
   })
   .superRefine((data, ctx) => {
-    if (data.meetingType === "Virtual") {
+    const now = new Date();
+
+    // Combine date and time into a Date object
+    const combinedDateTime = new Date(
+      `${data.meeting_date}T${data.meeting_time}`
+    );
+
+    if (isNaN(combinedDateTime.getTime())) {
+      ctx.addIssue({
+        path: ["meeting_date"],
+        message: "Invalid date or time",
+        code: z.ZodIssueCode.custom,
+      });
+    } else if (combinedDateTime < now) {
+      ctx.addIssue({
+        path: ["meeting_date"],
+        message: "Meeting cannot be scheduled in the past",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+
+    // Type-specific validation
+    if (data.meeting_type === "Virtual") {
       if (!data.platform || data.platform.trim() === "") {
         ctx.addIssue({
           path: ["platform"],
@@ -161,16 +174,16 @@ export const meetingSchema = z
         });
       }
 
-      if (!data.link || data.link.trim() === "") {
+      if (!data.meeting_link || data.meeting_link.trim() === "") {
         ctx.addIssue({
-          path: ["link"],
+          path: ["meeting_link"],
           message: "Link is required for Virtual meetings",
           code: z.ZodIssueCode.custom,
         });
       }
     }
 
-    if (data.meetingType === "In-Person") {
+    if (data.meeting_type === "In-Person") {
       if (!data.location || data.location.trim() === "") {
         ctx.addIssue({
           path: ["location"],

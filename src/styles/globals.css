@@ -5,7 +5,7 @@
 :root {
   --background: #ffffff;
   --secondaryBackground: #e5e5e5;
-  --home-item: #f1f1f1;
+  --home-item: #f9f9f9;
   --bgOpposite: #202020;
   --bgSecondaryOpposite: #2a2a2a;
   --font-color: black;
@@ -36,6 +36,7 @@
   --unassign: #ff5555;
   --noti-bg: white;
   --profile-text: #4b5563;
+  --blog-comment-box: #fff;
 }
 
 .dark {
@@ -72,6 +73,7 @@
   --unassign: #ff5555;
   --noti-bg: #414141;
   --profile-text: white;
+  --blog-comment-box: #333;
 }
 
 body {

@@ -15,6 +15,7 @@ import { RxCross1 } from "react-icons/rx";
 import CreateNewBlogModal from "./modals/CreateNewBlogModal";
 import LikeModal from "./modals/LikeModal";
 import ErrorPopup from "../ErrorPopup";
+import Cookies from "js-cookie";
 
 interface Props {
   isNewPostModalOpen: boolean;
@@ -27,6 +28,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   const [isLikedModalOpen, setLikeModalOpen] = useState(false);
   const [isClosing, setClosing] = useState(false); // For detail blog page closing sliding effect
   const [isLoading, setLoading] = useState(false); // loading new blogs
+  // const [userId, setUserId] = useState<number | null>(null);
   const [likedList, setLikeList] = useState<{
     blogId: number | null;
     likes: Like[];
@@ -38,14 +40,32 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastBlogRef = useRef(null);
   const { isError, setError } = errorStore();
-  const { getUserId, user } = useUserStore();
+  const { getUserId, user, viewUser } = useUserStore();
   const { showToast } = useToast();
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (user) {
+    const encodedUser = Cookies.get("viewUser");
+
+    if (encodedUser) {
+      const decodedUser = decodeURIComponent(encodedUser);
+      const userObject = JSON.parse(decodedUser);
+      const viewUserId = userObject.id;
+      setUserId(viewUserId);
+      return;
+    }
+
+    const userId = getUserId();
+    if (userId) {
+      setUserId(userId);
+    }
+  }, [user, viewUser]);
+
+  useEffect(() => {
+    if (userId) {
       getBlog();
     }
-  }, [user]); // need to wait user so can get userid from store
+  }, [userId]);
 
   const getBlog = async () => {
     if (isLoading) return;
@@ -59,6 +79,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
 
       const formattedBlogs = response.blogs.map((blog) => ({
         id: blog.id,
+        authorId: blog.author.id,
         profilePic: blog.author.profile_picture,
         username: blog.author.name,
         time: blog.created_at,
@@ -69,9 +90,8 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         comments: blog.comments,
         likeCount: blog.likes ? blog.likes.length : 0,
         commentCount: blog.comments ? blog.comments.length : 0,
-        isOwnBlog: blog.author.id === getUserId(),
-        isLiked:
-          blog.likes?.some((like) => like.user.id === getUserId()) ?? false,
+        isOwnBlog: blog.author.id === userId,
+        isLiked: blog.likes?.some((like) => like.user.id === userId) ?? false,
       }));
       setBlogs((prev) => [...prev, ...formattedBlogs]);
       setCursor(response.meta.next_cursor || null); // Update cursor for next fetch
@@ -118,8 +138,6 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
     [isLoading, cursor]
   );
 
-  
-
   // Detail page close
   const handleClose = () => {
     setClosing(true);
@@ -143,7 +161,6 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
       likes: likedList,
     });
   };
-  console.log("blogs", blogs);
 
   return (
     <>
@@ -170,19 +187,20 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         />
       )}
 
-      <div className="flex h-full w-full">
+      <div className='flex h-full w-full'>
         {/* Main Board */}
-        <div className="md:w-1/2 h-full pt-16 mt-2 w-full">
+        <div className='md:w-1/2 h-full pt-16 mt-2 w-full'>
           <div
-            id="postContainer"
-            className="flex flex-col md:gap-3 gap-1.5 h-[98.5%] overflow-y-auto scrollbar-cus-2 pb-4 md:pr-1 max-md:scrollbar-none"
+            id='postContainer'
+            className='flex flex-col md:gap-3 gap-1.5 h-[98.5%] overflow-y-auto scrollbar-cus-2 pb-4 md:pr-1 max-md:scrollbar-none'
           >
             {/* Posts */}
-            {blogs.length > 0 ? (
+            {blogs.length > 0 ?
               blogs.map((blog, index) => (
                 <UserBlog
                   key={blog.id}
                   blogId={blog.id}
+                  authorId={blog.authorId}
                   profilePic={blog.profilePic}
                   username={blog.username}
                   time={blog.time}
@@ -203,13 +221,12 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                   ref={index === blogs.length - 1 ? lastBlogElementRef : null}
                 />
               ))
-            ) : (
-              <div className="text-center py-3">
+            : <div className='text-center py-3'>
                 It’s quiet here… why not write something?
               </div>
-            )}
+            }
             {isLoading && (
-              <div className="text-center py-3">Loading more posts...</div>
+              <div className='text-center py-3'>Loading more posts...</div>
             )}
           </div>
         </div>
@@ -222,32 +239,35 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
         ></div>
 
         {/* Post Details */}
-        <div className="md:w-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative">
+        <div className='md:w-1/2 md:block h-full bg-secondaryBackground z-7 y-auto scrollbar-none relative'>
           <div
             className={`flex h-full w-full opacity-logo items-center justify-center z-0 absolute `}
           >
-            <Image src={logo} alt="Logo" />
+            <Image
+              src={logo}
+              alt='Logo'
+            />
           </div>
 
           <div
             className={`fixed max-md:top-[57px] md:mt-3 left-0 w-full h-full max-md:h-[calc(100%-56px)] bg-secondaryBackground z-10 md:px-1 overflow-y-auto scrollbar-none md:relative md:basis-1/2 md:block transition-transform duration-500 ease-in-out transform ${
-              selectedBlog && !isClosing
-                ? "translate-x-0 opacity-100"
-                : "translate-x-full md:opacity-100"
+              selectedBlog && !isClosing ?
+                "translate-x-0 opacity-100"
+              : "translate-x-full md:opacity-100"
             }`}
           >
             {selectedBlog && (
               <>
                 {/* Back button for mobile */}
-                <div className="max-md:sticky bg-background top-0 left-0 right-0 p-3">
+                <div className='max-md:sticky bg-background top-0 left-0 right-0 p-3 z-10'>
                   <button
-                    className="flex items-center gap-2 text-gray-500 md:hover:text-gray-800"
+                    className='flex items-center gap-2 text-gray-500 md:hover:text-secondaryText'
                     onClick={handleClose}
                   >
-                    <div className="flex gap-2 md:hidden">
+                    <div className='flex gap-2 md:hidden'>
                       <IoArrowBack size={24} /> <span>Back</span>
                     </div>
-                    <div className="flex gap-2 items-center max-md:hidden">
+                    <div className='flex gap-2 items-center max-md:hidden'>
                       <RxCross1 size={20} /> <span>Close</span>
                     </div>
                   </button>
@@ -256,6 +276,7 @@ const BlogTab = ({ isNewPostModalOpen, setNewPostModalOpen }: Props) => {
                 {/* Detail Blog */}
                 <UserBlog
                   blogId={selectedBlog.id}
+                  authorId={selectedBlog.authorId}
                   profilePic={selectedBlog.profilePic}
                   username={selectedBlog.username}
                   time={selectedBlog.time}

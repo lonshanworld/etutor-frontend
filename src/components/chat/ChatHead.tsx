@@ -6,7 +6,10 @@ import { AppRouter } from "@/router";
 import { checkExist, formatTimestamp } from "@/lib/utils";
 import ImageBox from "../ImageBox";
 import { useUserStore } from "@/stores/useUserStore";
-import { getOtherChatData } from "@/utils/checkUserChat";
+import { useChatProfileListStore } from "@/stores/useChatListProfile";
+import { useEffect, useState } from "react";
+import { ChatUserProfile } from "@/model/chatUserProfile";
+import { formatName } from "@/utils/formatData";
 
 
 
@@ -27,31 +30,15 @@ export default function ChatHead(
             } | null;
             _id: string;
             _creationTime: number;
-            user1: {
-                userId : number;
-                firstName : string;
-                middleName? : string | null;
-                lastName? :string | null;
-                email : string;
-                role : string;
-                profileImagePath? : string | null;
-                gender? : string | null;
-            };
-            user2: {
-                userId : number;
-                firstName : string;
-                middleName? : string | null;
-                lastName? :string | null;
-                email : string;
-                role : string;
-                profileImagePath? : string | null;
-                gender? : string | null;
-            };
-        }
+            user1Id: number;
+            user2Id: number;
+        },
     }
 ){
     const router = useRouter();
     const {user} = useUserStore();
+    const {getOneProfileById} = useChatProfileListStore();
+    const [otherUserProfile, setOtherUserProfile] = useState<ChatUserProfile>();
 
     function getColorRole(value : string) : string{
         console.log("check value role", value);
@@ -65,10 +52,22 @@ export default function ChatHead(
         }
     }
 
+    useEffect(()=>{
+        const fetchData = async()=>{
+            if(chat && user){
+                const otherUserId = chat.user1Id === user.id ? chat.user2Id : chat.user1Id;
+                const otherUserProfile = getOneProfileById(otherUserId);
+                setOtherUserProfile(otherUserProfile);
+            }
+        }
+
+        fetchData();
+    },[])
+
     return (
         <>
             {
-                user && <>
+                user && (otherUserProfile !== null && otherUserProfile !== undefined) && <>
                     <button
             onClick={()=>{
                 console.log("user role", user.role);
@@ -81,15 +80,15 @@ export default function ChatHead(
             className="flex sm:hidden flex-row justify-center items-center hover:bg-gray-400 hover:bg-opacity-30 px-3 py-2 rounded-l-xl hover:border-r-[6px] border-theme">
                 <div
                 className="w-11 h-11">
-                <ImageBox imageUrl={getOtherChatData(user.id, chat).profileImagePath} />
+                <ImageBox imageUrl={otherUserProfile.profile_picture} />
                 </div>
                 <div className="w-full pl-2">
                     <div
                     className="flex flex-row justify-between items-center gap-3">
-                        <span className="text-start w-full text-base line-clamp-1">{getOtherChatData(user.id, chat).firstName} {getOtherChatData(user.id, chat).middleName} {getOtherChatData(user.id, chat).lastName}</span>
+                        <span className="text-start w-full text-base line-clamp-1">{formatName(otherUserProfile.first_name, otherUserProfile.middle_name, otherUserProfile.last_name)}</span>
                         <div
                         className="flex flex-row justify-end items-center gap-2">
-                            <span className={`text-xss text-nowrap capitalize ${getColorRole(getOtherChatData(user.id,chat).role)}`}>{getOtherChatData(user.id, chat).role.toString()}</span>
+                            <span className={`text-xss text-nowrap capitalize ${getColorRole(otherUserProfile.role.name)}`}>{otherUserProfile.role.name.toString()}</span>
                             <div
                             className="w-[2px] h-4 bg-black rounded-t-full rounded-b-full"></div>
                             <span className="text-xss text-nowrap opacity-50">{chat.latestMessage ? formatTimestamp(chat.latestMessage._creationTime).time : formatTimestamp(chat._creationTime).time}</span>
@@ -107,15 +106,15 @@ export default function ChatHead(
             className="hidden sm:flex flex-row justify-center items-center hover:bg-gray-400 hover:bg-opacity-30 px-3 py-2 rounded-l-xl hover:border-r-[6px] border-theme">
                 <div
                 className="w-11 h-11">
-                 <ImageBox imageUrl={getOtherChatData(user.id, chat).profileImagePath} />
+                 <ImageBox imageUrl={otherUserProfile.profile_picture} />
                 </div>
                 <div className="w-full pl-2">
                     <div
                     className="flex flex-row justify-between items-center gap-3">
-                        <span className="text-start text-base line-clamp-1 w-full">{getOtherChatData(user.id, chat).firstName}</span>
+                        <span className="text-start text-base line-clamp-1 w-full">{formatName(otherUserProfile.first_name, otherUserProfile.middle_name, otherUserProfile.last_name)}</span>
                         <div
                         className="flex flex-row justify-end items-center gap-1">
-                            <span className={`text-xss text-nowrap capitalize ${getColorRole(getOtherChatData(user.id,chat).role.toString())}`}>{getOtherChatData(user.id, chat).role.toString()}</span>
+                            <span className={`text-xss text-nowrap capitalize ${getColorRole(otherUserProfile.role.name)}`}>{otherUserProfile.role.name.toString()}</span>
                             <div
                             className="w-[2px] h-4 bg-black rounded-t-full rounded-b-full"></div>
                             <span className="text-end text-xss text-nowrap opacity-50">{chat.latestMessage ? formatTimestamp(chat.latestMessage._creationTime).time : formatTimestamp(chat._creationTime).time}</span>

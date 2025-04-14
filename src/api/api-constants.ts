@@ -4,20 +4,20 @@ export const APIS = {
     getTutorList: "tutors",
     getStaffList: "staffs",
     getMyProfile: "user/profile", // get own user profile
-    getProfile: (id: string) => `user/${id}/profile`, // get user profile by id
+    getProfile: (id: number) => `user/${id}/profile`, // get user profile by id
     checkEmail: "check-email",
     confirmOtp: "confirm-otp",
     getMajors: "majors",
     getSubjects: "subjects",
     getMajorsWithSubjects: "majors-with-subjects",
+
     getBlogs: "blogs",
     getBlogById: (blogId: number) => `blogs/${blogId}`,
     getFiles: "blogs/files",
-    getMyStudents: (tutorId: number) => `tutors/${tutorId}/students`,
-    getActiveMeetings: "meetings/active",
-    getHistoryMeetings: "meetings/old",
+
     getReportActiveUsers: "reports/active-users",
     getBrowsersUsage: "reports/browser-usage",
+    getChatProfile: (id: number) => `user/${id}/profile`,
   },
   POST: {
     login: "auth/login",
@@ -26,6 +26,7 @@ export const APIS = {
     createTutor: "tutors/account/create",
     createStaff: "staffs/account/create",
     changePassword: "user/change-password",
+
     giveLike: "blogs/give-like",
     giveComment: "blogs/give-comment",
     uploadAttachment: "upload-attachment",
@@ -35,6 +36,12 @@ export const APIS = {
     allocateStudent: "staffs/allocate-student-tutor",
     deleteBlog: (blogId: number) => `blogs/${blogId}/delete`,
     createMeeting: "meetings/create",
+
+    getActiveMeetings: "meetings",
+    getHistoryMeetings: "meetings/recent",
+
+    getMyStudents: "tutors/my-students",
+    getMyTutor: "students/my-tutor",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

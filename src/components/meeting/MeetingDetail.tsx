@@ -1,173 +1,129 @@
 "use client";
 
-import Image from "next/image";
-import { FiArrowLeft } from "react-icons/fi";
+import { Meeting } from "@/model/meeting";
+import { formatDate, formatLink, formatTime } from "@/utils/formatData";
+import { IoChevronBackOutline } from "react-icons/io5";
 import ProfilePic from "../ProfilePic";
-import { IoBookOutline, IoTimeOutline } from "react-icons/io5";
+import { useUserStore } from "@/stores/useUserStore";
 
-export interface meetingProps {
-  id: number;
-  profileUrl: string;
-  tutorName: string;
-  tutorQualification: string;
-  subject: string;
-  time: string;
-  studentList: string[];
-  meetingType: "Virtual" | "Physical";
-  location: string;
-  platform: "Google Meet" | "Microsoft Teams" | "Zoom";
-  meetingLink: string;
-}
-
-interface Props extends meetingProps {
+interface Props {
+  meeting: Meeting;
   onBack: () => void;
 }
 
-const MeetingDetail = ({
-  profileUrl,
-  tutorName,
-  tutorQualification,
-  subject,
-  time,
-  studentList,
-  meetingType,
-  location,
-  platform,
-  meetingLink,
-  onBack,
-}: Props) => {
+const MeetingDetail = ({ meeting, onBack }: Props) => {
+  const { user } = useUserStore();
   return (
-    <div className='flex flex-col w-full pl-6 pt-3'>
+    <div className='flex flex-col w-full h-full overflow-y-auto scrollbar-none'>
       {/* Back btn */}
-      <div
-        className='flex items-center gap-1 cursor-pointer'
-        onClick={onBack}
-      >
-        <FiArrowLeft
-          size={30}
-          className='text-theme'
-        />{" "}
-        <span className='text-lg text-theme'>Back</span>
-      </div>
-
-      <div className='py-3 text-2xl font-semibold'>{subject}</div>
-
-      {/* tutor profile */}
-      <div className='flex gap-4 py-3'>
-        <div>
-          <ProfilePic
-            profileUrl={profileUrl}
-            size={50}
+      <div className='flex items-center gap-1 py-2 pb-2'>
+        <div
+          onClick={onBack}
+          className='rounded-2xl flex items-center hover:bg-secondaryBackground'
+        >
+          <IoChevronBackOutline
+            size={22}
+            className='text-theme'
           />
-        </div>
-        <div className=''>
-          <p className='font-semibold'>{tutorName}</p>
-          <p className='text-sm'>{tutorQualification}</p>
-        </div>
-      </div>
-
-      <div className='py-5'>
-        <button className='bg-theme px-5 py-2.5 text-white rounded-lg'>
-          Meeting Link
-        </button>
-      </div>
-
-      <div className='flex w-[80%] border border-secondaryText'>
-        <div className='pl-2 border-r border-r-secondaryText basis-60'>
-          <div className='flex items-center gap-2 p-1'>
-            {/* <IoBookOutline size={22} /> */}
-            <span className='font-semibold'>Subject</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className='font-semibold'>Time</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className='font-semibold'>Students</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className='font-semibold'>Meeting Type</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className='font-semibold'>Location</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className='font-semibold'>Platform</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className='font-semibold'>Meeting Link</span>
-          </div>
-        </div>
-        <div className='flex flex-col pl-2'>
-          <div className='flex items-center gap-2 p-1'>
-            {/* <IoBookOutline size={22} /> */}
-            <span className=''>{subject}</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className=''>{time}</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className=''>{studentList}</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className=''>{meetingType}</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className=''>{location || "-"}</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className=''>{platform || "-"}</span>
-          </div>
-          <div className='flex items-center gap-2 p-1'>
-            <span className=''>{meetingLink || "-"}</span>
-          </div>
+          <span className='pl-2 pr-6 py-1 cursor-pointer text-theme text-lg'>
+            Back
+          </span>
         </div>
       </div>
 
-      {/* <div className='mt-6 border border-gray-700'>
-        <div className='flex justify-between border-b border-b-black'>
-          <div className='flex items-center gap-2 mb-2 border-r border-r-black'>
-            <IoBookOutline size={22} />
-            <span className='font-semibold text-lg'>Subject</span>
+      <div className='bg-primary-foreground px-7 py-4 mt-1 rounded-lg w-full h-full'>
+        <div className='py-3 text-2xl font-semibold'>{meeting.subject}</div>
+
+        {/* tutor profile */}
+        <div className='flex gap-4 py-3 items-center'>
+          <div>
+            <ProfilePic
+              profileUrl={meeting.creator.profile_picture}
+              size={50}
+            />
           </div>
-          <span className=''>{subject}</span>
+          <div className=''>
+            <p className='font-semibold'>{meeting.creator.name}</p>
+            {user?.role === "tutor" && <p className='text-sm'>You</p>}
+            {user?.role === "student" && <p className='text-sm'>Your Tutor</p>}
+          </div>
         </div>
 
-        <div className='flex justify-between'>
-          <div className='flex items-center gap-2 mb-2'>
-            <IoTimeOutline size={22} />
-            <span className='font-semibold text-lg'>Time</span>
+        {meeting.link && (
+          <div className='py-3 flex'>
+            <a
+              href={formatLink(meeting.link)}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='bg-theme px-5 py-2.5 text-white rounded-lg block'
+            >
+              Meeting Link
+            </a>
           </div>
-          <span className=''>{time}</span>
-        </div>
+        )}
 
-        <div className='flex justify-between'>
-          <p className='font-semibold'>Students</p>
-          <p>{studentList?.join(", ")}</p>
-        </div>
-        <div className='flex justify-between'>
-          <p className='font-semibold'>Meeting Type</p>
-          <p>{meetingType}</p>
-        </div>
-        <div className='flex justify-between'>
-          <p className='font-semibold'>Location</p>
-          <p>{location ? location : "-"}</p>
-        </div>
-        <div className='flex justify-between'>
-          <p className='font-semibold'>Platform</p>
-          <p>{platform} icon here</p>
-        </div>
-        <div className='flex justify-between'>
-          <p className='font-semibold'>Meeting Link</p>
-          <a
-            href={meetingLink}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='text-teal-400 hover:underline'
-          >
-            {meetingLink}
-          </a>
-        </div>
-      </div> */}
+        <table className='w-auto text-left border-2 border-inputBorder text-primaryText mt-2 tracking-wide text-[15px] min-w-[80%]'>
+          <tbody>
+            <tr className='bg-secondaryBackground  text-primaryText'>
+              <th className='p-2 w-40 font-semibold border-r border-inputBorder'>
+                Subject
+              </th>
+              <td className='py-2 px-3'>{meeting.subject}</td>
+            </tr>
+            <tr className='bg-background'>
+              <th className='p-2 font-semibold border-r border-inputBorder'>
+                Time
+              </th>
+              <td className='py-2 px-3'>
+                {`${formatDate(meeting.date)} ${formatTime(meeting.time)}`}
+              </td>
+            </tr>
+            <tr className='bg-secondaryBackground'>
+              <th className='p-2 font-semibold border-r border-inputBorder'>
+                Students
+              </th>
+              <td className='py-2 px-3'>
+                {meeting.participants.map((student) => student.name).join(", ")}
+              </td>
+            </tr>
+            <tr className='bg-background'>
+              <th className='p-2 font-semibold border-r border-inputBorder'>
+                Meeting Type
+              </th>
+              <td className='py-2 px-3'>{meeting.type}</td>
+            </tr>
+            <tr className='bg-secondaryBackground'>
+              <th className='p-2 font-semibold border-r border-inputBorder'>
+                Location
+              </th>
+              <td className='py-2 px-3'>{meeting.location || "-"}</td>
+            </tr>
+            <tr className='bg-background'>
+              <th className='p-2 font-semibold border-r border-inputBorder'>
+                Platform
+              </th>
+              <td className='py-2 px-3'>{meeting.platform || "-"}</td>
+            </tr>
+            <tr className='bg-secondaryBackground'>
+              <th className='p-2 font-semibold border-r border-inputBorder'>
+                Meeting Link
+              </th>
+              <td className='py-2 px-3'>
+                {meeting.link ?
+                  <a
+                    href={formatLink(meeting.link)}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='text-blue-600 hover:underline'
+                  >
+                    {meeting.link}
+                  </a>
+                : "-"}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

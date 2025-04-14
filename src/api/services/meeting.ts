@@ -1,44 +1,54 @@
 import { isErrorModel } from "@/model/ErrorModel";
+import {
+  MeetingJsonData,
+  meetingsFromJson,
+  newMeetingFromJson,
+} from "@/model/meeting";
 import { APIS } from "../api-constants";
 import { GetRequest, PostRequest } from "../general-api-services";
-import { myStudentFromJson } from "@/model/meeting";
 
-export async function getMyStudents(tutorId: number): Promise<any> {
-  const response = await GetRequest(APIS.GET.getMyStudents(tutorId));
+export async function getActiveMeetings(
+  userId: number
+): Promise<MeetingJsonData> {
+  const response = await PostRequest(
+    {
+      user_id: userId,
+    },
+    APIS.POST.getActiveMeetings
+  );
 
   if (isErrorModel(response)) {
     throw response;
   }
-  const data = myStudentFromJson(response);
+
+  const data = meetingsFromJson(response);
   return data;
 }
 
-export async function getActiveMeeting(): Promise<any> {
-  const response = await GetRequest(APIS.GET.getActiveMeetings);
+export async function getHistoryMeetings(
+  userId: number
+): Promise<MeetingJsonData> {
+  const response = await PostRequest(
+    {
+      user_id: userId,
+    },
+    APIS.POST.getHistoryMeetings
+  );
 
   if (isErrorModel(response)) {
     throw response;
   }
 
-  return response;
+  const data = meetingsFromJson(response);
+  return data;
 }
 
-export async function getHistoryMeeting(): Promise<any> {
-  const response = await GetRequest(APIS.GET.getHistoryMeetings);
+export async function createMeeting(formData: any): Promise<any> {
+  const response = await PostRequest(formData, APIS.POST.createMeeting);
 
   if (isErrorModel(response)) {
     throw response;
   }
-
-  return response;
-}
-
-export async function createMeeting(): Promise<any> {
-  const response = await PostRequest(APIS.POST.createMeeting);
-
-  if (isErrorModel(response)) {
-    throw response;
-  }
-
-  return response;
+  const data = newMeetingFromJson(response);
+  return data;
 }

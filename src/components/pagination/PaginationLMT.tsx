@@ -28,7 +28,9 @@ export function PaginationLMT({
             aria-disabled={currentPage <= 1}
             className={twMerge(
               "max-sm:w-7 max-sm:h-7",
-              currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
+              currentPage <= 1 ?
+                "pointer-events-none opacity-50"
+              : "cursor-pointer"
             )}
             onClick={() => {
               if (currentPage > 1) onPageChange(currentPage - 1);
@@ -41,7 +43,7 @@ export function PaginationLMT({
               isActive={page === currentPage}
               className={twMerge(
                 "max-sm:w-7 max-sm:h-7",
-                page === currentPage ? "pointer-events-none" : undefined
+                page === currentPage ? "pointer-events-none" : "cursor-pointer"
               )}
               onClick={() => onPageChange(page)}
             >
@@ -56,7 +58,7 @@ export function PaginationLMT({
               "max-sm:w-7 max-sm:h-7",
               currentPage === pageCount ?
                 "pointer-events-none opacity-50"
-              : undefined
+              : "cursor-pointer"
             )}
             onClick={() => {
               if (currentPage < pageCount) onPageChange(currentPage + 1);
