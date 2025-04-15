@@ -96,7 +96,7 @@ export default function CustomPie(
                     setDat(data);
                 }
             }catch(err){
-                showToast("Error while fetching data", "Error" );
+                showToast("Error while fetching data", "error" );
             }finally{
                 hideLoading();
             }

@@ -28,6 +28,12 @@ export async function updateTutor(body: any, id: number): Promise<any> {
   return response;
 }
 
+export async function createTutor(body: any): Promise<any> {
+  const response = await PostRequest(body, APIS.POST.createTutor);
+  return response;
+}
+
+
 export async function deactivateTutor(body: any): Promise<any> {
   const response = await PostRequest(body, APIS.PATCH.deactivateStudent);
   return response;

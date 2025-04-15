@@ -61,7 +61,7 @@ export default function MainTemplate({
           pathName !== AppRouter.introPage &&
           pathName !== AppRouter.loginPage
         ) {
-          showToast("Please login again", "Warning");
+          showToast("Please login again", "warning");
           router.push(AppRouter.loginPage);
         }
       } finally {
