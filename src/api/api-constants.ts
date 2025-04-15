@@ -19,6 +19,8 @@ export const APIS = {
     getBrowsersUsage: "reports/browser-usage",
     getChatProfile: (id: number) => `user/${id}/profile`,
     getNoti: "notifications",
+
+    getStudentsTutors: "studentstutors",
   },
   POST: {
     login: "auth/login",

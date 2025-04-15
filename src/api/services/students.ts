@@ -43,3 +43,25 @@ export async function getMajors(): Promise<any> {
   const response = await GetRequest(APIS.GET.getMajors);
   return response;
 }
+
+export async function getStudentsTutors(
+  page: number = 1,
+  search: string | null = null,
+  filter: string | null = null
+): Promise<any> {
+  const baseurl = APIS.GET.getStudentsTutors;
+
+  // Construct query parameters
+  const queryParams = new URLSearchParams();
+  if (page) queryParams.append("page", page.toString());
+  if (search) queryParams.append("search", search);
+  if (filter) queryParams.append("filter", filter);
+
+  // Construct the final URL
+  const url = queryParams.toString()
+    ? `${baseurl}?${queryParams.toString()}`
+    : baseurl;
+
+  const response = await GetRequest(url);
+  return response;
+}
