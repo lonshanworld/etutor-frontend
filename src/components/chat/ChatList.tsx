@@ -118,7 +118,7 @@ export default function ChatList({
         "Error sending message: " + err.errorText ||
           err.message ||
           "An unknown error occurred. Please try again.",
-        "Error"
+        "error"
       );
     } finally {
       setMessage("");
@@ -140,7 +140,7 @@ export default function ChatList({
       const maxFileList = hasMaxFileSizeForChat(selectedFiles);
 
       if (selectedFiles.length > 10) {
-        showToast("Maximum 10 files can be selected", "Alert");
+        showToast("Maximum 10 files can be selected", "warning");
         return;
       }
 
@@ -148,7 +148,7 @@ export default function ChatList({
         console.log("reach here???");
         showToast(
           `Some files exceed 3MB limit: ${maxFileList.map((f) => f.name).join(", ")}`,
-          "Alert"
+          "warning"
         );
         return;
       }
