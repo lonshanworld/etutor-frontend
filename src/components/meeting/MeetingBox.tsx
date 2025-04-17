@@ -3,7 +3,6 @@
 import { formatDate, formatTime } from "@/utils/formatData";
 import { getMeetingIcon } from "@/utils/getMeetingIcon";
 import Image from "next/image";
-import React from "react";
 
 interface Props {
   meetingName: string;
@@ -30,12 +29,11 @@ const MeetingBox = ({
       <div className='flex items-center gap-4'>
         <div className='w-20 h-20 flex-shrink-0 bg-blue-100 p-1 rounded-lg'>
           <Image
-            src={getMeetingIcon(meetingType, platform)}
+            src={getMeetingIcon(meetingType)}
             alt='Meeting Icon'
             loading='lazy'
             width={80}
             height={80}
-            className='p-2'
           />
         </div>
 

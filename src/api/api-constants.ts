@@ -58,5 +58,7 @@ export const APIS = {
     updateStaff: (id: number) => `staffs/${id}/account/update`,
     deactivateStaff: "staffs/account/deactivate",
   },
-  DELETE: {},
+  DELETE: {
+    deleteMeeting: (meetingId: number) => `meetings/${meetingId}`,
+  },
 };

@@ -1,11 +1,13 @@
+"use client";
+
 import {
   Select,
-  SelectValue,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { Controller, Control } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
 
 interface Props {
   label: string;
