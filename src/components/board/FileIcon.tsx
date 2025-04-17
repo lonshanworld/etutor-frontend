@@ -1,10 +1,10 @@
 import { JSX } from "react";
 import {
-  AiOutlineFilePdf,
-  AiOutlineFileWord,
-  AiOutlineFileExcel,
-  AiOutlineFilePpt,
   AiOutlineFile,
+  AiOutlineFileExcel,
+  AiOutlineFilePdf,
+  AiOutlineFilePpt,
+  AiOutlineFileWord,
 } from "react-icons/ai";
 
 const FileIcon = ({ fileName }: { fileName: string }) => {

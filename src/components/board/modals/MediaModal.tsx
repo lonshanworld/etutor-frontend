@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { createPortal } from "react-dom";
-import { RxCross1 } from "react-icons/rx";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { RxCross1 } from "react-icons/rx";
 
 interface MediaModalProps {
   imageUrls: string[];
@@ -82,25 +82,27 @@ const MediaModal = ({
         </button>
       )}
 
-      {isImage ?
-        <Image
-          src={imageUrls[selectedIndex]}
-          alt='Full image'
-          width={1000}
-          height={800}
-        />
-      : isVideo ?
-        <video
-          controls
-          className='max-w-full h-[80vh] object-contain'
-        >
-          <source
+      <div className='sm:max-w-[90%]'>
+        {isImage ?
+          <Image
             src={imageUrls[selectedIndex]}
-            type='video/mp4'
+            alt='Full image'
+            width={1000}
+            height={800}
           />
-          Your browser does not support the video tag.
-        </video>
-      : null}
+        : isVideo ?
+          <video
+            controls
+            className='max-w-full h-[80vh] object-contain'
+          >
+            <source
+              src={imageUrls[selectedIndex]}
+              type='video/mp4'
+            />
+            Your browser does not support the video tag.
+          </video>
+        : null}
+      </div>
 
       {selectedIndex < imageUrls.length - 1 && (
         <button

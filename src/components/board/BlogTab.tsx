@@ -8,14 +8,14 @@ import { errorStore } from "@/stores/errorStore";
 import { useToast } from "@/stores/useToast";
 import { useUserStore } from "@/stores/useUserStore";
 import { formatName } from "@/utils/formatData";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
+import ErrorPopup from "../ErrorPopup";
 import CreateNewBlogModal from "./modals/CreateNewBlogModal";
 import LikeModal from "./modals/LikeModal";
-import ErrorPopup from "../ErrorPopup";
-import Cookies from "js-cookie";
 
 interface Props {
   isNewPostModalOpen: boolean;
