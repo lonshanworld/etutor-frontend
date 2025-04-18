@@ -19,6 +19,7 @@ export const AppRouter = {
   staffPages : "/dashboard/staff/viewed-pages",
   staffAllocateTutor: "/dashboard/staff/allocate/tutor",
   staffAllocateStudent: "/dashboard/staff/allocate/student",
+  staffUnassignStudent : "/dashboard/staff/unassigned-students",
 
   studentDashboard: "/dashboard/student",
   studentChat: "/dashboard/student/chat",

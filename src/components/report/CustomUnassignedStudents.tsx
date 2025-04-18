@@ -8,18 +8,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-
 import NoResultFound from "../searchbar/NoResultFound";
 import { PaginationDemo } from "../pagination/Pagination";
-import { getActiveUsers } from "@/api/services/report";
+import { getUnassignedStudents } from "@/api/services/report";
 import useLoading from "@/stores/useLoading";
 import { useToast } from "@/stores/useToast";
-import { ReportActiveUser, reportActiveUserFromJson } from "@/model/reportActiveUser";
 import { AppRouter } from "@/router";
+import { unassignedStudentFromJson, UnassignStudentModel } from "@/model/unassignStudentModel";
+import { formatName } from "@/utils/formatData";
 
 
 
-export default function CustomTable(
+export default function CustomUnassignTable(
   {
     numpage,
     isSmallScreen = false,
@@ -28,7 +28,7 @@ export default function CustomTable(
     isSmallScreen? : boolean;
   }
 ){
-    const [users, setUsers] = useState([] as ReportActiveUser[]);
+    const [users, setUsers] = useState([] as UnassignStudentModel[]);
   const page = numpage || 1;
     const [pageCount, setPageCount] = useState(1);
     const {isLoading,showLoading, hideLoading} = useLoading();
@@ -38,13 +38,14 @@ export default function CustomTable(
         const fetchData = async () => {
             try {
               showLoading();
-                const response = await getActiveUsers(page);
-                const userList : ReportActiveUser[] = [];
+                const response = await getUnassignedStudents(page);
+                console.log("")
+                const userList : UnassignStudentModel[] = [];
                 response.data.map((item:any) => {
-                  const oneUser = reportActiveUserFromJson(item);
+                  const oneUser = unassignedStudentFromJson(item);
                   userList.push(oneUser);
                 });
-                setUsers(userList);
+                setUsers(response);
                 setPageCount(response.meta.last_page);  
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -68,7 +69,7 @@ export default function CustomTable(
             <TableHead className="max-sm:text-sm w-[100px] sm:w-[150px] md:w-[300px] text-center">Name</TableHead>
             <TableHead className="max-sm:text-sm w-[150px] sm:w-[300px] md:w-[600px] text-center">Email</TableHead>
             <TableHead className="text-center">
-                Visit Count
+                Assign Status
             </TableHead>
            
           </TableRow>
@@ -98,12 +99,12 @@ export default function CustomTable(
                     </TableCell>
                     <TableCell  className="font-medium">
                     <p className="truncate text-center">
-                          {user.name}
+                          {formatName(user.first_name, user.middle_name, user.last_name)}
                         </p>
                     </TableCell>
                     <TableCell className="w-[300px] md:w-[400px] text-center ">{user.email}</TableCell>
                     <TableCell  className=" text-center">
-                       {user.visit_count}
+                       {user.tutoring_session_status}
                     </TableCell>
                     
                    
@@ -121,12 +122,12 @@ export default function CustomTable(
                     </TableCell>
                     <TableCell  className="font-medium">
                     <p className="truncate text-center">
-                          {user.name}
+                    {formatName(user.first_name, user.middle_name, user.last_name)} 
                         </p>
                     </TableCell>
                     <TableCell className="w-[300px] md:w-[400px] text-center ">{user.email}</TableCell>
                     <TableCell  className=" text-center">
-                       {user.visit_count}
+                       {user.tutoring_session_status}
                     </TableCell>
                     
                    

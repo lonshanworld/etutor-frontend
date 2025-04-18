@@ -78,6 +78,12 @@ export default function SideBarContainer() {
       route : AppRouter.staffPages,
       icon : ViewPages,
       iconClicked : ViewPagesClicked,
+    },
+    {
+      title : "Assign Status",
+      route : `${AppRouter.staffUnassignStudent}?page=1`,
+      icon : ActiveUsers,
+      iconClicked : ActiveUsersClicked,
     }
   ]; 
 
