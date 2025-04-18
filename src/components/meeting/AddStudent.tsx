@@ -1,13 +1,14 @@
 "use client";
 
 import { getMyStudents } from "@/api/services/home";
+import { useToast } from "@/stores/useToast";
+import { useUserStore } from "@/stores/useUserStore";
+import { formatName } from "@/utils/formatData";
 import { useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import ProfilePic from "../ProfilePic";
 import StudentListItem from "./StudentListItem";
-import { formatName } from "@/utils/formatData";
-import { useUserStore } from "@/stores/useUserStore";
 
 export interface myStudent {
   userId: number;
@@ -27,21 +28,30 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
     useState<myStudent[]>(preSelectedStudents);
   const [searchTerm, setSearchTerm] = useState("");
   const { getUserId, user } = useUserStore();
+  const [isLoading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const fetchMyStudent = async () => {
-    const userId = getUserId();
-    if (userId) {
-      const response = await getMyStudents(userId);
-      const formattedData = response.myStudents.map((student) => ({
-        userId: student.user_id,
-        name: formatName(
-          student.first_name,
-          student.middle_name,
-          student.last_name
-        ),
-        profileUrl: student.profile_picture,
-      }));
-      setMyStudentList(formattedData);
+    try {
+      setLoading(true);
+      const userId = getUserId();
+      if (userId) {
+        const response = await getMyStudents(userId);
+        const formattedData = response.myStudents.map((student) => ({
+          userId: student.user_id,
+          name: formatName(
+            student.first_name,
+            student.middle_name,
+            student.last_name
+          ),
+          profileUrl: student.profile_picture,
+        }));
+        setMyStudentList(formattedData);
+      }
+    } catch (error) {
+      showToast("Error fetching students", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -164,25 +174,30 @@ const AddStudent = ({ onBack, onAdd, preSelectedStudents = [] }: Props) => {
           </div>
           {/* Select All / Clear All */}
 
-          <div className='flex flex-col gap-2 overflow-y-auto scrollbar-cus-1'>
-            {filteredStudents.length > 0 ?
-              filteredStudents.map((student) => (
-                <StudentListItem
-                  key={student.userId}
-                  id={student.userId}
-                  name={student.name}
-                  profileUrl={student.profileUrl}
-                  onSelect={() => handleSelect(student)}
-                  isSelected={assignedStudents.some(
-                    (s) => s.userId === student.userId
-                  )}
-                />
-              ))
-            : <p className='text-sm text-primaryText pt-4'>
-                No students found...
-              </p>
-            }
-          </div>
+          {isLoading ?
+            <div className='text-sm h-full flex items-center justify-center'>
+              <p>Getting your student lists...</p>
+            </div>
+          : <div className='flex flex-col gap-2 overflow-y-auto scrollbar-cus-1'>
+              {filteredStudents.length > 0 ?
+                filteredStudents.map((student) => (
+                  <StudentListItem
+                    key={student.userId}
+                    id={student.userId}
+                    name={student.name}
+                    profileUrl={student.profileUrl}
+                    onSelect={() => handleSelect(student)}
+                    isSelected={assignedStudents.some(
+                      (s) => s.userId === student.userId
+                    )}
+                  />
+                ))
+              : <p className='text-sm text-primaryText pt-4'>
+                  No students found...
+                </p>
+              }
+            </div>
+          }
         </div>
       </div>
     </div>

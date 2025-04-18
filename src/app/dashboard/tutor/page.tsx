@@ -7,9 +7,10 @@ import MyStudentsTable from "@/components/home/MyStudentsTable";
 import MeetingDetail from "@/components/meeting/MeetingDetail";
 import { MyStudent } from "@/model/home";
 import { Meeting } from "@/model/meeting";
+import { useToast } from "@/stores/useToast";
 import { useUserStore } from "@/stores/useUserStore";
-import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 export default function TutorMainPage() {
   const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ export default function TutorMainPage() {
   const [viewMeeting, setViewMeeting] = useState<Meeting | null>(null);
   const { user, getUserId, viewUser } = useUserStore();
   const [userId, setUserId] = useState<number | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     // for staff accessing other ppl dashboard
@@ -74,6 +76,13 @@ export default function TutorMainPage() {
     }
   };
 
+  const handleDeleteMeeting = (meetingId: any) => {
+    setActiveMeetings((prevMeetings) =>
+      prevMeetings.filter((meeting) => meeting.id !== meetingId)
+    );
+    showToast("Meeting delete successfully", "success");
+  };
+
   return (
     <div className='w-full h-full relative'>
       <div className='absolute top-0 left-0 right-0 bottom-0 sm:py-4 py-2 px-4'>
@@ -81,6 +90,7 @@ export default function TutorMainPage() {
           <MeetingDetail
             meeting={viewMeeting}
             onBack={() => setViewMeeting(null)}
+            onDelete={(meetingId) => handleDeleteMeeting(meetingId)}
           />
         : <div className='flex flex-col gap-5 h-full'>
             <div className='flex flex-col min-h-0 overflow-hidden sm:flex-1 flex-grow rounded-3xl bg-homeItem basis- px-5 py-3 sm:py-5'>

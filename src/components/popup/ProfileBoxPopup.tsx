@@ -1,15 +1,17 @@
-import { useEffect, useState, useRef, TouchEvent, useMemo } from "react";
-import { BiSolidPhone } from "react-icons/bi";
-import { MdEmail, MdOutlineMessage } from "react-icons/md";
-import ProfilePic from "../ProfilePic";
-import { capitalizeFirstLetter, formatName } from "@/utils/formatData";
-import { useUserStore } from "@/stores/useUserStore";
-import { ProfileData, useProfileStore } from "@/stores/useProfileStore";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+"use client";
+
 import { AppRouter } from "@/router";
+import { ProfileData, useProfileStore } from "@/stores/useProfileStore";
+import { useUserStore } from "@/stores/useUserStore";
+import { capitalizeFirstLetter, formatName } from "@/utils/formatData";
+import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
+import { TouchEvent, useEffect, useRef, useState } from "react";
+import { BiSolidPhone } from "react-icons/bi";
 import { IoOpenOutline } from "react-icons/io5";
+import { MdEmail, MdOutlineMessage } from "react-icons/md";
+import { api } from "../../../convex/_generated/api";
+import ProfilePic from "../ProfilePic";
 import ProfileDetailView from "./ProfileDetailView";
 
 interface Props {
@@ -104,50 +106,18 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     }
   };
 
-  // user1 data for chat
-  const currentUserInfo = useMemo<UserChatInfo | null>(() => {
-    if (!user) return null;
-
-    return {
-      userId: user.id,
-      firstName: user.firstName!,
-      middleName: user.middleName ?? undefined,
-      lastName: user.lastName ?? undefined,
-      email: user.email,
-      role: user.role!,
-      profileImagePath: user.profileImagePath ?? undefined,
-      gender: user.gender,
-    };
-  }, [user]);
-
-  // user2 data for chat
-  const otherUserInfo = useMemo<UserChatInfo | null>(() => {
-    if (!profileState) return null;
-
-    return {
-      userId: profileState.userId,
-      firstName: profileState.firstName,
-      middleName: profileState.middleName ?? undefined,
-      lastName: profileState.lastName ?? undefined,
-      email: profileState.email,
-      role: profileState.role,
-      profileImagePath: profileState.profileUrl ?? undefined,
-      gender: profileState.gender,
-    };
-  }, [profileState]);
-
   const handleChat = async () => {
-    if (!currentUserInfo || !otherUserInfo) return;
+    if (!user || !profileState) return;
 
     try {
       const chatId = await createConversation({
-        user1Id: currentUserInfo.userId,
-        user2Id: otherUserInfo.userId,
+        user1Id: user.id,
+        user2Id: profileState.userId,
       });
 
-      if (currentUserInfo.role === "student") {
+      if (user.role === "student") {
         router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
-      } else if (currentUserInfo.role === "tutor") {
+      } else if (user.role === "tutor") {
         router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
       }
     } catch (error) {
@@ -587,7 +557,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
         <div
           onClick={handleClose}
           className={`fixed top-0 left-0 w-full h-full z-40 select-none transition-opacity duration-300 ${
-            uiState.isVisible ? "bg-black bg-opacity-30" : "bg-opacity-0"
+            uiState.isVisible ? "bg-black bg-opacity-20" : "bg-opacity-0"
           }`}
           aria-hidden='true'
         ></div>

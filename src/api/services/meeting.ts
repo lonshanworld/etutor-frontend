@@ -5,7 +5,7 @@ import {
   newMeetingFromJson,
 } from "@/model/meeting";
 import { APIS } from "../api-constants";
-import { GetRequest, PostRequest } from "../general-api-services";
+import { DeleteRequest, PostRequest } from "../general-api-services";
 
 export async function getActiveMeetings(
   userId: number
@@ -51,4 +51,13 @@ export async function createMeeting(formData: any): Promise<any> {
   }
   const data = newMeetingFromJson(response);
   return data;
+}
+
+export async function deleteMeeting(meetingId: number) {
+  const response = await DeleteRequest(APIS.DELETE.deleteMeeting(meetingId));
+
+  if (isErrorModel(response)) {
+    throw response;
+  }
+  return response;
 }

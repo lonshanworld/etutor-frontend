@@ -44,7 +44,11 @@ export type MyTutor = {
   gender: string | null;
 };
 
-export function myTutorFromJson(jsonData: any): MyTutor {
+export function myTutorFromJson(jsonData: any): MyTutor | null {
+  if (!jsonData || !jsonData.data) {
+    return null;
+  }
+
   const data = jsonData.data;
   return {
     user_id: data.user_id,
@@ -54,7 +58,7 @@ export function myTutorFromJson(jsonData: any): MyTutor {
     profile_picture: data.profile_picture,
     subject_name: data.subject_name,
     qualification: data.qualification,
-    experience: data.qualification,
+    experience: data.experience,
     email: data.email,
     phone_number: data.phone_number,
     role_name: data.role_name,

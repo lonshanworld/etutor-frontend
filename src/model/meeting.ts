@@ -1,5 +1,3 @@
-import { formatName } from "@/utils/formatData";
-
 export type Participant = {
   id: number;
   name: string;

@@ -12,6 +12,8 @@ import ToggleTheme from "@/components/ToggleTheme";
 import { storeRoleInCookie, storeTokenInCookie } from "@/lib/tokenCookies";
 import { AppRouter } from "@/router";
 import { errorStore } from "@/stores/errorStore";
+import { useToast } from "@/stores/useToast";
+import { useUserStore } from "@/stores/useUserStore";
 import { loginSchema } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -20,9 +22,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useToast } from "@/stores/useToast";
-import Toast from "@/components/customtoast/CustomToast";
-import { useUserStore } from "@/stores/useUserStore";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -31,7 +30,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { toast, showToast } = useToast();
-  const {setUser} = useUserStore();
+  const { setUser } = useUserStore();
 
   const {
     register,
@@ -166,7 +165,6 @@ export default function LoginPage() {
             <LogoBox />
           </div>
         </div>
-      
       </div>
     </>
   );

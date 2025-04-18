@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FiArrowLeft } from "react-icons/fi";
-import { RxCross2 } from "react-icons/rx";
-import ProfilePic from "../ProfilePic";
-import AddStudent, { myStudent } from "./AddStudent";
-import { z } from "zod";
-import { meetingSchema } from "@/utils/validationSchema";
-import MeetingDropdown from "./MeetingDropdown";
-import MeetingInputField from "../inputfields/MeetingInputField";
+"use client";
+
 import { createMeeting } from "@/api/services/meeting";
 import { useToast } from "@/stores/useToast";
+import { meetingSchema } from "@/utils/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { FiArrowLeft } from "react-icons/fi";
+import { RxCross2 } from "react-icons/rx";
+import { z } from "zod";
+import MeetingInputField from "../inputfields/MeetingInputField";
+import ProfilePic from "../ProfilePic";
+import AddStudent, { myStudent } from "./AddStudent";
+import MeetingDropdown from "./MeetingDropdown";
 
 type FormData = z.infer<typeof meetingSchema>;
 

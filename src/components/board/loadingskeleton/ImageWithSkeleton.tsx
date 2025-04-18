@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 
 const ImageWithSkeleton = ({ src, alt }: { src: string; alt: string }) => {
   const [isLoading, setIsLoading] = useState(true);
