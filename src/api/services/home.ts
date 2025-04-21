@@ -27,9 +27,6 @@ export async function getMyTutor(userId: number): Promise<any> {
     },
     APIS.POST.getMyTutor
   );
-  if (isErrorModel(response)) {
-    throw response;
-  }
 
   const data = myTutorFromJson(response);
   return data;

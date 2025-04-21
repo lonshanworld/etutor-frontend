@@ -65,14 +65,16 @@ export async function PostRequest(
   return fetchData("POST", apiString, body);
 }
 
+export async function DeleteRequest(apiString?: string): Promise<any> {
+  return fetchData("DELETE", apiString);
+}
+
 export async function ChatFilePostFormDataRequest(
-  formData : FormData,
-  apiString: string,
+  formData: FormData,
+  apiString: string
 ): Promise<any | ErrorModel> {
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get("sessionToken")?.value;
-
-
 
   console.log("it even reach here???", formData);
   const headers: Record<string, string> = {
@@ -91,14 +93,17 @@ export async function ChatFilePostFormDataRequest(
     requestOptions
   );
 
-  console.log('checking response from general', response);
+  console.log("checking response from general", response);
 
   const responseData = await response.json();
   if (!response.ok) {
-    console.log('checking response from error', response);
+    console.log("checking response from error", response);
     return {
       errorCode: response.status,
-      errorText: responseData.message || responseData.errorMessage || response.statusText,
+      errorText:
+        responseData.message ||
+        responseData.errorMessage ||
+        response.statusText,
     };
   }
 

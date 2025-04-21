@@ -56,7 +56,7 @@ export function profileFromJson(jsonData: any): Profile {
     gender: data.gender,
     address: data.address,
     phoneNumber: data.phone_number,
-    profileImagePath: data.image_id,
+    profileImagePath: data.profile_picture,
     passport: data.passport,
     status: data.status,
     roleID: data.role?.id,

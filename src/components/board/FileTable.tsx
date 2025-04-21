@@ -1,5 +1,6 @@
 "use client";
 
+import { getFiles } from "@/api/services/blogs";
 import {
   Table,
   TableBody,
@@ -8,15 +9,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useRef, useState } from "react";
-import { BsThreeDots } from "react-icons/bs";
-import NoResultFound from "../searchbar/NoResultFound";
-import { getFiles } from "@/api/services/blogs";
 import { File } from "@/model/blog";
-import { PaginationLMT } from "../pagination/PaginationLMT";
-import ActionPopup from "./popup/ActionPopup";
 import { formatTimeStamp } from "@/utils/formatData";
+import { useEffect, useState } from "react";
 import { MdOutlineOpenInNew } from "react-icons/md";
+import { PaginationLMT } from "../pagination/PaginationLMT";
 
 const FileTable = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -75,7 +72,14 @@ const FileTable = () => {
                 className='border border-tableRowBorder'
               >
                 <TableCell className='ps-5'>{index + 1}</TableCell>
-                <TableCell>{file.file_name}</TableCell>
+                <TableCell>
+                  <span
+                    title={file.file_name ?? undefined}
+                    className='line-clamp-1 break-all'
+                  >
+                    {file.file_name}
+                  </span>
+                </TableCell>
                 <TableCell>{formatTimeStamp(file.created_at)}</TableCell>
                 <TableCell>{file.user?.name}</TableCell>
                 <TableCell className='text-center'>
@@ -94,7 +98,7 @@ const FileTable = () => {
                 colSpan={5}
                 className='text-center h-[450px]'
               >
-                <NoResultFound />
+                No File Found
               </TableCell>
             </TableRow>
           }

@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import CommentInputField from "./CommentInputField";
-import CommentCard from "./CommentCard";
-import { Comment } from "@/model/blog";
-import { formatName, formatTimeStamp } from "@/utils/formatData";
 import { fetchComments } from "@/api/services/blogs";
+import { Comment } from "@/model/blog";
 import { useBlogStore } from "@/stores/useBlogStore";
 import { useUserStore } from "@/stores/useUserStore";
+import { formatName, formatTimeStamp } from "@/utils/formatData";
+import { useEffect, useState } from "react";
+import CommentCard from "./CommentCard";
+import CommentInputField from "./CommentInputField";
 
 interface Props {
   blogId: number;
@@ -18,8 +18,7 @@ const CommentSection = ({ blogId, comments }: Props) => {
   const [commentList, setCommentList] = useState<Comment[]>(comments);
   const [loading, setLoading] = useState(false);
   const [pendingComment, setPendingComment] = useState<string | null>(null);
-  const { incrementCommentCount, decrementLikeCount, setCommentCount } =
-    useBlogStore();
+  const { incrementCommentCount, setCommentCount } = useBlogStore();
   const { user } = useUserStore();
 
   useEffect(() => {
@@ -55,12 +54,13 @@ const CommentSection = ({ blogId, comments }: Props) => {
     <div className='bg-background'>
       <div className='p-4'>
         {loading ?
-          <p className='text-center'>Loading...</p>
+          <p className='text-center'>Loading comments...</p>
         : commentList.length > 0 ?
           <>
             {commentList.map((comment) => (
               <CommentCard
                 key={comment.id}
+                userId={comment.user.id}
                 profilePic={comment.user.profile_picture}
                 username={comment.user.name}
                 time={formatTimeStamp(comment.created_at)}
