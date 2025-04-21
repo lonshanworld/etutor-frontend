@@ -52,6 +52,7 @@ export default {
         notiBg: "var(--noti-bg)",
         profileTextColor: "var(--profile-text)",
         blogCommentBox: "var(--blog-comment-box)",
+        blogAttachmentBox: "var(--blog-attachment-box)",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
