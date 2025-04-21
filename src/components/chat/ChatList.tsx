@@ -147,7 +147,7 @@ export default function ChatList({
       if (maxFileList.length > 0) {
         console.log("reach here???");
         showToast(
-          `Some files exceed 3MB limit: ${maxFileList.map((f) => f.name).join(", ")}`,
+          `Some files exceed 4MB limit: ${maxFileList.map((f) => f.name).join(", ")}`,
           "Alert"
         );
         return;
