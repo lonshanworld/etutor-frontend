@@ -93,7 +93,7 @@ export const getConversationsWithLatestMessage = query({
 
     const nextCursor = start + args.paginationOpts.numItems < sortedConversations.length 
       ? (cursor + 1).toString()
-      : null;
+      : "";
 
     return {
       page: conversationList,

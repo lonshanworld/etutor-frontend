@@ -24,11 +24,55 @@ export async function getBrowsersUsage() : Promise<any>{
     }
 }
 
-export async function getUnassignedStudents(currentPage : number) : Promise<any>{
-    const response = await GetRequest(APIS.GET.getUnassignedStudents + `?page=${currentPage}`);
+export async function getUnassignedStudents(currentPage : number, search? : string) : Promise<any>{
+    const response = await GetRequest(APIS.GET.getUnassignedStudents + `?page=${currentPage}&search=${search ?? ""}`);
+    console.log('check list response', response);
     if(isErrorModel(response)){
         throw response;
     }else{
         return response
     }
 }
+
+export async function getAllStudents(currentPage : number, search? : string) : Promise<any>{
+    const response = await GetRequest(APIS.GET.getStudentList + `?page=${currentPage}&search=${search ?? ""}`);
+    console.log('check list response', response);
+    if(isErrorModel(response)){
+        throw response;
+    }else{
+        return response
+    }
+}
+
+export async function getChatMessageAll(currentPage : number, search? : string) : Promise<any>{
+    const response = await GetRequest(APIS.GET.getChatMessageList + `?page=${currentPage}&search=${search ?? ""}`);
+    if(isErrorModel(response)){
+        throw response;
+    }else{
+        return response
+    }
+} 
+
+export async function getChatMessageTutor(currentPage : number, search? : string) : Promise<any>{
+    const response = await GetRequest(APIS.GET.getTutorList + `?page=${currentPage}&search=${search}`);
+    if(isErrorModel(response)){
+        throw response;
+    }else{
+        return {
+            users : response.data,
+            meta : response.meta,
+        }
+    }
+} 
+
+export async function getChatMessageStudent(currentPage : number, search? : string) : Promise<any>{
+    const response = await GetRequest(APIS.GET.getStudentList + `?page=${currentPage}&search=${search}`);
+    if(isErrorModel(response)){
+        throw response;
+    }else{
+        return {
+            users : response.data,
+            meta : response.meta,
+        }
+    }
+} 

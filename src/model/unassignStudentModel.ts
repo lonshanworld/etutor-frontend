@@ -1,4 +1,4 @@
-import { json } from "stream/consumers";
+import { getLastActivityAgo } from "@/utils/datetime";
 
 export interface UnassignStudentModel {
     id : number,
@@ -45,6 +45,7 @@ export interface UnassignStudentModel {
     tutoring_session_status? : string | null,
     created_at? : string | null,
     updated_at? : string | null,
+    getLastActivity : string,
 };
 
 
@@ -94,5 +95,6 @@ export function unassignedStudentFromJson(jsonData : any) : UnassignStudentModel
         tutoring_session_status : jsonData.tutoring_session_status,
         created_at : jsonData.created_at,
         updated_at : jsonData.updated_at,
+        getLastActivity : getLastActivityAgo(jsonData.activity_logs)
     };
 }

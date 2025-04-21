@@ -4,15 +4,14 @@ import ChatHead from "@/components/chat/ChatHead";
 import SearchUser from "@/components/chat/SearchUser";
 import VerticalDivider from "@/components/dividers/VerticalDivider";
 import { AppRouter } from "@/router";
-import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import { usePathname } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import { Profile } from "@/model/profile";
-import { Cursor } from "convex/server";
 import PageTitle from "../PageTitle";
-import useLoading from "@/stores/useLoading";
+
 import { useChatProfileListStore } from "@/stores/useChatListProfile";
 import AuthenticatedChat from "./AuthenticateChat";
 
@@ -27,10 +26,9 @@ export default function MainChat({
     ownerData : Profile, 
   }>){
     const pathName = usePathname();
-    const { results, isLoading,status, loadMore } = usePaginatedQuery(
-      api.chatRoom.getConversationsWithLatestMessage, 
-      {userId : ownerData.id}, 
-      {initialNumItems: itemCount}
+    const { results, isLoading,status, loadMore } = usePaginatedQuery(api.chatRoom.getConversationsWithLatestMessage,
+      { userId : ownerData.id },            // your query args (without paginationOpts)
+      { initialNumItems: itemCount } // pagination config
     );
     const [chatLoading, setChatLoading] = useState(true);
     const {updateProfieList}= useChatProfileListStore();
@@ -129,7 +127,6 @@ export default function MainChat({
                         <div
                         className="w-full sm:w-1/3 lg:w-1/4 h-full sm:pr-4 flex flex-col gap-3">
                             <PageTitle title="Chat" />
-                            <SearchUser />
                             <div className="w-full h-full flex flex-col gap-2 overflow-y-auto custom-scrollbar">
                             {status === "LoadingFirstPage" && <p>Loading chats...</p>}
         
