@@ -1,4 +1,4 @@
-const MAX_FILE_SIZE_Forchat = 3 * 1024 * 1024; // 3MB in bytes
+const MAX_FILE_SIZE_Forchat = 4 * 1024 * 1024; // 4MB in bytes
 
 
 
