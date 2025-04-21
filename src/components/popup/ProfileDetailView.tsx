@@ -1,11 +1,14 @@
+"use client";
+
 import { ProfileData } from "@/stores/useProfileStore";
+import { useUserStore } from "@/stores/useUserStore";
 import { capitalizeFirstLetter, formatName } from "@/utils/formatData";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { BiSolidPhone } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { MdEmail, MdOutlineMessage } from "react-icons/md";
 import ProfilePic from "../ProfilePic";
-import { useUserStore } from "@/stores/useUserStore";
 
 type TabOption = "About" | "Student Info" | "Tutor Info" | "Emergency Contact";
 
@@ -49,7 +52,7 @@ const ProfileDetailView = ({
 
   const tabs = getTabs();
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -141,7 +144,7 @@ const ProfileDetailView = ({
 
           {/* Tabs */}
           <div className='px-8 pb-6 pt-3'>
-            <div className='flex border-b border-gray-200 mb-4'>
+            <div className='flex border-b border-secondaryBackground mb-4'>
               {tabs.map((tab) => (
                 <button
                   key={tab}
@@ -149,7 +152,7 @@ const ProfileDetailView = ({
                   className={`py-2 px-4 text-sm font-medium ${
                     activeTab === tab ?
                       "border-b-2 border-theme text-theme"
-                    : "text-gray-500 hover:text-gray-700"
+                    : "text-secondaryText hover:text-secondaryBackgroundOpposite"
                   }`}
                 >
                   {tab}
@@ -246,7 +249,8 @@ const ProfileDetailView = ({
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };
 

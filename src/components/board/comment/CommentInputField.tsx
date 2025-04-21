@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Send } from "lucide-react";
-import { useUserStore } from "@/stores/useUserStore";
-import { Comment } from "@/model/blog";
 import { giveComment } from "@/api/services/blogs";
+import { Comment } from "@/model/blog";
+import { useUserStore } from "@/stores/useUserStore";
+import { useRef, useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 
 interface Props {
@@ -64,7 +63,10 @@ const CommentInputField = ({
           className={`text-gray-600 transition flex rounded-full p-1 ${isReadOnly ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
           onClick={handleSubmit}
         >
-          <AiOutlineSend size={20} />
+          <AiOutlineSend
+            size={20}
+            className='text-primaryText'
+          />
         </button>
       </div>
       <div

@@ -211,7 +211,7 @@ const CreateNewBlogModal = ({
   };
 
   return (
-    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex items-center justify-center z-50'>
+    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 flex items-center justify-center z-50'>
       <div className='bg-background w-[97%] max-w-[500px] h-auto flex flex-col rounded-lg'>
         <div className='flex items-center justify-center font-semibold text-lg w-full  relative py-3'>
           <div className='text-xl font-semibold'>Create Blog</div>
@@ -246,7 +246,7 @@ const CreateNewBlogModal = ({
           {/* Input fields */}
           <div className='flex flex-col gap-3 pt-4'>
             <input
-              className='mt-1 h-10 w-full px-3 border bg-transparent border-gray-400 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-md'
+              className='mt-1 h-10 w-full px-3 border bg-transparent border-gray-400 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-md text-primaryText'
               type='text'
               placeholder='Title'
               value={title}
@@ -255,19 +255,19 @@ const CreateNewBlogModal = ({
             <textarea
               rows={5}
               placeholder='Write something...'
-              className='w-full p-3 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none bg-transparent transition-all duration-300 placeholder-gray-400 overflow-y-auto'
+              className='w-full p-3 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none bg-transparent transition-all duration-300 placeholder-gray-400 overflow-y-auto text-primaryText'
               value={content}
               onChange={(e) => setContent(e.target.value)}
             ></textarea>
           </div>
 
-          <div className='flex flex-col overflow-y-auto max-h-[350px]'>
+          <div className='flex flex-col overflow-y-auto max-h-[350px] pt-3 pb-2'>
             {files.length > 0 && (
               <div className='space-y-2'>
                 {files.map((fileData, index) => (
                   <div
                     key={index}
-                    className='flex items-center bg-gray-100 p-2 rounded-lg'
+                    className='flex items-center bg-blogAttachmentBox p-2 rounded-lg'
                   >
                     {getFileIcon(fileData.file.type)}
                     <div className='ml-3 flex-1'>

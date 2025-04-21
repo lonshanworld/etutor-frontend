@@ -1,5 +1,3 @@
-import React from "react";
-import MeetingList from "../meeting/MeetingList";
 import { Meeting } from "@/model/meeting";
 import MeetingBox from "../meeting/MeetingBox";
 

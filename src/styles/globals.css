@@ -37,6 +37,7 @@
   --noti-bg: white;
   --profile-text: #4b5563;
   --blog-comment-box: #fff;
+  --blog-attachment-box:#F3F4F6;
 }
 
 .dark {
@@ -74,6 +75,7 @@
   --noti-bg: #414141;
   --profile-text: white;
   --blog-comment-box: #333;
+  --blog-attachment-box: #303030;
 }
 
 body {

@@ -1,18 +1,43 @@
 "use client";
 
+import { deleteMeeting } from "@/api/services/meeting";
 import { Meeting } from "@/model/meeting";
+import { useToast } from "@/stores/useToast";
+import { useUserStore } from "@/stores/useUserStore";
 import { formatDate, formatLink, formatTime } from "@/utils/formatData";
+import { getPlatformIcon } from "@/utils/getMeetingIcon";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { IoChevronBackOutline } from "react-icons/io5";
 import ProfilePic from "../ProfilePic";
-import { useUserStore } from "@/stores/useUserStore";
+import WarningPopup from "../warningpopup/WarningPopup";
 
 interface Props {
   meeting: Meeting;
   onBack: () => void;
+  onDelete: (meetingId: number) => void;
 }
 
-const MeetingDetail = ({ meeting, onBack }: Props) => {
-  const { user } = useUserStore();
+const MeetingDetail = ({ meeting, onBack, onDelete }: Props) => {
+  const { user, isReadOnly } = useUserStore();
+  const [showWarningPopup, setWarningPopup] = useState(false);
+  const { showToast } = useToast();
+  const router = useRouter();
+
+  const handleDelete = async () => {
+    try {
+      await deleteMeeting(meeting.id);
+      onDelete(meeting.id);
+      onBack();
+    } catch (error) {
+      showToast("Error occurs while deleting meeting", "error");
+      console.log(error);
+    } finally {
+      setWarningPopup(false);
+    }
+  };
+
   return (
     <div className='flex flex-col w-full h-full overflow-y-auto scrollbar-none'>
       {/* Back btn */}
@@ -31,7 +56,7 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
         </div>
       </div>
 
-      <div className='bg-primary-foreground px-7 py-4 mt-1 rounded-lg w-full h-full'>
+      <div className='bg-homeItem px-7 py-4 mt-1 rounded-lg w-full h-full'>
         <div className='py-3 text-2xl font-semibold'>{meeting.subject}</div>
 
         {/* tutor profile */}
@@ -49,8 +74,8 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
           </div>
         </div>
 
-        {meeting.link && (
-          <div className='py-3 flex'>
+        <div className='py-3 flex gap-2.5'>
+          {meeting.link && (
             <a
               href={formatLink(meeting.link)}
               target='_blank'
@@ -59,8 +84,16 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
             >
               Meeting Link
             </a>
-          </div>
-        )}
+          )}
+          {user?.id === meeting.creator_id && (
+            <div
+              onClick={() => setWarningPopup(true)}
+              className={`bg-red-500 px-8 py-2.5 text-white rounded-lg block ${isReadOnly ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
+            >
+              Delete
+            </div>
+          )}
+        </div>
 
         <table className='w-auto text-left border-2 border-inputBorder text-primaryText mt-2 tracking-wide text-[15px] min-w-[80%]'>
           <tbody>
@@ -82,8 +115,20 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
               <th className='p-2 font-semibold border-r border-inputBorder'>
                 Students
               </th>
-              <td className='py-2 px-3'>
+              <td className='py-2 px-3 max-sm:hidden'>
                 {meeting.participants.map((student) => student.name).join(", ")}
+              </td>
+              <td className='py-2 px-3 sm:hidden'>
+                <ul className='list-disc list-inside space-y-1'>
+                  {meeting.participants.map((student) => (
+                    <li
+                      className='list-none'
+                      key={student.id}
+                    >
+                      {student.name}
+                    </li>
+                  ))}
+                </ul>
               </td>
             </tr>
             <tr className='bg-background'>
@@ -102,7 +147,17 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
               <th className='p-2 font-semibold border-r border-inputBorder'>
                 Platform
               </th>
-              <td className='py-2 px-3'>{meeting.platform || "-"}</td>
+              <td className='py-2 px-3'>
+                {meeting.platform ?
+                  <Image
+                    src={getPlatformIcon(meeting.platform)}
+                    alt='Meeting Icon'
+                    width={20}
+                    height={20}
+                    className=''
+                  />
+                : "-"}
+              </td>
             </tr>
             <tr className='bg-secondaryBackground'>
               <th className='p-2 font-semibold border-r border-inputBorder'>
@@ -124,6 +179,14 @@ const MeetingDetail = ({ meeting, onBack }: Props) => {
           </tbody>
         </table>
       </div>
+      {showWarningPopup && (
+        <WarningPopup
+          message='Are you sure you want to delete this meeting?'
+          onContinue={handleDelete}
+          setShowWarning={setWarningPopup}
+          title=''
+        />
+      )}
     </div>
   );
 };

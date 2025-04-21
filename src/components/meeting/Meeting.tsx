@@ -1,13 +1,16 @@
+"use client";
+
+import { getActiveMeetings, getHistoryMeetings } from "@/api/services/meeting";
+import { Meeting as MeetingType } from "@/model/meeting";
+import { useToast } from "@/stores/useToast";
+import { useUserStore } from "@/stores/useUserStore";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import NavBar from "./NavBar";
-import MeetingList from "./MeetingList";
 import { Button } from "../ui/button";
 import CreateMeetingForm from "./CreateMeetingForm";
 import MeetingDetail from "./MeetingDetail";
-import { Meeting as MeetingType } from "@/model/meeting";
-import { useUserStore } from "@/stores/useUserStore";
-import { getActiveMeetings, getHistoryMeetings } from "@/api/services/meeting";
-import Cookies from "js-cookie";
+import MeetingList from "./MeetingList";
+import NavBar from "./NavBar";
 
 const Meeting = () => {
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
@@ -17,6 +20,7 @@ const Meeting = () => {
   const { user, getUserId, viewUser } = useUserStore();
   const [userId, setUserId] = useState<null | number>(null);
   const [isLoading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const encodedUser = Cookies.get("viewUser");
@@ -70,6 +74,13 @@ const Meeting = () => {
     }
   };
 
+  const handleDeleteMeeting = (meetingId: any) => {
+    setMeetings((prevMeetings) =>
+      prevMeetings.filter((meeting) => meeting.id !== meetingId)
+    );
+    showToast("Meeting delete successfully", "success");
+  };
+
   useEffect(() => {
     activeTab === "active" ? fetchActiveMeetings() : fetchHistoryMeetings();
   }, [activeTab, userId]);
@@ -86,8 +97,9 @@ const Meeting = () => {
         <div className='absolute top-0 left-0 right-0 bottom-0 flex flex-row sm:py-4 py-2 px-4'>
           {viewDetail ?
             <MeetingDetail
-              onBack={() => setViewDetail(null)}
               meeting={viewDetail}
+              onBack={() => setViewDetail(null)}
+              onDelete={(meetingId) => handleDeleteMeeting(meetingId)}
             />
           : <div className='flex flex-col w-full'>
               <NavBar

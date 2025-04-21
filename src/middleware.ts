@@ -12,6 +12,11 @@ const roleRoutes = {
     AppRouter.staffAllocate,
     AppRouter.staffAllocateTutor,
     AppRouter.staffAllocateStudent,
+    AppRouter.staffUnassignStudent,
+    AppRouter.staffActiveUsers,
+    AppRouter.staffBrowsers,
+    AppRouter.staffPages,
+    AppRouter.staffMessage,
 
     AppRouter.studentDashboard,
     AppRouter.studentChat,
@@ -28,9 +33,7 @@ const roleRoutes = {
     AppRouter.tutorNote,
     AppRouter.tutorPeople,
     AppRouter.tutorAllocatedStudents,
-    AppRouter.staffActiveUsers,
-    AppRouter.staffBrowsers,
-    AppRouter.staffPages,
+
   ],
   student: [
     AppRouter.studentDashboard,

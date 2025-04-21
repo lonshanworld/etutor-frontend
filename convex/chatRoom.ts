@@ -42,32 +42,64 @@ export const getConversationsWithLatestMessage = query({
   },
   handler: async (ctx, args) => {
     // Fetch conversations where the user is either user1 or user2
-    const conversations = await ctx.db
-      .query("conversations")
-      .filter((q) =>
-        q.or(q.eq(q.field("user1Id"), args.userId), q.eq(q.field("user2Id"), args.userId))
+    const messageWithConversations = await ctx.db
+    .query("messages")
+    .withIndex("by_conversation")
+    .order("desc")
+    .collect();
+
+  // Get all conversations for the user
+  const userConversations = await ctx.db
+    .query("conversations")
+    .filter((q) =>
+      q.or(
+        q.eq(q.field("user1Id"), args.userId),
+        q.eq(q.field("user2Id"), args.userId)
       )
-      .paginate(args.paginationOpts);
+    )
+    .collect();
 
-    // Fetch latest messages per conversation
-    const conversationList = await Promise.all(
-      conversations.page.map(async (conversation) => {
-        const latestMessage = await ctx.db
-          .query("messages")
-          .withIndex("by_conversation", (q) =>
-            q.eq("conversation_id", conversation._id)
-          )
-          .order("desc")
-          .first();
+  // Create a map of conversation ID to latest message
+  const latestMessagesMap = new Map();
+  messageWithConversations.forEach(message => {
+    if (!latestMessagesMap.has(message.conversation_id)) {
+      latestMessagesMap.set(message.conversation_id, message);
+    }
+  });
 
-        return {
-          ...conversation,
-          latestMessage: latestMessage || null, // Return null if no messages exist
-        };
-      })
+  // Sort conversations by latest activity time
+  const sortedConversations = userConversations.sort((a, b) => {
+    const aMessage = latestMessagesMap.get(a._id);
+    const bMessage = latestMessagesMap.get(b._id);
+    
+    const aTime = aMessage ? aMessage._creationTime : a._creationTime;
+    const bTime = bMessage ? bMessage._creationTime : b._creationTime;
+    
+    return bTime - aTime; // Descending order
+  });
+
+  // Apply pagination
+  const cursor = args.paginationOpts.cursor ? parseInt(args.paginationOpts.cursor) : 0;
+    const start = args.paginationOpts.numItems * cursor;
+    const paginatedConversations = sortedConversations.slice(
+      start,
+      start + args.paginationOpts.numItems
     );
 
-    return { ...conversations, page: conversationList };
+    const conversationList = paginatedConversations.map(conversation => ({
+      ...conversation,
+      latestMessage: latestMessagesMap.get(conversation._id) || null,
+    }));
+
+    const nextCursor = start + args.paginationOpts.numItems < sortedConversations.length 
+      ? (cursor + 1).toString()
+      : "";
+
+    return {
+      page: conversationList,
+      isDone: start + args.paginationOpts.numItems >= sortedConversations.length,
+      continueCursor: nextCursor
+    };
   },
 });
 

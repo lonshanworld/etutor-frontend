@@ -1,3 +1,5 @@
+import { getUnassignedStudents } from "./services/report";
+
 export const APIS = {
   GET: {
     getStudentList: "students",
@@ -18,6 +20,8 @@ export const APIS = {
     getReportActiveUsers: "reports/active-users",
     getBrowsersUsage: "reports/browser-usage",
     getChatProfile: (id: number) => `user/${id}/profile`,
+    getUnassignedStudents: "reports/studentsunassigned",
+    getChatMessageList: "studentstutors",
     getNoti: "notifications",
 
     getStudentsTutors: "studentstutors",
@@ -65,5 +69,7 @@ export const APIS = {
     updateStaff: (id: number) => `staffs/${id}/account/update`,
     deactivateStaff: "staffs/account/deactivate",
   },
-  DELETE: {},
+  DELETE: {
+    deleteMeeting: (meetingId: number) => `meetings/${meetingId}`,
+  },
 };

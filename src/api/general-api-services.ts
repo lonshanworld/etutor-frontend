@@ -65,6 +65,10 @@ export async function PostRequest(
   return fetchData("POST", apiString, body);
 }
 
+export async function DeleteRequest(apiString?: string): Promise<any> {
+  return fetchData("DELETE", apiString);
+}
+
 export async function ChatFilePostFormDataRequest(
   formData: FormData,
   apiString: string
