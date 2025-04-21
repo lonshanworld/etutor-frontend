@@ -67,7 +67,7 @@ export default function SidebarBoxDropdown(
                             src={item.route === pathName ? item.iconClicked : item.icon}
                             width={22}
                             height={22}
-                            alt={item.title}
+                            alt={"icon"}
                         />
                         <span>{item.title}</span>
                         

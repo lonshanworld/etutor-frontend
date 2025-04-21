@@ -83,3 +83,29 @@ export const deleteMessage = mutation({
     });
   },
 });
+
+export const getMessageCountBySender = mutation({
+  args: {
+    senderId: v.number(),
+    timeRange: v.optional(v.string()),
+  },
+  handler: async (ctx, { senderId, timeRange }) => {
+    let query = ctx.db
+      .query("messages")
+      .filter((q) => q.eq(q.field("sender_id"), senderId));
+
+    if (timeRange) {
+      const now = Date.now();
+      const daysAgo = timeRange === "7d" ? 7 : timeRange === "28d" ? 28 : 0;
+      if (daysAgo > 0) {
+        const sinceTimestamp = now - daysAgo * 24 * 60 * 60 * 1000;
+        query = query.filter((q) =>
+          q.gte(q.field("_creationTime"), sinceTimestamp)
+        );
+      }
+    }
+
+    const messages = await query.collect();
+    return messages.length;
+  },
+});

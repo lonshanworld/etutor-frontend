@@ -78,6 +78,18 @@ export default function SideBarContainer() {
       route : AppRouter.staffPages,
       icon : ViewPages,
       iconClicked : ViewPagesClicked,
+    },
+    {
+      title : "Students",
+      route : `${AppRouter.staffUnassignStudent}?page=1&search=&type=`,
+      icon : ActiveUsers,
+      iconClicked : ActiveUsersClicked,
+    },
+    {
+      title : "Messages",
+      route : `${AppRouter.staffMessage}?page=1&search=&duration=&type=`,
+      icon : Chat,
+      iconClicked : ChatClicked,
     }
   ]; 
 
