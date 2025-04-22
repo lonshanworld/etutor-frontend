@@ -27,7 +27,6 @@ export default async function StudentListPage({
     const response = await getStudents(page, search, filter);
     studentData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
-    console.log("student response", page, search, response);
   } catch (error) {
     console.error("Failed to fetch students:", error);
   }
@@ -45,6 +44,7 @@ export default async function StudentListPage({
             placeholder="Filter Students"
             url={AppRouter.staffStudents}
             className="ps-8 w-[200px]"
+            selectedValue={filter}
           />
         </div>
       </div>

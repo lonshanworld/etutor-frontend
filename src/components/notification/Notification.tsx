@@ -20,7 +20,6 @@ const Notification = () => {
   const [isNotiOpen, setNotiOpen] = useState(false);
   const { theme } = useThemeStore();
   const [notiData, setNotiData] = useState<any[]>([]);
-  // const [isOpen, setIsOpen] = useState(false);
 
   const notiRef = useRef<HTMLDivElement | null>(null);
   const notiOpenRef = useRef<HTMLImageElement | null>(null);
@@ -52,8 +51,7 @@ const Notification = () => {
 
   const splitType = (type: string) => {
     const typeArray = type.split("\\");
-    // console.log(typeArray);
-    return typeArray[typeArray.length - 1];
+    return typeArray[typeArray.length - 1].replace(/([a-z])([A-Z])/g, "$1 $2");
   };
 
   useEffect(() => {
@@ -86,7 +84,7 @@ const Notification = () => {
       {isNotiOpen && (
         <div
           className={twMerge(
-            "fixed left-5 top-16 right-5 sm:absolute sm:top-10 sm:left-[-300px] sm:right-0 rounded-lg z-20 bg-notiBg border border-gray-200 shadow-lg min-w-[250px] sm:w-[350px] overflow-auto p-3 custom-scrollbar",
+            "fixed left-5 top-16 right-5 sm:absolute sm:top-10 sm:left-[-300px] sm:right-0 rounded-lg z-20 bg-notiBg border border-gray-200 shadow-lg min-w-[250px] sm:w-[350px] max-w-[350px] overflow-y-auto p-3 custom-scrollbar",
             notiData.length > 0 ? "h-[500px]" : "h-[300px]"
           )}
           ref={notiRef}
@@ -96,8 +94,7 @@ const Notification = () => {
               <div key={item.id}>
                 <NotiList
                   title={splitType(item.type)}
-                  body={item.notifiable_id + item.data.message}
-                  icon={Welcome}
+                  body={item.data.message}
                   onClose={() => readNoti(item.notifiable_id)}
                   createdDate={item.created_at}
                 />

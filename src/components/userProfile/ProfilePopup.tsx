@@ -58,7 +58,7 @@ const ProfilePopup = ({
               }}
             >
               {/* <img src={user.profileImagePath} alt="" /> */}
-              <div className="sm:w-[45px] sm:h-[45px] rounded-full w-8 h-8 max-w-8 max-h-8 overflow-hidden">
+              <div className="sm:w-[45px] sm:h-[45px] rounded-full w-10 h-10 max-w-10 max-h-10 overflow-hidden">
                 {user?.profileImagePath ? (
                   <img
                     src={user.profileImagePath}
@@ -74,7 +74,7 @@ const ProfilePopup = ({
                 <p className="font-bold max-sm:text-sm">
                   {user?.firstName +
                     " " +
-                    user?.middleName +
+                    (user?.middleName ?? "") +
                     " " +
                     user?.lastName}
                 </p>

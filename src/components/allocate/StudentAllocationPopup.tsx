@@ -51,11 +51,11 @@ const StudentAllocationPopup = ({
     <div>
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[788px] h-screen md:h-[700px] md:rounded-lg bg-white z-20 p-10">
         <div className="profile flex items-center gap-3">
-          <div className="w-[105px] h-[105px]">
+          <div className="w-[105px] h-[105px] rounded-full overflow-hidden">
             {activeUser?.profileImagePath ? (
               <img
                 src={activeUser?.profileImagePath ?? UserIcon.src}
-                className="w-[100px] h-[100px]"
+                className="w-full h-full object-cover"
                 alt=""
               />
             ) : (

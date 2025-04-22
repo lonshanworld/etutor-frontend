@@ -24,8 +24,8 @@ export default async function PeoplePage({
   try {
     const response = await getStudentsTutors(page, search, filter);
     console.log("students tutors", response);
-    userData = response?.users.map(userFromJson);
-    pageCount = response.meta.last_page;
+    userData = response?.users?.map(userFromJson);
+    pageCount = response?.meta?.last_page;
   } catch (error) {
     console.error("Failed to fetch staffs:", error);
   }
@@ -36,9 +36,10 @@ export default async function PeoplePage({
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
-            placeholder="Filter Users"
+            placeholder="Filter Students"
             url={AppRouter.studentPeople}
             className="ps-8 w-[200px]"
+            selectedValue={filter}
           />
         </div>
       </div>

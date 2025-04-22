@@ -11,9 +11,15 @@ type Options = {
   placeholder: string;
   url: string;
   className?: string;
+  selectedValue?: string;
 };
 
-export default function FilterBox({ placeholder, url, className }: Options) {
+export default function FilterBox({
+  placeholder,
+  url,
+  className,
+  selectedValue,
+}: Options) {
   const options = [
     {
       name: "Active now",
@@ -37,7 +43,10 @@ export default function FilterBox({ placeholder, url, className }: Options) {
     }
   };
   return (
-    <Select onValueChange={(value) => handleFilter(value)}>
+    <Select
+      onValueChange={(value) => handleFilter(value)}
+      defaultValue={selectedValue}
+    >
       <SelectTrigger
         className={`w-full min-w-[150px] h-[37.6px] sm:h-[45px] border-[1px] max-sm:text-sm border-inputBorder z-1 ${className}`}
       >

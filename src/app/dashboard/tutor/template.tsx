@@ -18,7 +18,6 @@ export default function StaffDashboardTemplate({
 
   useEffect(() => {
     const viewUser = Cookies.get("viewUser");
-    console.log("view User", viewUser);
     if (viewUser) {
       setViewUser(JSON.parse(viewUser));
       setReadOnly(true);

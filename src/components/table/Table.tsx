@@ -205,7 +205,7 @@ export default function TableDemo({
           </TableRow>
         </TableHeader>
         <TableBody className="max-sm:text-[11px]">
-          {users.length > 0 ? (
+          {users?.length > 0 ? (
             users.map((user, index) => (
               <TableRow
                 key={index}
@@ -220,7 +220,7 @@ export default function TableDemo({
                       {user.profileImagePath ? (
                         <img
                           src={user.profileImagePath}
-                          className="w-full h-full object-cover rounded-full"
+                          className="w-full h-full object-cover"
                           alt=""
                         />
                       ) : (

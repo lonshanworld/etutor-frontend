@@ -28,7 +28,6 @@ export default async function TutorListPage({
 
   try {
     const response = await getTutors(page, search, filter);
-    console.log("tutors", response.data);
     tutorData = response?.data.map(userFromJson);
     pageCount = response.meta.last_page;
   } catch (error) {
@@ -48,6 +47,7 @@ export default async function TutorListPage({
             placeholder="Filter Tutors"
             url={AppRouter.staffTutors}
             className="ps-8 w-[200px]"
+            selectedValue={filter}
           />
         </div>
       </div>

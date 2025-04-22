@@ -20,6 +20,7 @@ import { useToast } from "@/stores/useToast";
 import { useAllocate } from "@/stores/useAllocate";
 import { User } from "@/model/user";
 import NoAssignedStudents from "@/assets/images/no-assigned-students.png";
+import WarningPopup from "@/components/warningpopup/WarningPopup";
 
 type TableProps = {
   columns: any;

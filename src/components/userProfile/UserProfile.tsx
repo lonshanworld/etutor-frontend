@@ -168,9 +168,9 @@ export default function UserProfile({
     // setViewUser(profileData);
     Cookies.set("viewUser", JSON.stringify(profileData), { expires: 7 });
     if (profileData.role === UserRole.student) {
-      router.push(AppRouter.studentBoard);
+      router.push(AppRouter.studentDashboard);
     } else if (profileData.role == UserRole.tutor) {
-      router.push(AppRouter.tutorBoard);
+      router.push(AppRouter.tutorDashboard);
     }
   };
 

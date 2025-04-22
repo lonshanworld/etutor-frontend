@@ -27,8 +27,8 @@ export default async function StaffListPage({
   let pageCount: number = 1;
   try {
     const response = await getStaffs(page, search, filter);
-    staffData = response?.data.map(userFromJson);
-    pageCount = response.meta.last_page;
+    staffData = response?.data?.map(userFromJson);
+    pageCount = response?.meta?.last_page;
   } catch (error) {
     console.error("Failed to fetch staffs:", error);
   }
@@ -46,6 +46,7 @@ export default async function StaffListPage({
             placeholder="Filter Staffs"
             url={AppRouter.staffStaff}
             className="ps-8 w-[200px]"
+            selectedValue={filter}
           />
         </div>
       </div>
