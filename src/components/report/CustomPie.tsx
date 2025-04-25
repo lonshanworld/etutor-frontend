@@ -142,7 +142,7 @@ export default function CustomPie(
                                     className="w-4 h-4 rounded-full"
                                     style={{ backgroundColor: colorList[index % colorList.length] }}
                                 ></div>
-                                <span>{item.name}</span>
+                                <span className="capitalize">{item.name}</span>
                             </div>
                             <span
                             className="w-6 text-center"> - </span>

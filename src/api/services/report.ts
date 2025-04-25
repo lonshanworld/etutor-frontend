@@ -24,6 +24,17 @@ export async function getBrowsersUsage() : Promise<any>{
     }
 }
 
+export async function getViewPages() : Promise<any>{
+    const response = await GetRequest(APIS.GET.getPageUsage);
+    console.log("Page Usage Response: ", response);
+    if(isErrorModel(response)){
+        throw response;
+    }else{
+        return response;
+    }
+}
+
+
 export async function getUnassignedStudents(currentPage : number, search? : string) : Promise<any>{
     const response = await GetRequest(APIS.GET.getUnassignedStudents + `?page=${currentPage}&search=${search ?? ""}`);
     console.log('check list response', response);
