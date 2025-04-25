@@ -6,7 +6,7 @@ export default function ErrorPopup() {
 
   return (
     <div>
-      <div className="fixed p-10 text-center bg-background text-font w-[80%] sm:w-[50%] md:w-[50%] lg:w-[30%] min-h-[299px] rounded-lg shadow-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+      <div className="fixed p-10 text-center bg-background text-font w-[80%] sm:w-[50%] md:w-[50%] min-h-[299px] rounded-lg shadow-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
         <div className="flex justify-center mb-10">
           <IoClose className="text-6xl p-3 text-white rounded-full bg-red-500" />
         </div>

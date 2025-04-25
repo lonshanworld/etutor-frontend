@@ -15,7 +15,8 @@ export function getCurrentUserAbout(user: Profile | null) {
   return [
     {
       label: "Name",
-      value: user?.firstName + " " + user?.middleName + " " + user?.lastName,
+      value:
+        user?.firstName + " " + (user?.middleName ?? "") + " " + user?.lastName,
     },
     { label: "Email", value: user?.email },
     { label: "Phone No", value: "09756042421" },

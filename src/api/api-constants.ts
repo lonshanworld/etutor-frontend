@@ -19,9 +19,15 @@ export const APIS = {
 
     getReportActiveUsers: "reports/active-users",
     getBrowsersUsage: "reports/browser-usage",
+    getPageUsage : 'reports/view-pages',
     getChatProfile: (id: number) => `user/${id}/profile`,
-    getUnassignedStudents : "reports/studentsunassigned",
-    getChatMessageList : "studentstutors",
+    getUnassignedStudents: "reports/studentsunassigned",
+    getChatMessageList: "studentstutors",
+    getNoti: "notifications",
+
+    getStudentsTutors: "studentstutors",
+    getSessionLogByUserId : (id :number) =>`getSessionLogByUserId?user_id=${id}`,
+
   },
   POST: {
     login: "auth/login",
@@ -46,6 +52,13 @@ export const APIS = {
 
     getMyStudents: "tutors/my-students",
     getMyTutor: "students/my-tutor",
+
+    increasePageCount : (route : string) => `increasePageCount?route=${route}`,
+    increaseBrowserCount : (name : string) => `increaseBrowserCount?name=${name}`,
+
+    readNoti: "notifications/mark-read",
+
+    updateProfile: "user/profile-picture/update",
   },
   PATCH: {
     updatePassword: "update-password", // reset password

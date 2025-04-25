@@ -39,6 +39,7 @@ async function fetchData(
 
   if (!response.ok) {
     const responseData = await response.json();
+    console.log("has some error", responseData);
     return {
       errorCode: response.status,
       errorText:

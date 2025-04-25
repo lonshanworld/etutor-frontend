@@ -8,6 +8,7 @@ import { User } from "@/model/user";
 import { unassignedStudent } from "@/api/services/allocate";
 import { useToast } from "@/stores/useToast";
 import { getTutors } from "@/api/services/tutors";
+import { useRouter } from "next/navigation";
 
 type StudentProps = {
   id: number;
@@ -31,6 +32,8 @@ const AssignedStudents = ({
   const [selectAll, setSelectAll] = useState(false);
   const [data, setData] = useState<StudentProps[]>([]);
   const [filteredData, setFilteredData] = useState<StudentProps[]>([]);
+
+  const router = useRouter();
 
   const { showToast } = useToast();
   const columns = ["Name", "Email", "Major"];
@@ -128,19 +131,20 @@ const AssignedStudents = ({
       showToast(error.errorText, "error");
     }
   };
+  console.log("select all", selectAll);
   return (
     <div>
       {data.length > 0 && (
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap gap-3">
           <button
-            className="px-8 py-2 bg-theme text-white rounded-md"
+            className="sm:px-8 px-5 py-2 max-sm:text-sm bg-theme text-white rounded-md"
             onClick={handleSelectAll}
           >
-            {!selectAll ? "Select All" : "Unselect All"}
+            {selectAll ? "Unselect All" : "Select All"}
           </button>
           <button
             className={twMerge(
-              "px-8 py-2 text-white rounded-md",
+              "sm:px-8 px-5 py-2 max-sm:text-sm text-white rounded-md",
               selectedUsers.length > 0
                 ? "bg-unassign"
                 : "bg-gray-400  cursor-not-allowed"

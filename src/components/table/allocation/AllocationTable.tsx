@@ -20,6 +20,7 @@ import { useToast } from "@/stores/useToast";
 import { useAllocate } from "@/stores/useAllocate";
 import { User } from "@/model/user";
 import NoAssignedStudents from "@/assets/images/no-assigned-students.png";
+import WarningPopup from "@/components/warningpopup/WarningPopup";
 
 type TableProps = {
   columns: any;
@@ -68,9 +69,7 @@ const AllocationTable = ({
 
   useEffect(() => {
     // console.log("selectedUsers", selectedUsers);
-    if (selectedUsers.length === data.length) {
-      setSelectAll && setSelectAll(true);
-    } else {
+    if (selectedUsers.length !== data.length) {
       setSelectAll && setSelectAll(false);
     }
   }, [selectedUsers]);
@@ -82,7 +81,6 @@ const AllocationTable = ({
         student_id: [activeUser?.info.id],
       });
       console.log("unassigned", response);
-      showToast(response.message, "success");
       showToast(response.message, "success");
       if (!response?.errorCode) {
         setTimeout(() => {
@@ -103,8 +101,11 @@ const AllocationTable = ({
         tutor_id: tutor.id,
       });
       console.log("assigned", response);
-      showToast(response.message, "success");
-      showToast(response.message, "success");
+      if (response.errorCode === 500) {
+        showToast(response.errorText, "error");
+      } else {
+        showToast(response.message, "success");
+      }
       if (!response?.errorCode) {
         setTimeout(() => {
           location.reload();
@@ -116,125 +117,125 @@ const AllocationTable = ({
     }
   };
   return (
-    <div className="relative sm:rounded-t-md border-t-[1px] ">
-      <ScrollArea className="max-h-[330px] overflow-y-auto custom-scrollbar">
-        <Table className="border-collapse w-full">
-          <TableHeader className="bg-theme py-3 rounded-lg sticky top-0 z-10 border border-theme">
-            <TableRow className="">
-              <TableHead className="max-sm:text-sm text-left w-[50px] ps-5"></TableHead>
+    <div className="relative sm:rounded-t-md border-t-[1px]">
+      <div className="relative sm:rounded-t-md border-t-[1px] max-h-[330px] overflow-y-auto custom-scrollbar">
+        <div className="overflow-x-auto">
+          <Table className="min-w-[700px] border-collapse overflow-auto">
+            <TableHeader className="bg-theme py-3 rounded-lg sticky top-0 z-10 border border-theme">
+              <TableRow className="">
+                <TableHead className="max-sm:text-sm text-left w-[50px] ps-5"></TableHead>
 
-              <TableHead className="max-sm:text-sm text-left">
-                {columns[0]}
-              </TableHead>
-              <TableHead className="max-sm:text-sm text-left">
-                {columns[1]}
-              </TableHead>
-              <TableHead className="max-sm:hidden ps-10 text-left">
-                {columns[2]}
-              </TableHead>
-            </TableRow>
-          </TableHeader>
+                <TableHead className="max-sm:text-sm text-left">
+                  {columns[0]}
+                </TableHead>
+                <TableHead className="max-sm:text-sm text-left">
+                  {columns[1]}
+                </TableHead>
+                <TableHead className="ps-10 text-left">{columns[2]}</TableHead>
+              </TableRow>
+            </TableHeader>
 
-          <TableBody className="max-sm:text-[11px] max-h-52 overflow-y-auto">
-            {data.length > 0 ? (
-              data.map((user, index) => (
-                <TableRow
-                  key={index}
-                  className="border-[1px] border-tableRowBorder h-[70px]"
-                >
-                  {activePopup === "tutor" ? (
-                    <TableCell className="ps-5">
-                      {selectedUsers.some(
-                        (selectedUser) => selectedUser === user.id
-                      ) ? (
-                        <img
-                          src={Selected.src}
-                          alt=""
-                          onClick={() => removeUser(user.id)}
-                          className="cursor-pointer"
-                        />
-                      ) : (
-                        <img
-                          src={CheckBox.src}
-                          alt=""
-                          onClick={() => selectUser(user.id)}
-                          className="cursor-pointer"
-                        />
-                      )}
-                    </TableCell>
-                  ) : (
-                    <TableCell className="ps-5"></TableCell>
-                  )}
-
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] object-cover flex items-center">
-                        {user.profileImagePath ? (
+            <TableBody className="max-sm:text-[11px] max-h-52 overflow-auto">
+              {data.length > 0 ? (
+                data.map((user, index) => (
+                  <TableRow
+                    key={index}
+                    className="border-[1px] border-tableRowBorder h-[70px]"
+                  >
+                    {activePopup === "tutor" ? (
+                      <TableCell className="ps-5">
+                        {selectedUsers.some(
+                          (selectedUser) => selectedUser === user.id
+                        ) ? (
                           <img
-                            src={user.profileImagePath}
-                            className=""
+                            src={Selected.src}
                             alt=""
+                            onClick={() => removeUser(user.id)}
+                            className="cursor-pointer"
                           />
                         ) : (
-                          <FaUserCircle className="text-lg sm:text-3xl text-theme" />
+                          <img
+                            src={CheckBox.src}
+                            alt=""
+                            onClick={() => selectUser(user.id)}
+                            className="cursor-pointer"
+                          />
+                        )}
+                      </TableCell>
+                    ) : (
+                      <TableCell className="ps-5"></TableCell>
+                    )}
+
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] object-cover flex items-center">
+                          {user.profileImagePath ? (
+                            <img
+                              src={user.profileImagePath}
+                              className=""
+                              alt=""
+                            />
+                          ) : (
+                            <FaUserCircle className="text-lg sm:text-3xl text-theme" />
+                          )}
+                        </div>
+                        <p className="truncate">
+                          {user.name ??
+                            user.firstName +
+                              " " +
+                              (user.middleName ? user.middleName : "") +
+                              " " +
+                              user.lastName}
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell className="ps-10 text-center">
+                      <div className="flex justify-left items-center gap-3">
+                        {activePopup === "tutor" ? (
+                          <div>{user.major}</div>
+                        ) : activeTab == 1 ? (
+                          <div
+                            className="text-red-500 cursor-pointer"
+                            onClick={unassign}
+                          >
+                            Unassign
+                          </div>
+                        ) : (
+                          <div
+                            className="text-blue-500 cursor-pointer"
+                            onClick={() => allocate(user)}
+                          >
+                            Assign
+                          </div>
                         )}
                       </div>
-                      <p className="truncate">
-                        {user.name ??
-                          user.firstName +
-                            " " +
-                            (user.middleName ? user.middleName : "") +
-                            " " +
-                            user.lastName}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell className="ps-10 text-center">
-                    <div className="flex justify-left items-center gap-3">
-                      {activePopup === "tutor" ? (
-                        <div>{user.major}</div>
-                      ) : activeTab == 1 ? (
-                        <div
-                          className="text-red-500 cursor-pointer"
-                          onClick={unassign}
-                        >
-                          Unassign
-                        </div>
-                      ) : (
-                        <div
-                          className="text-blue-500 cursor-pointer"
-                          onClick={() => allocate(user)}
-                        >
-                          Assign
-                        </div>
-                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center">
+                    <div className="flex flex-col items-center justify-center mt-20 gap-3">
+                      <img
+                        src={NoAssignedStudents.src}
+                        width={130}
+                        height={130}
+                        alt=""
+                        draggable="false"
+                      />
+                      No Records Found
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center">
-                  <div className="flex flex-col items-center justify-center mt-20 gap-3">
-                    <img
-                      src={NoAssignedStudents.src}
-                      width={130}
-                      height={130}
-                      alt=""
-                      draggable="false"
-                    />
-                    No Records Found
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+        </div>
         <div ref={bottomRef} className="h-1"></div>
 
         {loading && <p className="text-center">Loading more...</p>}
-      </ScrollArea>
+      </div>
     </div>
   );
 };

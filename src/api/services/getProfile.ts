@@ -9,6 +9,7 @@ export async function getProfile(): Promise<Profile> {
   if (isErrorModel(response)) {
     throw response;
   }
+  console.log("profile res", response);
   const data = profileFromJson(response);
   return data;
 }
@@ -26,5 +27,10 @@ export async function getProfileById(userId: number): Promise<Profile> {
 export async function changePassword(body: any): Promise<any> {
   const response = await PostRequest(body, APIS.POST.changePassword);
 
+  return response;
+}
+
+export async function updateProfile(body: FormData): Promise<any> {
+  const response = await PostRequest(body, APIS.POST.updateProfile);
   return response;
 }

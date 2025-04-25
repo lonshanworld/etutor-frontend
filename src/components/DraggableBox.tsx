@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/useUserStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
+import useLoading from "@/stores/useLoading";
 
 const DraggableButton = () => {
   const buttonRef = useRef<HTMLDivElement>(null);
@@ -16,6 +17,7 @@ const DraggableButton = () => {
   const router = useRouter();
 
   const { viewUser, setViewUser } = useUserStore();
+  const { showLoading, hideLoading } = useLoading();
 
   const MIN_TOP = 10;
   const MIN_LEFT = 10;
@@ -79,32 +81,35 @@ const DraggableButton = () => {
     setViewUser(null);
     // router.push();
     Cookies.remove("viewUser");
+    showLoading();
     window.location.href = AppRouter.staffStaff;
   };
 
-  return (
-    <div
-      ref={buttonRef}
-      onMouseDown={handleMouseDown}
-      className="fixed z-[9999] bg-gray-500/80 text-white cursor-move px-3 py-2 rounded-xl shadow-xl min-w-[300px]"
-      style={{
-        left: position.x,
-        top: position.y,
-      }}
-    >
-      <div className="flex justify-between items-center gap-4 text-sm">
-        <span className="whitespace-nowrap">
-          You're accessing <b className="">{viewUser?.firstName}'s</b> account.
-        </span>
-        <button
-          className="bg-theme px-3 py-1 rounded-md text-white select-none opacity-[1]"
-          onClick={handleLeave}
-        >
-          Leave
-        </button>
+  if (viewUser)
+    return (
+      <div
+        ref={buttonRef}
+        onMouseDown={handleMouseDown}
+        className="fixed z-[9999] bg-gray-500/80 text-white cursor-move px-3 py-2 rounded-xl shadow-xl min-w-[300px]"
+        style={{
+          left: position.x,
+          top: position.y,
+        }}
+      >
+        <div className="flex justify-between items-center gap-4 text-sm">
+          <span className="whitespace-nowrap">
+            You're accessing <b className="">{viewUser?.firstName}'s</b>{" "}
+            account.
+          </span>
+          <button
+            className="bg-theme px-3 py-1 rounded-md text-white select-none opacity-[1]"
+            onClick={handleLeave}
+          >
+            Leave
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default DraggableButton;

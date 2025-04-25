@@ -454,7 +454,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
           </div>
         </div>
 
-        {!isOwnProfile && profileState && (
+        {!isOwnProfile && profileState && (user?.id !== profileState.userId) && (
           <div className='absolute top-[60px] right-4'>
             <button
               onClick={handleChat}

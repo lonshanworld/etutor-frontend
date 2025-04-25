@@ -75,7 +75,7 @@ export default function CustomUnassignTable(
                 setPageCount(response.meta.last_page);  
             } catch (error) {
                 console.error("Error fetching data:", error);
-                showToast("Error in loading users. Please try again later", "Error");
+                showToast("Error in loading users. Please try again later", "error");
             }finally{
                 hideLoading();
             }

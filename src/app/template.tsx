@@ -10,6 +10,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useToast } from "@/stores/useToast";
 import Toast from "@/components/customtoast/CustomToast";
+import {detect} from "detect-browser";
+import { visitBrowser, visitPage } from "@/api/services/events";
+
 
 export default function MainTemplate({
   children,
@@ -22,6 +25,44 @@ export default function MainTemplate({
   const router = useRouter();
   const pathName = usePathname();
   const { toast, showToast } = useToast();
+  const browser = detect();
+  
+  useEffect(() => {
+    
+    const sendPath = async()=>{
+     
+      if (pathName){
+        console.log("send path event", pathName);
+        await visitPage(pathName);
+      };
+    }
+
+    sendPath();
+  }, [pathName]);
+
+  // useEffect(()=>{
+  //   const sendEvent = async()=>{
+  //     console.log('send browser event', browser?.name);
+  //     await visitBrowser(browser?.name ?? "unidentified");
+  //   }
+
+  //   sendEvent();
+  // },[])
+
+  useEffect(() => {
+    const sendEvent = async () => {
+      const hasSent = sessionStorage.getItem("hasSentBrowserEvent");
+  
+      if (!hasSent) {
+        console.log("send browser event", browser?.name);
+        await visitBrowser(browser?.name ?? "unidentified");
+        sessionStorage.setItem("hasSentBrowserEvent", "true");
+      }
+    };
+  
+    sendEvent();
+  }, []);
+  
 
   useEffect(() => {
     async function getUser() {
@@ -61,7 +102,7 @@ export default function MainTemplate({
           pathName !== AppRouter.introPage &&
           pathName !== AppRouter.loginPage
         ) {
-          showToast("Please login again", "Warning");
+          showToast("Please login again", "warning");
           router.push(AppRouter.loginPage);
         }
       } finally {

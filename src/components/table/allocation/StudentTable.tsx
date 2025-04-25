@@ -61,9 +61,13 @@ const StudentTable = ({ data, pageCount, currentPage }: TableProps) => {
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
-                    <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] object-cover flex items-center">
+                    <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] overflow-hidden rounded-full flex items-center">
                       {user.profileImagePath ? (
-                        <img src={user.profileImagePath} className="" alt="" />
+                        <img
+                          src={user.profileImagePath}
+                          className="w-full h-full object-cover"
+                          alt=""
+                        />
                       ) : (
                         <FaUserCircle className="text-lg sm:text-3xl text-theme" />
                       )}
