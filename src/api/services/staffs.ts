@@ -3,19 +3,23 @@ import { APIS } from "../api-constants";
 
 export async function getStaffs(
   page: number = 1,
-  name: string | null = null
+  search: string | null = null,
+  filter: string | null = null
 ): Promise<any> {
   const baseurl = APIS.GET.getStaffList;
 
-  const geturl = () => {
-    if (page && name) return baseurl + `?page=${page}&name=${name}`;
-    if (page) return baseurl + `?page=${page}`;
-    if (name) return baseurl + `?name=${name}`;
-    return baseurl;
-  };
-  const URL = geturl();
-  const response = await GetRequest(URL);
-  console.log("res", response);
+  // Construct query parameters
+  const queryParams = new URLSearchParams();
+  if (page) queryParams.append("page", page.toString());
+  if (search) queryParams.append("search", search);
+  if (filter) queryParams.append("filter", filter);
+
+  // Construct the final URL
+  const url = queryParams.toString()
+    ? `${baseurl}?${queryParams.toString()}`
+    : baseurl;
+
+  const response = await GetRequest(url);
   return response;
 }
 

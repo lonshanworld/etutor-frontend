@@ -2,6 +2,7 @@
 
 import { MdMenuOpen } from "react-icons/md";
 import ProfileImageBox from "../ProfileImageBox";
+import Notification from "../notification/Notification";
 
 export default function DashboardAppbarMobile({
   onClickMenu,
@@ -14,7 +15,10 @@ export default function DashboardAppbarMobile({
         onClick={() => onClickMenu()}
         className="text-theme w-10 h-10 active:text-backgroundOpposite cursor-pointer"
       />
-      <ProfileImageBox />
+      <div className="flex items-center gap-5">
+        <Notification />
+        <ProfileImageBox />
+      </div>
     </div>
   );
 }

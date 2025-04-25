@@ -18,7 +18,7 @@ export function PaginationDemo({
   pageCount: number;
   currentPage: number;
   url: string;
-  remainingUrl? : string;
+  remainingUrl?: string;
 }) {
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
 

@@ -10,13 +10,18 @@ import { allocateStudent } from "@/api/services/allocate";
 import { useAllocate } from "@/stores/useAllocate";
 import { useToast } from "@/stores/useToast";
 import NoAssignedStudents from "@/assets/images/no-assigned-students.png";
+import WarningPopup from "../warningpopup/WarningPopup";
+import { errorStore } from "@/stores/errorStore";
+import ErrorPopup from "../ErrorPopup";
 
 const AvailableStudents = ({
   setActiveTab,
   searchData,
+  // activeUser,
 }: {
   setActiveTab: (value: number) => void;
   searchData?: string;
+  // activeUser: User | null;
 }) => {
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
   const [students, setStudents] = useState<User[]>([]);
@@ -25,11 +30,13 @@ const AvailableStudents = ({
   const { majors } = useMajor();
   const { activeUser } = useAllocate();
   const { showToast } = useToast();
+  const { isError, setError } = errorStore();
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [searchCleared, setSearchCleared] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -73,12 +80,21 @@ const AvailableStudents = ({
 
   useEffect(() => {
     if (searchCleared) {
-      loadStudents(1); // Force reload when search is cleared
-      setSearchCleared(false); // Reset the flag after loading
+      setPage(1);
+      setStudents([]);
+      setFilteredData([]);
+      setHasMore(true); // Allow loading next pages again
     } else {
       loadStudents(page); // Normal loading when page changes
     }
   }, [page, searchCleared]);
+
+  useEffect(() => {
+    if (searchCleared) {
+      loadStudents(1);
+      setSearchCleared(false);
+    }
+  }, [searchCleared]);
 
   const getMajorName = (id: number) => {
     if (id) {
@@ -162,20 +178,33 @@ const AvailableStudents = ({
   }, [loading, hasMore]);
 
   const allocate = async () => {
-    try {
-      const response = await allocateStudent({
-        student_id: selectedUsers,
-        tutor_id: activeUser?.info.id,
-      });
-      showToast(response.message, "success");
-      if (!response?.errorCode) {
-        setTimeout(() => {
-          location.reload();
-        }, 3000);
+    if (activeUser?.student?.length + selectedUsers.length > 10) {
+      console.log("You can only select up to 10 users");
+      setShowWarning(true);
+      setError(
+        `You already have ${activeUser?.student?.length} students assigned. You can only assign ${10 - activeUser?.student?.length} more students.`
+      );
+    } else {
+      try {
+        const response = await allocateStudent({
+          student_id: selectedUsers,
+          tutor_id: activeUser?.info.id,
+        });
+        console.log("assigned", response);
+        if (response.errorCode === 500) {
+          showToast(response.errorText, "error");
+        } else {
+          showToast(response.message, "success");
+        }
+        if (!response?.errorCode) {
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
+        }
+      } catch (error: any) {
+        console.error("Failed to assign:", error);
+        showToast(error.errorText, "error");
       }
-    } catch (error: any) {
-      console.error("Failed to assign:", error);
-      showToast(error.errorText, "error");
     }
   };
 
@@ -219,6 +248,15 @@ const AvailableStudents = ({
             />
             No Unassigned Students
           </div>
+        )}
+        {isError && (
+          <ErrorPopup />
+          // <WarningPopup
+          //   title="Student Allocation"
+          //   message="You can't assign more than 10 students to a tutor"
+          //   setShowWarning={setShowWarning}
+          //   onContinue={() => setShowWarning(false)}
+          // />
         )}
       </div>
     </div>

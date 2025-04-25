@@ -5,7 +5,7 @@ import Close from "@/assets/svgs/close.svg";
 import Email from "@/assets/svgs/email.svg";
 import Phone from "@/assets/svgs/phone.svg";
 import StatusIcon from "../statusicon/StatusIcon";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useUserStore } from "@/stores/useUserStore";
 import { Profile } from "@/model/profile";
@@ -28,7 +28,11 @@ import {
   ChangePasswordSchemaType,
 } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changePassword } from "@/api/services/getProfile";
+import {
+  changePassword,
+  getProfile,
+  updateProfile,
+} from "@/api/services/getProfile";
 import { useToast } from "@/stores/useToast";
 import Image from "next/image";
 import MessageIcon from "@/assets/svgs/chat.svg";
@@ -39,6 +43,9 @@ import { createConversation } from "../../../convex/chatRoom";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Cookies from "js-cookie";
+import { MdOutlineEdit } from "react-icons/md";
+
+import DefaultProfile from "@/assets/images/default_profile.jpg";
 
 export type UserType = {
   label: string;
@@ -68,7 +75,13 @@ export default function UserProfile({
   const [info, setInfo] = useState<UserType[] | null>(null);
   const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
-  const { user, setViewUser } = useUserStore();
+  const { user, setViewUser, setUser } = useUserStore();
+  const [isProfileHover, setProfileHover] = useState(false);
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const {
     register,
@@ -130,6 +143,7 @@ export default function UserProfile({
     } else if (profileData?.role === UserRole.student) {
       setInfo(studentInfo);
     }
+    console.log("profile", user);
   }, [profileData, showDetail]);
 
   const onSubmit: SubmitHandler<any> = async (data, e: any) => {
@@ -154,9 +168,51 @@ export default function UserProfile({
     // setViewUser(profileData);
     Cookies.set("viewUser", JSON.stringify(profileData), { expires: 7 });
     if (profileData.role === UserRole.student) {
-      router.push(AppRouter.studentBoard);
+      router.push(AppRouter.studentDashboard);
     } else if (profileData.role == UserRole.tutor) {
-      router.push(AppRouter.tutorBoard);
+      router.push(AppRouter.tutorDashboard);
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // const reader = new FileReader();
+    // reader.onloadend = () => {
+    //   setImageUrl(reader.result as string);
+    // };
+    // reader.readAsDataURL(file);
+
+    if (!file) return;
+
+    setImageFile(file); // Save the File object for upload
+
+    // Optional: Show preview
+    const preview = URL.createObjectURL(file);
+    setPreviewUrl(preview);
+  };
+
+  const changeProfile = async () => {
+    try {
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("1_profile_picture", imageFile);
+
+        console.log("profile", formData);
+
+        const response = await updateProfile(formData);
+        if (response.errorCode) {
+          showToast("Profile update failed", "error");
+        } else {
+          showToast("Profile updated successfully", "success");
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        }
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -165,7 +221,7 @@ export default function UserProfile({
     <div>
       <div
         className={twMerge(
-          "fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]  bg-background z-20 sm:rounded-lg max-sm:w-svw max-sm:h-svh overflow-auto",
+          "fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]  bg-grayToggle z-20 sm:rounded-lg max-sm:w-svw max-sm:h-svh overflow-auto",
           showDetail
             ? "w-[90%] md:w-[500px] min-h-[600px]"
             : "w-[90%] lg:w-[800px] h-[500px]"
@@ -192,7 +248,7 @@ export default function UserProfile({
                     hideLoading();
                     showToast(
                       "Unexpected error occured. Please try again later",
-                      "Error"
+                      "error"
                     );
                   }
                 }
@@ -212,17 +268,79 @@ export default function UserProfile({
         {profileData && (
           <div>
             {/* profile photo */}
-            <div className="absolute top-6 left-[60px]">
-              {profileData.profileImagePath ? (
+            {/* <div className="relative"> */}
+            <div
+              className="absolute top-6 left-[60px] w-[100px] h-[100px] rounded-full overflow-hidden group"
+              onMouseEnter={() =>
+                window.innerWidth >= 640 && setProfileHover(true)
+              }
+              onMouseLeave={() =>
+                window.innerWidth >= 640 && setProfileHover(false)
+              }
+            >
+              {/* Profile Image */}
+              {profileData.profileImagePath || previewUrl ? (
                 <img
-                  src={profileData?.profileImagePath ?? UserIcon.src}
-                  className="w-[100px] h-[100px]"
+                  src={
+                    previewUrl ?? profileData?.profileImagePath ?? UserIcon.src
+                  }
+                  className="w-full h-full object-cover sm:cursor-pointer"
                   alt=""
                 />
               ) : (
-                <FaUserCircle className="text-8xl bg-theme rounded-full text-white" />
+                // <img
+                //   src={DefaultProfile.src}
+                //   className="w-full h-full object-cover pointer-events-none"
+                //   alt="Default Profile"
+                // />
+
+                <FaUserCircle className="text-[100px] text-white bg-theme cursor-pointer" />
+              )}
+
+              {/* Hover Overlay */}
+              {!showDetail && isProfileHover && (
+                <div
+                  className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 sm:cursor-pointer flex-col"
+                  onClick={() => inputFileRef.current?.click()}
+                >
+                  <MdOutlineEdit className="text-4xl text-gray-200" />
+                  <div className="text-[12px] text-white">Choose Photo</div>
+                </div>
               )}
             </div>
+
+            <div
+              className="sm:hidden px-1.5 py-1 text-gray-500 bg-white border border-gray-300 absolute left-[130px] top-[90px] rounded-md"
+              onClick={() => inputFileRef.current?.click()}
+            >
+              <MdOutlineEdit className="text-lg cursor-pointer" />
+            </div>
+
+            {!showDetail && (
+              <button
+                className={twMerge(
+                  "px-2 sm:px-5 max-sm:text-sm py-1 rounded-md absolute left-[170px] top-[90px]",
+                  imageFile
+                    ? "bg-theme hover:bg-themeHover text-white"
+                    : "bg-gray-300 text-gray-500"
+                )}
+                disabled={imageFile ? false : true}
+                onClick={changeProfile}
+              >
+                Save Profile
+              </button>
+            )}
+
+            <input
+              type="file"
+              className="hidden"
+              name=""
+              ref={inputFileRef}
+              onChange={handleImageChange}
+              id=""
+            />
+
+            {/* </div> */}
 
             {/* User details */}
             <div
@@ -372,7 +490,7 @@ export default function UserProfile({
               </div>
             </div>
 
-            {showDetail && profileData.role !== UserRole.staff && (
+            {showDetail && user?.role === UserRole.staff && (
               <div
                 className="float-right mb-5 mt-3 me-5"
                 onClick={() => viewDashboard(profileData)}

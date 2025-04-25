@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import ProfilePopup from "./userProfile/ProfilePopup";
 import UserProfile from "./userProfile/UserProfile";
+import { FaUserCircle } from "react-icons/fa";
 
 export default function ProfileImageBox() {
   const { user } = useUserStore();
@@ -14,19 +15,21 @@ export default function ProfileImageBox() {
     <div>
       <div
         ref={profileRef}
-        className="w-11 h-11 rounded-full bg-secondaryBackground relative overflow-clip cursor-pointer"
+        className="w-11 h-11 rounded-full bg-transparent relative overflow-clip cursor-pointer"
         onClick={() => {
           setProfilePopup(!profilePopup);
         }}
       >
-        <Image
-          src={
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-pBfUzg3ft35hIK4QEw0w9qA_vYUTpSYWRQ&s"
-          }
-          fill={true}
-          alt="Profile"
-          className="absolute object-cover"
-        />
+        {user?.profileImagePath ? (
+          <Image
+            src={user.profileImagePath}
+            alt="Profile"
+            fill={true}
+            className="absolute object-cover"
+          />
+        ) : (
+          <FaUserCircle className="text-lg w-full h-full text-theme" />
+        )}
       </div>
       {profilePopup && (
         <ProfilePopup

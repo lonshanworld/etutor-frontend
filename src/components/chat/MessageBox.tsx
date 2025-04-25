@@ -89,7 +89,7 @@ export default function MessageBox(
                 }
             }
         }catch(err){
-            showToast("Unexpected error occured", "Error");
+            showToast("Unexpected error occured", "error");
         }finally{
             setShowDelete(false);
         }
