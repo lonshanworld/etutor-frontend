@@ -46,11 +46,12 @@ export default async function UserHomePage({
         />
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
-          <FilterBox
+          
+          {/* <FilterBox
             placeholder="Filter Users"
             options={["Name", "Email"]}
             className="ps-8 w-[200px]"
-          />
+          /> */}
         </div>
       </div>
       <div className="mt-5">

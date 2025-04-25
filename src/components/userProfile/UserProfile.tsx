@@ -228,7 +228,7 @@ export default function UserProfile({
         )}
       >
         <div className="h-[80px] bg-theme w-full sm:rounded-t-lg relative">
-          {profileData && user?.role !== "staff" && user?.role !== "admin" && (
+          {profileData && user?.role !== "staff" && user?.role !== "admin" && (user?.id !== profileData.id) && (
             <button
               onClick={async () => {
                 if (user && profileData) {

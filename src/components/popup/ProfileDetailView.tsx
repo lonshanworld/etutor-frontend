@@ -31,6 +31,7 @@ const ProfileDetailView = ({
 }: ProfileDetailViewProps) => {
   const [activeTab, setActiveTab] = useState<TabOption>("About");
   const { isReadOnly } = useUserStore();
+  const {user} = useUserStore();
 
   // Determine which tabs to show based on role
   const getTabs = (): TabOption[] => {
@@ -72,7 +73,7 @@ const ProfileDetailView = ({
           </button>
 
           {/* Message button for other users' profiles */}
-          {!isOwnProfile && (
+          {!isOwnProfile && (profile.userId !== user?.id) && (
             <button
               onClick={onChat}
               className={`absolute -bottom-5 right-8 bg-secondaryBackground flex items-center gap-2 px-4 py-2 rounded-lg shadow-md text-primaryText hover:bg-opacity-80 transition-colors ${isReadOnly ? "pointer-events-none" : "cursor-pointer"}`}
