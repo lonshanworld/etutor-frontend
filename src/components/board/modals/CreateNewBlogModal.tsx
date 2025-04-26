@@ -32,7 +32,7 @@ interface Props {
   onBlogPosted: (newBlog: any) => void;
 }
 
-const MAX_FILE_SIZE_MB = 4;
+const MAX_FILE_SIZE_MB = 2;
 const MAX_FILES = 10;
 
 const CreateNewBlogModal = ({
