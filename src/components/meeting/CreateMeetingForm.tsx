@@ -165,7 +165,7 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
                   {...register("meeting_time")}
                 />
                 {errors.meeting_time && (
-                  <span className='text-red-500 text-sm'>
+                  <span className='text-red-500 text-sm pt-1'>
                     {errors.meeting_time.message}
                   </span>
                 )}
@@ -179,7 +179,7 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
                   {...register("meeting_date")}
                 />
                 {errors.meeting_date && (
-                  <span className='text-red-500 text-sm'>
+                  <span className='text-red-500 text-sm pt-1'>
                     {errors.meeting_date.message}
                   </span>
                 )}
@@ -226,7 +226,7 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
                   }
                 />
                 {errors.platform && (
-                  <span className='text-red-500 text-sm'>
+                  <span className='text-red-500 text-sm pt-1'>
                     {errors.platform.message}
                   </span>
                 )}
@@ -292,7 +292,7 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
                 }
               </div>
               {errors.users && (
-                <span className='text-red-500 text-sm'>
+                <span className='text-red-500 text-sm pt-1'>
                   At least one student must be assigned.
                 </span>
               )}

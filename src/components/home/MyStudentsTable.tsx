@@ -64,11 +64,11 @@ const MyStudentsTable = ({ loading, myStudents }: Props) => {
   return (
     <>
       <div className='flex items-center justify-between'>
-        <h2 className='font-semibold text-primaryText px-2 pb-3 text-xl'>
+        <h2 className='font-semibold text-primaryText px-2 pb-3 text-lg'>
           My Students
         </h2>
 
-        <div className='px-2 pb-4'>
+        <div className='px-2 pb-3'>
           <input
             type='text'
             placeholder='Search by name or email...'
@@ -115,13 +115,30 @@ const MyStudentsTable = ({ loading, myStudents }: Props) => {
                   <tr>
                     <td
                       colSpan={5}
-                      className='text-center py-10'
+                      className='text-center h-[200px]'
                     >
                       Loading...
                     </td>
                   </tr>
-                : filteredStudents.length > 0 ?
-                  filteredStudents.map((student, index) => (
+                : myStudents.length === 0 ?
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className='text-center h-[200px]'
+                    >
+                      No student assigned to you yet
+                    </td>
+                  </tr>
+                : filteredStudents.length === 0 ?
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className='text-center h-[200px]'
+                    >
+                      No matching students found
+                    </td>
+                  </tr>
+                : filteredStudents.map((student, index) => (
                     <tr
                       key={student.user_id}
                       className='border border-tableRowBorder h-[50px] sm:h-[70px] text-sm'
@@ -154,14 +171,6 @@ const MyStudentsTable = ({ loading, myStudents }: Props) => {
                       </td>
                     </tr>
                   ))
-                : <tr>
-                    <td
-                      colSpan={5}
-                      className='text-center h-[200px]'
-                    >
-                      No matching students found.
-                    </td>
-                  </tr>
                 }
               </tbody>
             </table>

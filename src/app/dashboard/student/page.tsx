@@ -20,6 +20,8 @@ import { api } from "../../../../convex/_generated/api";
 
 export default function StudentMainPage() {
   const createConversation = useMutation(api.chatRoom.createConversation);
+  const [meetingLoading, setMeetingLoading] = useState(false);
+  const [tutorLoading, setTutorLoading] = useState(false);
   const [activeMeetings, setActiveMeetings] = useState<Meeting[]>([]);
   const [myTutorInfo, setMyTutorInfo] = useState<MyTutor | null>(null);
   const [viewMeeting, setViewMeeting] = useState<Meeting | null>(null);
@@ -54,6 +56,7 @@ export default function StudentMainPage() {
   }, [userId]);
 
   const fetchMyMeetings = async () => {
+    setMeetingLoading(true);
     try {
       if (userId) {
         const response = await getActiveMeetings(userId);
@@ -61,10 +64,13 @@ export default function StudentMainPage() {
       }
     } catch (error) {
       showToast("Error fetching meetings", "error");
+    } finally {
+      setMeetingLoading(false);
     }
   };
 
   const fetchMyTutor = async () => {
+    setTutorLoading(true);
     try {
       if (userId) {
         const response = await getMyTutor(userId);
@@ -72,6 +78,8 @@ export default function StudentMainPage() {
       }
     } catch (error) {
       showToast("Error fetching my tutor info", "error");
+    } finally {
+      setTutorLoading(false);
     }
   };
 
@@ -120,14 +128,18 @@ export default function StudentMainPage() {
             <div className='hidden sm:flex w-full text-2xl font-semibold pl-3 py-1 mb-2'>
               My Tutor
             </div>
-            {myTutorInfo ?
+            {tutorLoading ?
+              <div className='rounded-3xl bg-homeItem p-4 sm:min-h-[300px] flex items-center justify-center'>
+                Loading...
+              </div>
+            : myTutorInfo ?
               <>
                 {/* Top section */}
-                <div className='flex flex-col md:flex-row gap-4 sm:min-h-[330px]'>
+                <div className='flex flex-col md:flex-row gap-4 min-h-[300px]'>
                   {/* Left card - Tutor Profile */}
 
                   <div className='flex flex-col rounded-3xl bg-homeItem p-4 flex-1'>
-                    <div className='flex w-full text-base font-semibold pb-2 sm:hidden'>
+                    <div className='flex w-full text-lg font-semibold pb-3 sm:hidden'>
                       My Tutor
                     </div>
 
@@ -158,7 +170,7 @@ export default function StudentMainPage() {
                     </div>
 
                     {/* Info */}
-                    <div className='grid grid-cols-2 gap-4 flex-1 p-4'>
+                    <div className='grid grid-cols-2 gap-4 flex-1 sm:p-4'>
                       <div className='flex flex-col'>
                         <p className='text-base font-semibold pb-1'>Subject</p>
                         <p className='text-secondaryText text-md'>
@@ -196,7 +208,7 @@ export default function StudentMainPage() {
                       Contact Information
                     </div>
 
-                    <div className='grid sm:grid-cols-2 gap-4 mb-4 h-auto p-4'>
+                    <div className='grid sm:grid-cols-2 gap-4 mb-4 h-auto sm:p-4'>
                       <div className='flex flex-col'>
                         <p className='font-semibold pb-1'>Email</p>
                         <p
@@ -213,7 +225,7 @@ export default function StudentMainPage() {
                       </div>
                     </div>
 
-                    <div className='flex sm:pt-10 pt-3 pl-4'>
+                    <div className='flex sm:pt-10 pt-3 sm:pl-4'>
                       <button
                         onClick={handleChat}
                         className='flex items-center gap-4 bg-grayToggle text-gray-600 rounded-lg shadow-md px-6 py-3'
@@ -241,6 +253,7 @@ export default function StudentMainPage() {
                 <MeetingSummary
                   meetings={activeMeetings}
                   onClick={(meeting) => handleView(meeting)}
+                  loading={meetingLoading}
                 />
               </div>
             </div>

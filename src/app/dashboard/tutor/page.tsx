@@ -13,7 +13,8 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
 export default function TutorMainPage() {
-  const [loading, setLoading] = useState(false);
+  const [studentLoading, setStudentLoading] = useState(false);
+  const [meetingLoading, setMeetingLoading] = useState(false);
   const [myStudents, setMyStudents] = useState<MyStudent[]>([]);
   const [activeMeetings, setActiveMeetings] = useState<Meeting[]>([]);
   const [viewMeeting, setViewMeeting] = useState<Meeting | null>(null);
@@ -45,6 +46,7 @@ export default function TutorMainPage() {
   }, [userId]);
 
   const fetchMyStudents = async () => {
+    setStudentLoading(true);
     try {
       if (userId) {
         const response = await getMyStudents(userId);
@@ -52,10 +54,13 @@ export default function TutorMainPage() {
       }
     } catch (error) {
       console.log("error fetching students", error);
+    } finally {
+      setStudentLoading(false);
     }
   };
 
   const fetchMyMeetings = async () => {
+    setMeetingLoading(true);
     try {
       if (userId) {
         const response = await getActiveMeetings(userId);
@@ -63,6 +68,8 @@ export default function TutorMainPage() {
       }
     } catch (error) {
       console.log("error fetching meetings", error);
+    } finally {
+      setMeetingLoading(false);
     }
   };
 
@@ -95,7 +102,7 @@ export default function TutorMainPage() {
         : <div className='flex flex-col gap-5 h-full'>
             <div className='flex flex-col min-h-0 overflow-hidden sm:flex-1 flex-grow rounded-3xl bg-homeItem basis- px-5 py-3 sm:py-5'>
               <MyStudentsTable
-                loading={loading}
+                loading={studentLoading}
                 myStudents={myStudents}
               />
             </div>
@@ -104,6 +111,7 @@ export default function TutorMainPage() {
                 <MeetingSummary
                   meetings={activeMeetings}
                   onClick={(meeting) => handleViewMeetingDetail(meeting)}
+                  loading={meetingLoading}
                 />
               </div>
             </div>
