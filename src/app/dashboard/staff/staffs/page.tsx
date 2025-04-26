@@ -5,7 +5,6 @@ import TableDemo from "@/components/table/Table";
 import Form from "@/components/form/Form";
 import CreateFormButton from "@/components/form/CreateFormButton";
 import { BiFilterAlt } from "react-icons/bi";
-import UserHomePage from "@/components/userhomepage/UserHomePage";
 import { User, userFromJson, UserRole } from "@/model/user";
 import { getStaffs } from "@/api/services/staffs";
 import { AppRouter } from "@/router";
