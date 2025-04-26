@@ -14,6 +14,8 @@ import { majorSubjectFromJson } from "@/model/major";
 
 import { useEffect, useState } from "react";
 import { useMajor } from "@/stores/useMajor";
+import { useEventStore } from "@/stores/useEventStore";
+import { useUserStore } from "@/stores/useUserStore";
 
 export default function DashboardTemplate({
   children,
@@ -23,8 +25,12 @@ export default function DashboardTemplate({
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [sidebarStyle, setSidebarStyle] = useState<string>("");
   const pathName = usePathname();
+  const {user} = useUserStore()
 
   const { setMajors, setSubjects } = useMajor();
+
+  const { initializeEcho, disconnect, session_login, session_logout,sendData, subscribeToChannel, connected, subscribeToPublicChannel } = useEventStore();
+
 
   const openSidebar = () => {
     setSidebarStyle("left-0");
@@ -64,12 +70,59 @@ export default function DashboardTemplate({
     }
   };
 
+  function joinSocket(id : number){
+    initializeEcho().then((_)=>{
+      console.log('trying');
+      if(connected){
+        session_login();
+        // console.log("it is connected");
+        // // setTimeout(async() => {
+        // //   await sendData('session-login-channel', 'SessionLoginEvent', { user_id: 1 });
+          
+        // // }, 2000);
+        // connectPresense();
+        // setTimeout(async()=>{
+        //   console.log("trying to leave");
+        //   leavePresense();
+        // },5000);
+      }
+      
+    });
+  }
+
   useEffect(() => {
-    fetchMajors();
+    const handleBeforeUnload = () => {
+      if(user){
+        navigator.sendBeacon(`http://localhost:8000/api/logout?id=${user.id}`);
+      }
+  
+      session_logout();
+
+    };
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
+
+  useEffect(() => {
+    
+    fetchMajors();
+    
+  }, []);
+
+  useEffect(()=>{
+    if(user){
+      joinSocket(user.id);
+      
+    }
+  },[user, connected])
 
   return (
     <>
+      <p className="text-3xl">{}</p>
       <div className="py-3 pr-4 hidden lg:block">
         <DashboardAppbar />
       </div>

@@ -1,39 +1,47 @@
 "use client";
 
+import { getViewPages } from "@/api/services/report";
 import { AppRouter } from "@/router";
+import useLoading from "@/stores/useLoading";
+import { useEffect, useState } from "react";
 import { CartesianAxis, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-const data = [
-    { name: '/login', pv: 322 },
-    { name: '/', pv: 500 },
-    { name: '/unauthorized', pv: 421 },
-    { name: '/forget-password', pv: 139 },
-    { name: '/confirm-otp', pv: 297 },
-    { name: '/reset-password', pv: 220 },
-    { name: '/dashboard/staff', pv: 404 },
-    { name: '/dashboard/staff/students', pv: 176 },
-    { name: '/dashboard/staff/tutors', pv: 389 },
-    { name: '/dashboard/staff/staffs', pv: 248 },
-    { name: '/dashboard/staff/allocate', pv: 222 },
-    { name: '/dashboard/staff/active-users', pv: 303 },
-    { name: '/dashboard/staff/viewed-browsers', pv: 154 },
-    { name: '/dashboard/staff/viewed-pages', pv: 275 },
-    { name: '/dashboard/student', pv: 184 },
-    { name: '/dashboard/student/chat', pv: 334 },
-    { name: '/dashboard/student/board', pv: 265 },
-    { name: '/dashboard/student/meeting', pv: 471 },
-    { name: '/dashboard/student/note', pv: 142 },
-    { name: '/dashboard/student/people', pv: 312 },
-    { name: '/dashboard/student/chat/chatbox', pv: 228 },
-    { name: '/dashboard/tutor', pv: 343 },
-    { name: '/dashboard/tutor/chat', pv: 111 },
-    { name: '/dashboard/tutor/board', pv: 227 },
-    { name: '/dashboard/tutor/meeting', pv: 172 },
-    { name: '/dashboard/tutor/note', pv: 251 },
-    { name: '/dashboard/tutor/people', pv: 107 },
-    { name: '/dashboard/tutor/allocatedstudent', pv: 107 },
-    { name: '/dashboard/tutor/chat/chatbox', pv: 291 },
-  ];
+// const data = [
+//     { name: '/login', pv: 322 },
+//     { name: '/', pv: 500 },
+//     { name: '/unauthorized', pv: 421 },
+//     { name: '/forget-password', pv: 139 },
+//     { name: '/confirm-otp', pv: 297 },
+//     { name: '/reset-password', pv: 220 },
+//     { name: '/dashboard/staff', pv: 404 },
+//     { name: '/dashboard/staff/students', pv: 176 },
+//     { name: '/dashboard/staff/tutors', pv: 389 },
+//     { name: '/dashboard/staff/staffs', pv: 248 },
+//     { name: '/dashboard/staff/allocate', pv: 222 },
+//     { name: '/dashboard/staff/active-users', pv: 303 },
+//     { name: '/dashboard/staff/viewed-browsers', pv: 154 },
+//     { name: '/dashboard/staff/viewed-pages', pv: 275 },
+//     { name: '/dashboard/student', pv: 184 },
+//     { name: '/dashboard/student/chat', pv: 334 },
+//     { name: '/dashboard/student/board', pv: 265 },
+//     { name: '/dashboard/student/meeting', pv: 471 },
+//     { name: '/dashboard/student/note', pv: 142 },
+//     { name: '/dashboard/student/people', pv: 312 },
+//     { name: '/dashboard/student/chat/chatbox', pv: 228 },
+//     { name: '/dashboard/tutor', pv: 343 },
+//     { name: '/dashboard/tutor/chat', pv: 111 },
+//     { name: '/dashboard/tutor/board', pv: 227 },
+//     { name: '/dashboard/tutor/meeting', pv: 172 },
+//     { name: '/dashboard/tutor/note', pv: 251 },
+//     { name: '/dashboard/tutor/people', pv: 107 },
+//     { name: '/dashboard/tutor/allocatedstudent', pv: 107 },
+//     { name: '/dashboard/tutor/chat/chatbox', pv: 291 },
+//   ];
+
+interface PageViewModel {
+  name : string,
+  pv : number,
+}
 
   const routeLabels: Record<string, string> = {};
 
@@ -61,77 +69,110 @@ export default function CustomLineChart(
     isSmallScreen? : boolean,
   } 
 ) {
-  const reportData = isSmallScreen === true ? data.slice(0, 5) : data;
+  // const reportData = isSmallScreen === true ? data.slice(0, 5) : data;
+  const [reportData, setReportData] = useState<PageViewModel[]>([]);
+  const {isLoading, showLoading, hideLoading} = useLoading();
+
+  function reportDataLimit(){
+    return  isSmallScreen === true ? reportData.slice(0, 5) : reportData;
+  }
+
+  useEffect(()=>{
+    const fetchData = async()=>{
+      try{
+        showLoading();
+        const response = await getViewPages();
+        console.log("checking page response", response);
+        const list : PageViewModel[]= [];
+        response.data.map((item :any, index  : any)=>{
+          list.push({
+            name : item.url ?? "",
+            pv : item.view_count ?? 0,
+          })
+        })
+        setReportData(list);
+      }catch(err){
+        console.log("has page view count error", err);
+      }finally{
+        hideLoading();
+      }
+    };
+
+    fetchData();
+  },[])
+
     return (
         <div
         className={`w-full h-[360px] md:h-full `}>
-            <ResponsiveContainer
+            {
+              (isLoading !== true)  &&  <ResponsiveContainer
           
-             width="100%" height="100%">
-        <LineChart
-          width={500}
-          height={300}
-          data={reportData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-          
-        >
-          <CartesianAxis strokeDasharray="3 3" />
-          <XAxis 
-          dataKey="name"
-          interval={0}
-          angle={-70}
-          height={isSmallScreen === true ? 20 : 110}
-          fontSize={12}
-          textAnchor="end" 
-          
-          tick={(props) => {
-            const { x, y, payload } = props;
-            const label = routeLabels[payload.value]; // Get key name if path exists
-        
-            return isSmallScreen === true ? 
-            <></> 
-            :
-            label ? (
-              <text
-                x={x}
-                y={y + 10}
-                textAnchor="end"
-                fill="#099797"
-                fontSize={12}
-                transform={`rotate(-70, ${x}, ${y})`}
-              >
-                {label} {/* Display the route's key name */}
-              </text>
-            ) : (
-              <text
-                x={x}
-                y={y + 10}
-                textAnchor="end"
-                fill="#099797"
-                fontSize={10}
-                transform={`rotate(-60, ${x}, ${y})`}
-              >
-                {payload.value} {/* Display the full path if not in the AppRouter */}
-              </text>
-            )
-            ;
-          }}
-           />
-          <YAxis 
-          width={20}/>
-          <Tooltip
-          content={({ active, payload, label })=> (<CustomTooltip  active={active} payload={payload} label={label}/>)} />
-          <Legend />
-          <Line
-          
-          type="monotone" dataKey="pv" stroke="#099797" activeDot={{ r: 8 }} />
-        </LineChart>
-      </ResponsiveContainer>
+              width="100%" height="100%">
+         <LineChart
+           width={500}
+           height={300}
+           data={reportDataLimit()}
+           margin={{
+             top: 5,
+             right: 30,
+             left: 20,
+             bottom: 5,
+           }}
+           
+         >
+           <CartesianAxis strokeDasharray="3 3" />
+           <XAxis 
+           dataKey="name"
+           interval={0}
+           angle={-70}
+           height={isSmallScreen === true ? 20 : 110}
+           fontSize={12}
+           textAnchor="end" 
+           
+           tick={(props) => {
+             const { x, y, payload } = props;
+             const label = routeLabels[payload.value]; // Get key name if path exists
+         
+             return isSmallScreen === true ? 
+             <></> 
+             :
+             label ? (
+               <text
+                 x={x}
+                 y={y + 10}
+                 textAnchor="end"
+                 fill="#099797"
+                 fontSize={12}
+                 transform={`rotate(-70, ${x}, ${y})`}
+               >
+                 {label} {/* Display the route's key name */}
+               </text>
+             ) : (
+               <text
+                 x={x}
+                 y={y + 10}
+                 textAnchor="end"
+                 fill="#099797"
+                 fontSize={10}
+                 transform={`rotate(-60, ${x}, ${y})`}
+               >
+                 {payload.value} {/* Display the full path if not in the AppRouter */}
+               </text>
+             )
+             ;
+           }}
+            />
+           <YAxis 
+           width={20}/>
+           <Tooltip
+           content={({ active, payload, label })=> (<CustomTooltip  active={active} payload={payload} label={label}/>)} />
+           <Legend />
+           <Line
+           
+           type="monotone" dataKey="pv" stroke="#099797" activeDot={{ r: 8 }} />
+         </LineChart>
+       </ResponsiveContainer>
+            }
         </div>
     )
 
