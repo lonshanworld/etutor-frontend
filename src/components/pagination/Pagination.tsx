@@ -7,19 +7,22 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 
 export function PaginationDemo({
   pageCount,
   currentPage,
   url,
-  remainingUrl,
+  remainingUrl = "",
 }: {
   pageCount: number;
   currentPage: number;
   url: string;
   remainingUrl?: string;
 }) {
+  const router = useRouter();
+
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
 
   return (
@@ -32,13 +35,17 @@ export function PaginationDemo({
               "max-sm:w-7 max-sm:h-7",
               currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
             )}
-            href={`${url}?page=${currentPage - 1}${remainingUrl ?? ""}`}
+            onClick={() =>
+              router.push(`${url}?page=${currentPage - 1}${remainingUrl ?? ""}`)
+            }
           />
         </PaginationItem>
         {pages.map((page) => (
           <PaginationItem key={page} className="">
             <PaginationLink
-              href={`${url}?page=${page}${remainingUrl ?? ""}`}
+              onClick={() =>
+                router.push(`${url}?page=${page}${remainingUrl ?? ""}`)
+              }
               isActive={page === currentPage}
               className={twMerge(
                 "max-sm:w-7 max-sm:h-7",
@@ -58,7 +65,9 @@ export function PaginationDemo({
                 : undefined
             )}
             aria-disabled={currentPage === pageCount}
-            href={`${url}?page=${currentPage + 1}${remainingUrl ?? ""}`}
+            onClick={() =>
+              router.push(`${url}?page=${currentPage + 1}${remainingUrl ?? ""}`)
+            }
           />
         </PaginationItem>
       </PaginationContent>
