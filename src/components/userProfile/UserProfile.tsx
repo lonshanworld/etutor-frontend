@@ -494,16 +494,18 @@ export default function UserProfile({
               </div>
             </div>
 
-            {showDetail && user?.role === UserRole.staff && (
-              <div
-                className="float-right mb-5 mt-3 me-5"
-                onClick={() => viewDashboard(profileData)}
-              >
-                <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
-                  View Dashboard
-                </button>
-              </div>
-            )}
+            {showDetail &&
+              user?.role === UserRole.staff &&
+              profileData?.role !== UserRole.staff && (
+                <div
+                  className="float-right mb-5 mt-3 me-5"
+                  onClick={() => viewDashboard(profileData)}
+                >
+                  <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
+                    View Dashboard
+                  </button>
+                </div>
+              )}
           </div>
         )}
 
