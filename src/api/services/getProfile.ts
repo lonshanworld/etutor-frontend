@@ -9,7 +9,6 @@ export async function getProfile(): Promise<Profile> {
   if (isErrorModel(response)) {
     throw response;
   }
-  console.log("profile res", response);
   const data = profileFromJson(response);
   return data;
 }

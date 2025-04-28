@@ -32,7 +32,6 @@ const MeetingDetail = ({ meeting, onBack, onDelete }: Props) => {
       onBack();
     } catch (error) {
       showToast("Error occurs while deleting meeting", "error");
-      console.log(error);
     } finally {
       setWarningPopup(false);
     }

@@ -53,7 +53,7 @@ export default function TutorMainPage() {
         setMyStudents(response.myStudents);
       }
     } catch (error) {
-      console.log("error fetching students", error);
+      showToast("Error getting my students", "error");
     } finally {
       setStudentLoading(false);
     }
@@ -67,7 +67,7 @@ export default function TutorMainPage() {
         setActiveMeetings(response.meetings);
       }
     } catch (error) {
-      console.log("error fetching meetings", error);
+      showToast("Error getting meetings", "error");
     } finally {
       setMeetingLoading(false);
     }
