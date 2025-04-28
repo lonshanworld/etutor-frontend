@@ -13,23 +13,13 @@ import { MdEmail, MdOutlineMessage } from "react-icons/md";
 import { api } from "../../../convex/_generated/api";
 import ProfilePic from "../ProfilePic";
 import ProfileDetailView from "./ProfileDetailView";
+import { getLastActiveAgo } from "@/api/services/activityLog";
 
 interface Props {
   className?: string;
   userId: number;
   onClose: () => void;
 }
-
-type UserChatInfo = {
-  userId: number;
-  firstName: string;
-  middleName?: string;
-  lastName?: string;
-  email: string;
-  role: string;
-  profileImagePath?: string;
-  gender?: string;
-};
 
 interface DragState {
   isDragging: boolean;
@@ -41,6 +31,7 @@ interface DragState {
 
 const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
   const [profileState, setProfileState] = useState<ProfileData | null>(null);
+  const [lastSeen, setLastSeen] = useState<string>("");
   const [isLoading, setLoading] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [showDetailProfile, setShowDetailProfile] = useState(false); // State to control detailed profile view
@@ -97,6 +88,13 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
         const profile = await fetchProfile(userId, user);
         setProfileState(profile);
         setIsOwnProfile(getUserId() === userId);
+
+        if (userId === getUserId()) {
+          setLastSeen("Active now");
+        } else {
+          const status = await getLastActiveAgo(userId);
+          setLastSeen(status);
+        }
       }
     } catch (error) {
       console.error("Error loading profile:", error);
@@ -398,11 +396,9 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
           </div>
           <div className='flex items-center gap-1'>
             <div
-              className={`rounded-full h-2 w-2 ${profileState.status === "activated" ? "bg-green-600" : "bg-red-600"}`}
+              className={`rounded-full h-2 w-2 ${lastSeen === "Active now" ? "bg-green-600" : "bg-red-600"}`}
             ></div>
-            <span className='text-sm'>
-              {capitalizeFirstLetter(profileState.status)}
-            </span>
+            <span className='text-sm text-secondaryText'>{lastSeen}</span>
           </div>
         </div>
         <div className='pt-1 space-y-1'>
@@ -454,7 +450,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
           </div>
         </div>
 
-        {!isOwnProfile && profileState && (user?.id !== profileState.userId) && (
+        {!isOwnProfile && profileState && user?.id !== profileState.userId && (
           <div className='absolute top-[60px] right-4'>
             <button
               onClick={handleChat}
@@ -489,6 +485,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     return (
       <ProfileDetailView
         profile={profileState}
+        lastSeen={lastSeen}
         onClose={handleCloseDetailView}
         onChat={handleChat}
         isOwnProfile={isOwnProfile}
@@ -565,7 +562,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
 
       {/* Desktop popup box with subtle slide animation */}
       <div
-        className={`relative bg-background sm:rounded-lg min-w-[300px] sm:w-[350px] min-h-[240px] rounded-lg overflow-clip shadow-xl z-50 
+        className={`relative bg-background sm:rounded-lg min-w-[300px] sm:min-w-[350px] min-h-[240px] rounded-lg overflow-clip shadow-xl z-50 
           transition-all duration-300 ease-out ${uiState.isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
         role='dialog'
         aria-modal='true'
