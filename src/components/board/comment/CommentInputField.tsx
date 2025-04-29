@@ -2,6 +2,8 @@
 
 import { giveComment } from "@/api/services/blogs";
 import { Comment } from "@/model/blog";
+import { useToast } from "@/stores/useToast";
+
 import { useUserStore } from "@/stores/useUserStore";
 import { useRef, useState } from "react";
 import { AiOutlineSend } from "react-icons/ai";
@@ -20,6 +22,7 @@ const CommentInputField = ({
   const [commentContent, setcommentContent] = useState("");
   const commentSectionRef = useRef<HTMLDivElement | null>(null);
   const { isReadOnly } = useUserStore();
+  const { showToast } = useToast();
 
   const handleSubmit = async () => {
     if (commentContent.trim() === "") return;
@@ -30,7 +33,7 @@ const CommentInputField = ({
       onAddComment(response);
       setcommentContent("");
     } catch (error) {
-      console.log("comment error", error);
+      showToast("Error occurs while giving comment", "error");
     } finally {
       // scroll to comment input
       setTimeout(() => {

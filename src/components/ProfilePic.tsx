@@ -6,19 +6,10 @@ import placeholderProfile from "@/assets/images/placeholder-profile.png";
 interface Props {
   profileUrl: string | null;
   size?: number;
-  userId?: number;
-  onClick?: () => void;
   alt?: string;
   className?: string;
 }
-const ProfilePic = ({
-  className,
-  profileUrl,
-  size = 40,
-  alt,
-  userId,
-  onClick,
-}: Props) => {
+const ProfilePic = ({ className, profileUrl, size = 40, alt }: Props) => {
   return (
     <div
       className='rounded-full overflow-clip relative select-none'

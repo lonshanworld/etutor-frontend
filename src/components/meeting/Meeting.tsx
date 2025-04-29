@@ -47,7 +47,7 @@ const Meeting = () => {
         setMeetings(response.meetings);
       }
     } catch (error) {
-      console.log("Error Fetching active meetings", error);
+      showToast("Error fetching active meetings", "error");
     } finally {
       setLoading(false);
     }
@@ -62,7 +62,7 @@ const Meeting = () => {
         setMeetings(response.meetings);
       }
     } catch (error) {
-      console.log("Error Fetching history meetings", error);
+      showToast("Error fetching meeting history", "error");
     } finally {
       setLoading(false);
     }
