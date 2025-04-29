@@ -228,39 +228,42 @@ export default function UserProfile({
         )}
       >
         <div className="h-[80px] bg-theme w-full sm:rounded-t-lg relative">
-          {profileData && user?.role !== "staff" && user?.role !== "admin" && (user?.id !== profileData.id) && (
-            <button
-              onClick={async () => {
-                if (user && profileData) {
-                  showLoading();
-                  try {
-                    const chatId = await createConversation({
-                      user1Id: user.id,
-                      user2Id: profileData.id,
-                    });
-                    hideLoading();
-                    if (user.role === "student") {
-                      router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
-                    } else if (user.role === "tutor") {
-                      router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
+          {profileData &&
+            user?.role !== "staff" &&
+            user?.role !== "admin" &&
+            user?.id !== profileData.id && (
+              <button
+                onClick={async () => {
+                  if (user && profileData) {
+                    showLoading();
+                    try {
+                      const chatId = await createConversation({
+                        user1Id: user.id,
+                        user2Id: profileData.id,
+                      });
+                      hideLoading();
+                      if (user.role === "student") {
+                        router.push(`${AppRouter.studentChatBox}?id=${chatId}`);
+                      } else if (user.role === "tutor") {
+                        router.push(`${AppRouter.tutorChatBox}?id=${chatId}`);
+                      }
+                    } catch (err) {
+                      hideLoading();
+                      showToast(
+                        "Unexpected error occured. Please try again later",
+                        "error"
+                      );
                     }
-                  } catch (err) {
-                    hideLoading();
-                    showToast(
-                      "Unexpected error occured. Please try again later",
-                      "error"
-                    );
                   }
-                }
-              }}
-              className="absolute flex flex-row justify-center items-center gap-3 -bottom-5 right-[60px] bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2"
-            >
-              <div className="relative w-7 h-7 opacity-80">
-                <Image src={MessageIcon} alt="Message" fill={true} />
-              </div>
-              <span className="text-base text-iconGray">Message</span>
-            </button>
-          )}
+                }}
+                className="absolute flex flex-row justify-center items-center gap-3 -bottom-5 right-[60px] bg-grayToggle text-gray-600 rounded-lg shadow-md px-4 py-2"
+              >
+                <div className="relative w-7 h-7 opacity-80">
+                  <Image src={MessageIcon} alt="Message" fill={true} />
+                </div>
+                <span className="text-base text-iconGray">Message</span>
+              </button>
+            )}
         </div>
         {!profileData && (
           <div className="text-2xl text-center mt-40">User Not Found</div>
@@ -284,7 +287,8 @@ export default function UserProfile({
                   src={
                     previewUrl ?? profileData?.profileImagePath ?? UserIcon.src
                   }
-                  className="w-full h-full object-cover sm:cursor-pointer"
+                  className={`w-full h-full object-cover ${!showDetail && "sm:cursor-pointer"}`}
+                  draggable={false}
                   alt=""
                 />
               ) : (
@@ -490,16 +494,18 @@ export default function UserProfile({
               </div>
             </div>
 
-            {showDetail && user?.role === UserRole.staff && (
-              <div
-                className="float-right mb-5 mt-3 me-5"
-                onClick={() => viewDashboard(profileData)}
-              >
-                <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
-                  View Dashboard
-                </button>
-              </div>
-            )}
+            {showDetail &&
+              user?.role === UserRole.staff &&
+              profileData?.role !== UserRole.staff && (
+                <div
+                  className="float-right mb-5 mt-3 me-5"
+                  onClick={() => viewDashboard(profileData)}
+                >
+                  <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
+                    View Dashboard
+                  </button>
+                </div>
+              )}
           </div>
         )}
 

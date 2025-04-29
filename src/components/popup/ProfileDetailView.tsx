@@ -59,17 +59,17 @@ const ProfileDetailView = ({
     <>
       {/* Overlay */}
       <div
-        className='fixed inset-0 bg-black bg-opacity-50 z-50'
+        className="fixed inset-0 bg-black bg-opacity-50 z-50"
         onClick={onClose}
       ></div>
 
       {/* Detail View */}
-      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background shadow-xl rounded-lg z-50 w-[600px] max-w-[90vw] min-h-[690px] max-h-[90vh] overflow-hidden'>
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background shadow-xl rounded-lg z-50 w-[600px] max-w-[90vw] min-h-[690px] max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className='h-[120px] bg-theme w-full rounded-t-lg relative'>
+        <div className="h-[120px] bg-theme w-full rounded-t-lg relative">
           <button
             onClick={onClose}
-            className='absolute top-3 right-3 text-white hover:bg-opacity-80 p-1.5 rounded-full'
+            className="absolute top-3 right-3 text-white hover:bg-opacity-80 p-1.5 rounded-full"
           >
             <IoClose size={24} />
           </button>
@@ -91,14 +91,11 @@ const ProfileDetailView = ({
         </div>
 
         {/* Profile content */}
-        <div className='relative'>
+        <div className="relative">
           {/* Profile photo */}
-          <div className='absolute top-[-120px] left-8'>
-            <div className='rounded-full bg-background p-1.5'>
-              <ProfilePic
-                profileUrl={profile?.profileUrl || ""}
-                size={100}
-              />
+          <div className="absolute top-[-120px] left-8">
+            <div className="rounded-full bg-background p-1.5">
+              <ProfilePic profileUrl={profile?.profileUrl || ""} size={100} />
             </div>
           </div>
 
@@ -125,20 +122,14 @@ const ProfileDetailView = ({
               </div>
             </div>
 
-            <div className='mt-2 space-y-2'>
-              <div className='flex items-center gap-2'>
-                <MdEmail
-                  className='text-theme'
-                  size={18}
-                />
-                <p className='text-sm text-secondaryText'>{profile.email}</p>
+            <div className="mt-2 space-y-2">
+              <div className="flex items-center gap-2">
+                <MdEmail className="text-theme" size={18} />
+                <p className="text-sm text-secondaryText">{profile.email}</p>
               </div>
-              <div className='flex items-center gap-2'>
-                <BiSolidPhone
-                  className='text-theme'
-                  size={18}
-                />
-                <p className='text-sm text-secondaryText'>
+              <div className="flex items-center gap-2">
+                <BiSolidPhone className="text-theme" size={18} />
+                <p className="text-sm text-secondaryText">
                   {profile.phone || "-"}
                 </p>
               </div>
@@ -146,16 +137,16 @@ const ProfileDetailView = ({
           </div>
 
           {/* Tabs */}
-          <div className='px-8 pb-6 pt-3'>
-            <div className='flex border-b border-secondaryBackground mb-4'>
+          <div className="px-8 pb-6 pt-3">
+            <div className="flex border-b border-secondaryBackground mb-4">
               {tabs.map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`py-2 px-4 text-sm font-medium ${
-                    activeTab === tab ?
-                      "border-b-2 border-theme text-theme"
-                    : "text-secondaryText hover:text-secondaryBackgroundOpposite"
+                    activeTab === tab
+                      ? "border-b-2 border-theme text-theme"
+                      : "text-secondaryText hover:text-secondaryBackgroundOpposite"
                   }`}
                 >
                   {tab}
@@ -164,33 +155,33 @@ const ProfileDetailView = ({
             </div>
 
             {/* Tab Content */}
-            <div className='bg-secondaryBackground p-4 rounded-lg'>
+            <div className="bg-secondaryBackground p-4 rounded-lg">
               {activeTab === "About" && (
-                <div className='space-y-4'>
+                <div className="space-y-4">
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>
+                    <h3 className="font-semibold text-sm mb-1">
                       Date of Birth
                     </h3>
-                    <p className='text-sm'>{profile.dob || "-"}</p>
+                    <p className="text-sm">{profile.dob || "-"}</p>
                   </div>
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>Gender</h3>
-                    <p className='text-sm'>{profile.gender || "-"}</p>
+                    <h3 className="font-semibold text-sm mb-1">Gender</h3>
+                    <p className="text-sm">{profile.gender || "-"}</p>
                   </div>
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>Nationality</h3>
-                    <p className='text-sm'>{profile.nationality || "-"}</p>
+                    <h3 className="font-semibold text-sm mb-1">Nationality</h3>
+                    <p className="text-sm">{profile.nationality || "-"}</p>
                   </div>
                   {/* Only show address and passport for staff or own profile */}
                   {(isOwnProfile || isStaff) && (
                     <>
                       <div>
-                        <h3 className='font-semibold text-sm mb-1'>Address</h3>
-                        <p className='text-sm'>{profile.address || "-"}</p>
+                        <h3 className="font-semibold text-sm mb-1">Address</h3>
+                        <p className="text-sm">{profile.address || "-"}</p>
                       </div>
                       <div>
-                        <h3 className='font-semibold text-sm mb-1'>Passport</h3>
-                        <p className='text-sm'>{profile.passport || "-"}</p>
+                        <h3 className="font-semibold text-sm mb-1">Passport</h3>
+                        <p className="text-sm">{profile.passport || "-"}</p>
                       </div>
                     </>
                   )}
@@ -198,53 +189,53 @@ const ProfileDetailView = ({
               )}
 
               {activeTab === "Student Info" && profile.role === "student" && (
-                <div className='space-y-4'>
+                <div className="space-y-4">
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>Major</h3>
-                    <p className='text-sm'>{profile.major || "-"}</p>
+                    <h3 className="font-semibold text-sm mb-1">Major</h3>
+                    <p className="text-sm">{profile.major || "-"}</p>
                   </div>
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>
+                    <h3 className="font-semibold text-sm mb-1">
                       Enrollment Date
                     </h3>
-                    <p className='text-sm'>{profile.enrollDate || "-"}</p>
+                    <p className="text-sm">{profile.enrollDate || "-"}</p>
                   </div>
                 </div>
               )}
 
               {activeTab === "Tutor Info" && profile.role === "tutor" && (
-                <div className='space-y-4'>
+                <div className="space-y-4">
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>
+                    <h3 className="font-semibold text-sm mb-1">
                       Qualification
                     </h3>
-                    <p className='text-sm'>{profile.qualification || "-"}</p>
+                    <p className="text-sm">{profile.qualification || "-"}</p>
                   </div>
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>Experience</h3>
-                    <p className='text-sm'>{profile.experience || "-"}</p>
+                    <h3 className="font-semibold text-sm mb-1">Experience</h3>
+                    <p className="text-sm">{profile.experience || "-"}</p>
                   </div>
                   <div>
-                    <h3 className='font-semibold text-sm mb-1'>Subject</h3>
-                    <p className='text-sm'>{profile.subject || "-"}</p>
+                    <h3 className="font-semibold text-sm mb-1">Subject</h3>
+                    <p className="text-sm">{profile.subject || "-"}</p>
                   </div>
                 </div>
               )}
 
               {activeTab === "Emergency Contact" &&
                 profile.role === "student" && (
-                  <div className='space-y-4'>
+                  <div className="space-y-4">
                     <div>
-                      <h3 className='font-semibold text-sm mb-1'>
+                      <h3 className="font-semibold text-sm mb-1">
                         Emergency Contact Name
                       </h3>
-                      <p className='text-sm'>{profile.emergencyName || "-"}</p>
+                      <p className="text-sm">{profile.emergencyName || "-"}</p>
                     </div>
                     <div>
-                      <h3 className='font-semibold text-sm mb-1'>
+                      <h3 className="font-semibold text-sm mb-1">
                         Emergency Contact Phone
                       </h3>
-                      <p className='text-sm'>{profile.emergencyPhone || "-"}</p>
+                      <p className="text-sm">{profile.emergencyPhone || "-"}</p>
                     </div>
                   </div>
                 )}

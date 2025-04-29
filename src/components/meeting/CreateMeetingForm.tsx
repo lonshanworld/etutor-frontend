@@ -110,7 +110,7 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
       {/* Background Overlay */}
       {isOpen && (
         <div
-          className='bg-black/70 w-full h-full fixed top-0 left-0 z-10'
+          className="bg-black/70 w-full h-full fixed top-0 left-0 z-10"
           onClick={onBack}
         ></div>
       )}
@@ -122,32 +122,32 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
       >
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className='flex flex-col h-full'
+          className="flex flex-col h-full"
         >
           {/* Back Button */}
-          <div className='pb-8'>
+          <div className="pb-8">
             <FiArrowLeft
               size={48}
-              className='text-backgroundOpposite bg-transparent border border-backgroundOpposite rounded-full p-3 hover:text-theme hover:border-theme cursor-pointer transition-200'
+              className="text-backgroundOpposite bg-transparent border border-backgroundOpposite rounded-full p-3 hover:text-theme hover:border-theme cursor-pointer transition-200"
               onClick={onBack}
             />
           </div>
 
           {/* Header */}
-          <div className='pb-8'>
-            <h2 className='text-3xl font-semibold text-primaryText'>
+          <div className="pb-8">
+            <h2 className="text-3xl font-semibold text-primaryText">
               Create Meeting
             </h2>
-            <div className='bg-theme w-16 h-1'></div>
+            <div className="bg-theme w-16 h-1"></div>
           </div>
 
           {/* Form Fields */}
-          <div className='grid grid-cols-1 w-full gap-y-6'>
-            <div className='flex flex-col w-full'>
+          <div className="grid grid-cols-1 w-full gap-y-6">
+            <div className="flex flex-col w-full">
               <MeetingInputField
-                id='meeting_subject'
-                type='text'
-                label='Subject'
+                id="meeting_subject"
+                type="text"
+                label="Subject"
                 register={register("meeting_subject")}
                 error={{
                   name: errors.meeting_subject ? "meeting_subject" : null,
@@ -156,51 +156,51 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
               />
             </div>
 
-            <div className='grid sm:grid-cols-2 gap-6'>
-              <div className='flex flex-col w-full'>
-                <label className='text-primaryText pb-1 text-sm'>Time</label>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="flex flex-col w-full">
+                <label className="text-primaryText pb-1 text-sm">Time</label>
                 <input
-                  className='border border-inputBorder w-full px-3 py-2 bg-transparent rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500'
-                  type='time'
+                  className="border border-inputBorder w-full px-3 py-2 bg-transparent rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+                  type="time"
                   {...register("meeting_time")}
                 />
                 {errors.meeting_time && (
-                  <span className='text-red-500 text-sm pt-1'>
+                  <span className="text-red-500 text-sm pt-1">
                     {errors.meeting_time.message}
                   </span>
                 )}
               </div>
 
-              <div className='flex flex-col w-full'>
-                <label className='text-primaryText pb-1 text-sm'>Date</label>
+              <div className="flex flex-col w-full">
+                <label className="text-primaryText pb-1 text-sm">Date</label>
                 <input
-                  className='border border-inputBorder w-full px-3 py-2 bg-transparent rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500'
-                  type='date'
+                  className="border border-inputBorder w-full px-3 py-2 bg-transparent rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500"
+                  type="date"
                   {...register("meeting_date")}
                 />
                 {errors.meeting_date && (
-                  <span className='text-red-500 text-sm pt-1'>
+                  <span className="text-red-500 text-sm pt-1">
                     {errors.meeting_date.message}
                   </span>
                 )}
               </div>
             </div>
 
-            <div className='grid sm:grid-cols-2 gap-6'>
-              <div className='flex flex-col w-full'>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="flex flex-col w-full">
                 <MeetingDropdown
-                  label='Meeting Type'
-                  name='meeting_type'
+                  label="Meeting Type"
+                  name="meeting_type"
                   control={control}
-                  placeholder='Select meeting type'
+                  placeholder="Select meeting type"
                   options={["Virtual", "In-Person"]}
                 />
               </div>
-              <div className='flex flex-col w-full'>
+              <div className="flex flex-col w-full">
                 <MeetingInputField
-                  id='location'
-                  type='text'
-                  label='Location'
+                  id="location"
+                  type="text"
+                  label="Location"
                   register={register("location")}
                   disabled={meetingType === "Virtual"}
                   error={{
@@ -211,32 +211,32 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
               </div>
             </div>
 
-            <div className='grid sm:grid-cols-2 gap-6'>
-              <div className='flex flex-col w-full'>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="flex flex-col w-full">
                 <MeetingDropdown
-                  label='Platform'
-                  name='platform'
+                  label="Platform"
+                  name="platform"
                   control={control}
-                  placeholder='-- Select --'
+                  placeholder="-- Select --"
                   options={["Zoom", "Teams", "Google Meet", "Other"]}
                   className={
-                    meetingType === "In-Person" ?
-                      "opacity-25 pointer-events-none"
-                    : ""
+                    meetingType === "In-Person"
+                      ? "opacity-25 pointer-events-none"
+                      : ""
                   }
                 />
                 {errors.platform && (
-                  <span className='text-red-500 text-sm pt-1'>
+                  <span className="text-red-500 text-sm pt-1">
                     {errors.platform.message}
                   </span>
                 )}
               </div>
 
-              <div className='flex flex-col w-full'>
+              <div className="flex flex-col w-full">
                 <MeetingInputField
-                  id='meeting_link'
-                  type='text'
-                  label='Link'
+                  id="meeting_link"
+                  type="text"
+                  label="Link"
                   disabled={meetingType === "In-Person"}
                   register={register("meeting_link")}
                   error={{
@@ -248,60 +248,58 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
             </div>
 
             {/* Assign Students */}
-            <div className=''>
-              <div className='flex justify-end gap-2 pb-1'>
+            <div className="">
+              <div className="flex justify-end gap-2 pb-1">
                 <button
-                  type='button'
-                  className='p-2 bg-red-500 text-white w-[100px]'
+                  type="button"
+                  className="p-2 bg-red-500 text-white w-[100px]"
                   onClick={() => setAssignedStudents([])}
                 >
                   Clear
                 </button>
                 <button
-                  type='button'
-                  className='p-2 bg-theme text-white'
+                  type="button"
+                  className="p-2 bg-theme text-white"
                   onClick={() => setStudentOverlay(true)}
                 >
                   {assignedStudents.length > 0 ? "Edit" : "Assign"} Student
                 </button>
               </div>
-              <div className='border border-inputBorder h-32 w-full flex flex-wrap content-start gap-x-2 gap-y-2 p-1 overflow-y-auto scrollbar-cus-1 select-none'>
-                {assignedStudents.length > 0 ?
+              <div className="border border-inputBorder h-32 w-full flex flex-wrap content-start gap-x-2 gap-y-2 p-1 overflow-y-auto scrollbar-cus-1 select-none">
+                {assignedStudents.length > 0 ? (
                   assignedStudents.map((student) => (
                     <div
                       key={student.userId}
-                      className='flex items-center gap-2 px-3 bg-meetingCard h-8 text-white rounded-sm'
+                      className="flex items-center gap-2 px-3 bg-meetingCard h-8 text-white rounded-sm"
                     >
-                      <div className='max-sm:hidden'>
-                        <ProfilePic
-                          profileUrl={student.profileUrl}
-                          size={20}
-                        />
+                      <div className="max-sm:hidden">
+                        <ProfilePic profileUrl={student.profileUrl} size={20} />
                       </div>
                       <span>{student.name}</span>
                       <RxCross2
                         size={20}
-                        className='cursor-pointer'
+                        className="cursor-pointer"
                         onClick={() => handleRemove(student.userId)}
                       />
                     </div>
                   ))
-                : <p className='text-sm text-secondaryText p-1'>
+                ) : (
+                  <p className="text-sm text-secondaryText p-1">
                     No student assigned to the meeting yet
                   </p>
-                }
+                )}
               </div>
               {errors.users && (
-                <span className='text-red-500 text-sm pt-1'>
+                <span className="text-red-500 text-sm pt-1">
                   At least one student must be assigned.
                 </span>
               )}
             </div>
 
-            <div className='w-full'>
+            <div className="w-full">
               <button
-                className='p-2 bg-theme w-full text-white mb-6'
-                type='submit'
+                className="p-2 bg-theme w-full text-white mb-6"
+                type="submit"
               >
                 Create
               </button>

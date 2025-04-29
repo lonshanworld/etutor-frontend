@@ -257,8 +257,8 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     isLast?: boolean;
   }) => (
     <div className={!isLast ? "pb-4" : ""}>
-      <p className='text-sm font-semibold'>{label}</p>
-      <p className='text-sm'>{value}</p>
+      <p className="text-sm font-semibold">{label}</p>
+      <p className="text-sm">{value}</p>
     </div>
   );
 
@@ -266,28 +266,19 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     if (!profileState) return null;
 
     return (
-      <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
+      <div className="bg-secondaryBackground p-3 rounded-xl text-secondaryText">
+        <InfoItem label="Date of Birthday" value={profileState.dob || "-"} />
+        <InfoItem label="Gender" value={profileState.gender || "-"} />
         <InfoItem
-          label='Date of Birthday'
-          value={profileState.dob || "-"}
-        />
-        <InfoItem
-          label='Gender'
-          value={profileState.gender || "-"}
-        />
-        <InfoItem
-          label='Nationality'
+          label="Nationality"
           value={profileState.nationality || "-"}
           isLast={user?.role !== "staff" && !isOwnProfile}
         />
         {(user?.role === "staff" || isOwnProfile) && (
           <>
+            <InfoItem label="Passport" value={profileState.passport || "-"} />
             <InfoItem
-              label='Passport'
-              value={profileState.passport || "-"}
-            />
-            <InfoItem
-              label='Address'
+              label="Address"
               value={profileState.address || "-"}
               isLast
             />
@@ -303,13 +294,10 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     return (
       <>
         {(isOwnProfile || user?.role === "tutor" || user?.role === "staff") && (
-          <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
+          <div className="bg-secondaryBackground p-3 rounded-xl text-secondaryText">
+            <InfoItem label="Major" value={profileState.major || "-"} />
             <InfoItem
-              label='Major'
-              value={profileState.major || "-"}
-            />
-            <InfoItem
-              label='Enrollment Date'
+              label="Enrollment Date"
               value={profileState.enrollDate || "-"}
               isLast={user?.role !== "staff" || !isOwnProfile}
             />
@@ -317,13 +305,13 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
         )}
 
         {(user?.role === "staff" || isOwnProfile) && (
-          <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText mb-6'>
+          <div className="bg-secondaryBackground p-3 rounded-xl text-secondaryText mb-6">
             <InfoItem
-              label='Emergency Contact Name'
+              label="Emergency Contact Name"
               value={profileState.emergencyName || "-"}
             />
             <InfoItem
-              label='Emergency Contact Phone'
+              label="Emergency Contact Phone"
               value={profileState.emergencyPhone || "-"}
               isLast
             />
@@ -337,20 +325,13 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     if (!profileState || profileState.role !== "tutor") return null;
 
     return (
-      <div className='bg-secondaryBackground p-3 rounded-xl text-secondaryText'>
+      <div className="bg-secondaryBackground p-3 rounded-xl text-secondaryText">
         <InfoItem
-          label='Qualification'
+          label="Qualification"
           value={profileState.qualification || "-"}
         />
-        <InfoItem
-          label='Experience'
-          value={profileState.experience || "-"}
-        />
-        <InfoItem
-          label='Subject'
-          value={profileState.subject || "-"}
-          isLast
-        />
+        <InfoItem label="Experience" value={profileState.experience || "-"} />
+        <InfoItem label="Subject" value={profileState.subject || "-"} isLast />
       </div>
     );
   };
@@ -358,20 +339,20 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
   const ProfileHeader = () => {
     if (isLoading) {
       return (
-        <div className='mt-8 px-5 py-6 space-y-4'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-3'>
-              <Skeleton className='w-[120px] h-[24px]' />
-              <Skeleton className='w-[60px] h-[20px]' />
+        <div className="mt-8 px-5 py-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Skeleton className="w-[120px] h-[24px]" />
+              <Skeleton className="w-[60px] h-[20px]" />
             </div>
-            <div className='flex items-center gap-2'>
-              <Skeleton className='h-2 w-2 rounded-full' />
-              <Skeleton className='w-[60px] h-[16px]' />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-2 w-2 rounded-full" />
+              <Skeleton className="w-[60px] h-[16px]" />
             </div>
           </div>
-          <div className='pt-1 space-y-2'>
-            <Skeleton className='w-[200px] h-[18px]' />
-            <Skeleton className='w-[140px] h-[18px]' />
+          <div className="pt-1 space-y-2">
+            <Skeleton className="w-[200px] h-[18px]" />
+            <Skeleton className="w-[140px] h-[18px]" />
           </div>
         </div>
       );
@@ -386,34 +367,31 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
     );
 
     return (
-      <div className='mt-8 px-5 py-6'>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-3'>
-            <p className='font-semibold text-xl text-primaryText'>{fullName}</p>
-            <div className='text-sm px-1.5 bg-theme rounded-sm text-white'>
+      <div className="mt-8 px-5 py-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <p className="font-semibold text-xl text-primaryText">{fullName}</p>
+            <div className="text-sm px-1.5 bg-theme rounded-sm text-white">
               {capitalizeFirstLetter(profileState.role)}
             </div>
           </div>
-          <div className='flex items-center gap-1'>
+          <div className="flex items-center gap-1">
             <div
               className={`rounded-full h-2 w-2 ${lastSeen === "Active now" ? "bg-green-600" : "bg-red-600"}`}
             ></div>
             <span className='text-sm text-secondaryText'>{lastSeen}</span>
           </div>
         </div>
-        <div className='pt-1 space-y-1'>
-          <div className='flex items-end gap-1.5'>
-            <MdEmail className='text-theme' />
-            <p className='text-sm underline text-secondaryText'>
+        <div className="pt-1 space-y-1">
+          <div className="flex items-end gap-1.5">
+            <MdEmail className="text-theme" />
+            <p className="text-sm underline text-secondaryText">
               {profileState.email}
             </p>
           </div>
-          <div className='flex items-end gap-1.5'>
-            <BiSolidPhone
-              size={17}
-              className='text-theme'
-            />
-            <p className='text-sm text-secondaryText'>
+          <div className="flex items-end gap-1.5">
+            <BiSolidPhone size={17} className="text-theme" />
+            <p className="text-sm text-secondaryText">
               {profileState.phone || "-"}
             </p>
           </div>
@@ -425,37 +403,38 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
   // Main content of the profile box
   const profileContent = (
     <>
-      <div className='h-[80px] bg-theme w-full'>
+      <div className="h-[80px] bg-theme w-full">
         {!uiState.isMobile && (
           <div
             onClick={handleViewDetail}
-            className='w-full flex justify-end p-2 cursor-pointer'
-            aria-label='View detailed profile'
+            className="w-full flex justify-end p-2 cursor-pointer"
+            aria-label="View detailed profile"
           >
-            <IoOpenOutline color='white' />
+            <IoOpenOutline color="white" />
           </div>
         )}
       </div>
       <div>
         {/* profile photo */}
-        <div className='absolute top-9 left-5'>
-          <div className='rounded-full bg-background p-1.5'>
-            {isLoading ?
-              <Skeleton className='rounded-full w-[80px] h-[80px]' />
-            : <ProfilePic
+        <div className="absolute top-9 left-5">
+          <div className="rounded-full bg-background p-1.5">
+            {isLoading ? (
+              <Skeleton className="rounded-full w-[80px] h-[80px]" />
+            ) : (
+              <ProfilePic
                 profileUrl={profileState?.profileUrl || ""}
                 size={80}
               />
-            }
+            )}
           </div>
         </div>
 
         {!isOwnProfile && profileState && user?.id !== profileState.userId && (
-          <div className='absolute top-[60px] right-4'>
+          <div className="absolute top-[60px] right-4">
             <button
               onClick={handleChat}
               className={`px-4 py-2 bg-secondaryBackground rounded-lg flex  text-primaryText hover:bg-opacity-80 transition-colors ${isReadOnly ? "pointer-events-none" : "cursor-pointer"}`}
-              aria-label='Message user'
+              aria-label="Message user"
             >
               <div
                 className={`flex items-end gap-1.5 ${isReadOnly && "opacity-50"}`}
@@ -470,7 +449,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
         <ProfileHeader />
 
         {uiState.isMobile && (
-          <div className='px-5 pb-6 space-y-6'>
+          <div className="px-5 pb-6 space-y-6">
             <PersonalInfoSection />
             <StudentInfoSection />
             <TutorInfoSection />
@@ -505,7 +484,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
               uiState.isVisible ? "opacity-50" : "opacity-0"
             }`}
             onClick={handleClose}
-            aria-hidden='true'
+            aria-hidden="true"
           ></div>
         )}
 
@@ -519,28 +498,28 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          role='dialog'
-          aria-modal='true'
-          aria-label='User Profile'
+          role="dialog"
+          aria-modal="true"
+          aria-label="User Profile"
         >
           {/* Drag handle header - this is the primary draggable area */}
           <div
             ref={headerRef}
-            className='sticky top-0 z-10 pt-3 pb-1 flex justify-center bg-theme w-full'
+            className="sticky top-0 z-10 pt-3 pb-1 flex justify-center bg-theme w-full"
           >
             <div
-              className='w-12 h-1 bg-gray-300 rounded-full'
-              aria-label='Drag to close'
+              className="w-12 h-1 bg-gray-300 rounded-full"
+              aria-label="Drag to close"
             ></div>
           </div>
 
           {/* Scrollable content container */}
           <div
             ref={contentRef}
-            className='max-h-[calc(80vh-30px)] overflow-y-auto overscroll-contain'
+            className="max-h-[calc(80vh-30px)] overflow-y-auto overscroll-contain"
           >
             {/* Profile content */}
-            <div className='relative'>{profileContent}</div>
+            <div className="relative">{profileContent}</div>
           </div>
         </div>
       </>
@@ -556,7 +535,7 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
           className={`fixed top-0 left-0 w-full h-full z-40 select-none transition-opacity duration-300 ${
             uiState.isVisible ? "bg-black bg-opacity-20" : "bg-opacity-0"
           }`}
-          aria-hidden='true'
+          aria-hidden="true"
         ></div>
       )}
 
@@ -564,9 +543,9 @@ const ProfileBoxPopup = ({ className, userId, onClose }: Props) => {
       <div
         className={`relative bg-background sm:rounded-lg min-w-[300px] sm:min-w-[350px] min-h-[240px] rounded-lg overflow-clip shadow-xl z-50 
           transition-all duration-300 ease-out ${uiState.isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"}`}
-        role='dialog'
-        aria-modal='true'
-        aria-label='User Profile'
+        role="dialog"
+        aria-modal="true"
+        aria-label="User Profile"
       >
         {profileContent}
       </div>

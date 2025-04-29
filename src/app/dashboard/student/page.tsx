@@ -109,56 +109,57 @@ export default function StudentMainPage() {
   };
 
   return (
-    <div className='w-full h-full relative'>
-      <div className='absolute inset-0 px-3 py-3 md:px-5 overflow-auto'>
-        {viewMeeting ?
+    <div className="w-full h-full relative">
+      <div className="absolute inset-0 px-3 py-3 md:px-5 overflow-auto">
+        {viewMeeting ? (
           <MeetingDetail
             meeting={viewMeeting}
             onBack={() => setViewMeeting(null)}
             onDelete={() => undefined}
           />
-        : <div className='flex flex-col min-h-full'>
+        ) : (
+          <div className="flex flex-col min-h-full">
             {/* Header */}
-            <div className='sm:hidden px-1 pb-3'>
-              <div className='text-2xl font-semibold text-secondaryText'>
+            <div className="sm:hidden px-1 pb-3">
+              <div className="text-2xl font-semibold text-secondaryText">
                 Home
               </div>
-              <div className='bg-theme w-9 h-1'></div>
+              <div className="bg-theme w-9 h-1"></div>
             </div>
-            <div className='hidden sm:flex w-full text-2xl font-semibold pl-3 py-1 mb-2'>
+            <div className="hidden sm:flex w-full text-2xl font-semibold pl-3 py-1 mb-2">
               My Tutor
             </div>
-            {tutorLoading ?
-              <div className='rounded-3xl bg-homeItem p-4 sm:min-h-[300px] flex items-center justify-center'>
+            {tutorLoading ? (
+              <div className="rounded-3xl bg-homeItem p-4 sm:min-h-[300px] flex items-center justify-center">
                 Loading...
               </div>
-            : myTutorInfo ?
+            ) : myTutorInfo ? (
               <>
                 {/* Top section */}
-                <div className='flex flex-col md:flex-row gap-4 min-h-[300px]'>
+                <div className="flex flex-col md:flex-row gap-4 min-h-[300px]">
                   {/* Left card - Tutor Profile */}
 
-                  <div className='flex flex-col rounded-3xl bg-homeItem p-4 flex-1'>
-                    <div className='flex w-full text-lg font-semibold pb-3 sm:hidden'>
+                  <div className="flex flex-col rounded-3xl bg-homeItem p-4 flex-1">
+                    <div className="flex w-full text-lg font-semibold pb-3 sm:hidden">
                       My Tutor
                     </div>
 
                     {/* Profile */}
-                    <div className='flex gap-4 items-center pb-4'>
-                      <div className='sm:hidden'>
+                    <div className="flex gap-4 items-center pb-4">
+                      <div className="sm:hidden">
                         <ProfilePic
                           profileUrl={myTutorInfo?.profile_picture || null}
                           size={40}
                         />
                       </div>
-                      <div className='hidden sm:block'>
+                      <div className="hidden sm:block">
                         <ProfilePic
                           profileUrl={myTutorInfo?.profile_picture || null}
                           size={60}
                         />
                       </div>
-                      <div className='flex flex-col'>
-                        <p className='sm:text-lg font-semibold text-primaryText'>
+                      <div className="flex flex-col">
+                        <p className="sm:text-lg font-semibold text-primaryText">
                           {formatName(
                             myTutorInfo?.first_name,
                             myTutorInfo?.middle_name,
@@ -170,32 +171,32 @@ export default function StudentMainPage() {
                     </div>
 
                     {/* Info */}
-                    <div className='grid grid-cols-2 gap-4 flex-1 sm:p-4'>
-                      <div className='flex flex-col'>
-                        <p className='text-base font-semibold pb-1'>Subject</p>
-                        <p className='text-secondaryText text-md'>
+                    <div className="grid grid-cols-2 gap-4 flex-1 sm:p-4">
+                      <div className="flex flex-col">
+                        <p className="text-base font-semibold pb-1">Subject</p>
+                        <p className="text-secondaryText text-md">
                           {myTutorInfo?.subject_name || "-"}
                         </p>
                       </div>
-                      <div className='flex flex-col'>
-                        <p className='text-base font-semibold pb-1'>
+                      <div className="flex flex-col">
+                        <p className="text-base font-semibold pb-1">
                           Qualification
                         </p>
-                        <p className='text-secondaryText text-md'>
+                        <p className="text-secondaryText text-md">
                           {myTutorInfo?.qualification || "-"}
                         </p>
                       </div>
-                      <div className='flex flex-col'>
-                        <p className='text-base font-semibold pb-1'>
+                      <div className="flex flex-col">
+                        <p className="text-base font-semibold pb-1">
                           Experience
                         </p>
-                        <p className='text-secondaryText text-md'>
-                          {myTutorInfo?.experience ?
-                            `${myTutorInfo?.experience} year${myTutorInfo?.experience > 1 && "s"}`
-                          : "-"}
+                        <p className="text-secondaryText text-md">
+                          {myTutorInfo?.experience
+                            ? `${myTutorInfo?.experience} year${myTutorInfo?.experience > 1 && "s"}`
+                            : "-"}
                         </p>
                       </div>
-                      <div className='flex flex-col'>
+                      <div className="flex flex-col">
                         {/* <p className='text-base font-semibold pb-1'>Start Date</p>
                     <p className='text-secondaryText text-md'>-</p> */}
                       </div>
@@ -203,38 +204,38 @@ export default function StudentMainPage() {
                   </div>
 
                   {/* Right card - Contact Info */}
-                  <div className='flex flex-col rounded-3xl bg-homeItem p-4 flex-1'>
-                    <div className='font-semibold text-base sm:text-xl sm:mb-8 mb-4 mt-2'>
+                  <div className="flex flex-col rounded-3xl bg-homeItem p-4 flex-1">
+                    <div className="font-semibold text-base sm:text-xl sm:mb-8 mb-4 mt-2">
                       Contact Information
                     </div>
 
-                    <div className='grid sm:grid-cols-2 gap-4 mb-4 h-auto sm:p-4'>
-                      <div className='flex flex-col'>
-                        <p className='font-semibold pb-1'>Email</p>
+                    <div className="grid sm:grid-cols-2 gap-4 mb-4 h-auto sm:p-4">
+                      <div className="flex flex-col">
+                        <p className="font-semibold pb-1">Email</p>
                         <p
                           className={`text-md text-secondaryText ${myTutorInfo?.email && "underline"}`}
                         >
                           {myTutorInfo?.email || "-"}
                         </p>
                       </div>
-                      <div className='flex flex-col'>
-                        <p className='font-semibold pb-1'>Phone No.</p>
-                        <p className='text-md text-secondaryText'>
+                      <div className="flex flex-col">
+                        <p className="font-semibold pb-1">Phone No.</p>
+                        <p className="text-md text-secondaryText">
                           {myTutorInfo?.phone_number || "-"}
                         </p>
                       </div>
                     </div>
 
-                    <div className='flex sm:pt-10 pt-3 sm:pl-4'>
+                    <div className="flex sm:pt-10 pt-3 sm:pl-4">
                       <button
                         onClick={handleChat}
-                        className='flex items-center gap-4 bg-grayToggle text-gray-600 rounded-lg shadow-md px-6 py-3'
+                        className="flex items-center gap-4 bg-grayToggle text-gray-600 rounded-lg shadow-md px-6 py-3"
                       >
                         <MdOutlineMessage
                           size={24}
-                          className='text-secondaryText'
+                          className="text-secondaryText"
                         />
-                        <span className='text-[17px] text-secondaryText'>
+                        <span className="text-[17px] text-secondaryText">
                           Message
                         </span>
                       </button>
@@ -242,14 +243,15 @@ export default function StudentMainPage() {
                   </div>
                 </div>
               </>
-            : <div className='rounded-3xl bg-homeItem p-4 sm:h-[250px] h-[150px] flex items-center justify-center sm:text-lg'>
+            ) : (
+              <div className="rounded-3xl bg-homeItem p-4 sm:h-[250px] h-[150px] flex items-center justify-center sm:text-lg">
                 No Tutor assigned to you yet
               </div>
-            }
+            )}
 
             {/* Bottom section */}
-            <div className='flex flex-col rounded-3xl bg-homeItem p-4 h-[200px] md:h-auto md:flex-1 min-h-0 overflow-hidden mt-4'>
-              <div className='col-span-2 row-span-4 sm:row-span-6 h-full'>
+            <div className="flex flex-col rounded-3xl bg-homeItem p-4 h-[200px] md:h-auto md:flex-1 min-h-0 overflow-hidden mt-4">
+              <div className="col-span-2 row-span-4 sm:row-span-6 h-full">
                 <MeetingSummary
                   meetings={activeMeetings}
                   onClick={(meeting) => handleView(meeting)}
@@ -258,7 +260,7 @@ export default function StudentMainPage() {
               </div>
             </div>
           </div>
-        }
+        )}
       </div>
     </div>
   );

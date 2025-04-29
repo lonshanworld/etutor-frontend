@@ -63,89 +63,83 @@ const MyStudentsTable = ({ loading, myStudents }: Props) => {
 
   return (
     <>
-      <div className='flex items-center justify-between'>
-        <h2 className='font-semibold text-primaryText px-2 pb-3 text-lg'>
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold text-primaryText px-2 pb-3 text-lg">
           My Students
         </h2>
 
-        <div className='px-2 pb-3'>
+        <div className="px-2 pb-3">
           <input
-            type='text'
-            placeholder='Search by name or email...'
+            type="text"
+            placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className='w-full sm:max-w-sm px-3 sm:py-2 py-1.5 border border-inputBorder rounded focus:outline-none focus:ring-2 focus:ring-teal-500 sm:min-w-[250px] bg-transparent'
+            className="w-full sm:max-w-sm px-3 sm:py-2 py-1.5 border border-inputBorder rounded focus:outline-none focus:ring-2 focus:ring-teal-500 sm:min-w-[250px] bg-transparent"
           />
         </div>
       </div>
 
-      <div className='sm:rounded-t-xl overflow-hidden'>
-        <div className='h-full w-full overflow-auto'>
-          <div className='min-w-[700px]'>
+      <div className="sm:rounded-t-xl overflow-hidden">
+        <div className="h-full w-full overflow-auto">
+          <div className="min-w-[700px]">
             {profilePopup && (
               <ProfileBoxPopup
-                className='right-40'
+                className="right-40"
                 userId={userId || 0}
                 onClose={() => setProfilePopup(false)}
               />
             )}
-            <table className='w-full table-auto bg-background sm:rounded-t-lg relative'>
-              <thead className='bg-theme py-3 h-[45px] text-white'>
-                <tr className='border border-theme'>
-                  <th className='ps-5 sm:w-[70px] text-left'>No</th>
+            <table className="w-full table-auto bg-background sm:rounded-t-lg relative">
+              <thead className="bg-theme py-3 h-[45px] text-white">
+                <tr className="border border-theme">
+                  <th className="ps-5 sm:w-[70px] text-left">No</th>
                   <th
-                    className='text-left cursor-pointer select-none'
+                    className="text-left cursor-pointer select-none"
                     onClick={handleSortToggle}
-                    title='Sort by name'
+                    title="Sort by name"
                   >
-                    <div className=' flex items-center gap-2'>
+                    <div className=" flex items-center gap-2">
                       <span>Name</span>
-                      {sortOrder === "asc" ?
+                      {sortOrder === "asc" ? (
                         <FaArrowDownAZ />
-                      : <FaArrowDownZA />}
+                      ) : (
+                        <FaArrowDownZA />
+                      )}
                     </div>
                   </th>
-                  <th className='text-left'>Email</th>
-                  <th className='text-left max-md:hidden'>Phone</th>
-                  <th className=''>Action</th>
+                  <th className="text-left">Email</th>
+                  <th className="text-left max-md:hidden">Phone</th>
+                  <th className="">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {loading ?
+                {loading ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className='text-center h-[200px]'
-                    >
+                    <td colSpan={5} className="text-center h-[200px]">
                       Loading...
                     </td>
                   </tr>
-                : myStudents.length === 0 ?
+                ) : myStudents.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className='text-center h-[200px]'
-                    >
+                    <td colSpan={5} className="text-center h-[200px]">
                       No student assigned to you yet
                     </td>
                   </tr>
-                : filteredStudents.length === 0 ?
+                ) : filteredStudents.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className='text-center h-[200px]'
-                    >
+                    <td colSpan={5} className="text-center h-[200px]">
                       No matching students found
                     </td>
                   </tr>
-                : filteredStudents.map((student, index) => (
+                ) : (
+                  filteredStudents.map((student, index) => (
                     <tr
                       key={student.user_id}
-                      className='border border-tableRowBorder h-[50px] sm:h-[70px] text-sm'
+                      className="border border-tableRowBorder h-[50px] sm:h-[70px] text-sm"
                     >
-                      <td className='ps-5'>{index + 1}</td>
+                      <td className="ps-5">{index + 1}</td>
                       <td>
-                        <div className='flex gap-2 items-center'>
+                        <div className="flex gap-2 items-center">
                           <ProfilePic
                             profileUrl={student.profile_picture}
                             size={26}
@@ -160,18 +154,18 @@ const MyStudentsTable = ({ loading, myStudents }: Props) => {
                         </div>
                       </td>
                       <td>{student.email}</td>
-                      <td className='max-md:hidden'>{student.phone_number}</td>
-                      <td className='text-center relative'>
+                      <td className="max-md:hidden">{student.phone_number}</td>
+                      <td className="text-center relative">
                         <button
                           onClick={() => handleViewProfile(student.user_id)}
-                          className='px-2 py-1.5 text-white bg-theme hover:bg-optionBgHover'
+                          className="px-2 py-1.5 text-white bg-theme hover:bg-optionBgHover"
                         >
                           View profile
                         </button>
                       </td>
                     </tr>
                   ))
-                }
+                )}
               </tbody>
             </table>
           </div>
