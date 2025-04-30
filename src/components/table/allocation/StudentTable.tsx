@@ -17,6 +17,8 @@ import { useState } from "react";
 import StudentAllocationPopup from "@/components/allocate/StudentAllocationPopup";
 import { PaginationDemo } from "@/components/pagination/Pagination";
 import { AppRouter } from "@/router";
+import { twMerge } from "tailwind-merge";
+import { useUserStore } from "@/stores/useUserStore";
 
 type TableProps = {
   data: any[];
@@ -25,6 +27,7 @@ type TableProps = {
 };
 const StudentTable = ({ data, pageCount, currentPage }: TableProps) => {
   const { setActiveUser } = useAllocate();
+  const { isReadOnly } = useUserStore();
 
   const [isStudentPopupShown, setIsStudentPopupShown] = useState(false);
 
@@ -94,7 +97,13 @@ const StudentTable = ({ data, pageCount, currentPage }: TableProps) => {
                   <div>
                     {/* <CustomButton text="Allocate" type="button" /> */}
                     <button
-                      className="bg-theme px-8 py-2 text-white rounded-sm hover:bg-themeHover transition-200"
+                      className={twMerge(
+                        "bg-theme px-8 py-2 text-white rounded-sm transition-200",
+                        isReadOnly
+                          ? "opacity-70"
+                          : "opacity-100 hover:bg-themeHover "
+                      )}
+                      disabled={isReadOnly}
                       onClick={() => showStudentPopup(user)}
                     >
                       Allocate

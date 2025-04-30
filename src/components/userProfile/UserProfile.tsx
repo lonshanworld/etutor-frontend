@@ -75,7 +75,7 @@ export default function UserProfile({
   const [info, setInfo] = useState<UserType[] | null>(null);
   const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
-  const { user, setViewUser, setUser } = useUserStore();
+  const { user, setViewUser, setReadOnly, setUser } = useUserStore();
   const [isProfileHover, setProfileHover] = useState(false);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -171,6 +171,20 @@ export default function UserProfile({
       router.push(AppRouter.studentDashboard);
     } else if (profileData.role == UserRole.tutor) {
       router.push(AppRouter.tutorDashboard);
+    } else if (profileData.role == UserRole.staff) {
+      // const viewUser = Cookies.get("viewUser");
+      // if (viewUser) {
+      //   setViewUser(JSON.parse(viewUser));
+      //   setReadOnly(true);
+      // } else {
+      //   setReadOnly(false);
+      // }
+
+      // if (user?.role === UserRole.staff && !viewUser) {
+      //   router.push(AppRouter.staffDashboard);
+      // }
+
+      router.push(AppRouter.staffDashboard);
     }
   };
 
@@ -494,18 +508,17 @@ export default function UserProfile({
               </div>
             </div>
 
-            {showDetail &&
-              user?.role === UserRole.staff &&
-              profileData?.role !== UserRole.staff && (
-                <div
-                  className="float-right mb-5 mt-3 me-5"
-                  onClick={() => viewDashboard(profileData)}
-                >
-                  <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
-                    View Dashboard
-                  </button>
-                </div>
-              )}
+            {showDetail && user?.role === UserRole.staff && (
+              // profileData?.role !== UserRole.staff &&
+              <div
+                className="float-right mb-5 mt-3 me-5"
+                onClick={() => viewDashboard(profileData)}
+              >
+                <button className="bg-theme px-5 py-3 rounded-md text-white font-bold">
+                  View Dashboard
+                </button>
+              </div>
+            )}
           </div>
         )}
 

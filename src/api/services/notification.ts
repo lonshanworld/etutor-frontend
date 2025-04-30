@@ -12,7 +12,10 @@ export async function getNotifications(): Promise<any> {
   return response;
 }
 
-export async function readNotification(body: any, id: number): Promise<any> {
+export async function readNotification(
+  body: any = {},
+  id: number
+): Promise<any> {
   const response = await PostRequest(body, APIS.POST.readNoti + "?" + id);
   return response;
 }
