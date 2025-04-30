@@ -95,7 +95,7 @@ const CreateMeetingForm = ({ onBack, isOpen, onNewMeetingCreated }: Props) => {
       showToast("Meeting created successfully", "success");
       onBack();
     } catch (error) {
-      console.log("New meeting create error", error);
+      showToast("Error occurs while creating meeting", "error");
     }
   };
 

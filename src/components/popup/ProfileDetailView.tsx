@@ -14,6 +14,7 @@ type TabOption = "About" | "Student Info" | "Tutor Info" | "Emergency Contact";
 
 interface ProfileDetailViewProps {
   profile: ProfileData;
+  lastSeen: string;
   onClose: () => void;
   onChat: () => void;
   isOwnProfile: boolean;
@@ -23,6 +24,7 @@ interface ProfileDetailViewProps {
 
 const ProfileDetailView = ({
   profile,
+  lastSeen,
   onClose,
   onChat,
   isOwnProfile,
@@ -98,25 +100,25 @@ const ProfileDetailView = ({
           </div>
 
           {/* User details */}
-          <div className="mt-16 px-8 py-1">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-semibold text-primaryText">
-                {formatName(
-                  profile.firstName,
-                  profile.middleName,
-                  profile.lastName
-                )}
-              </h1>
-              <div className="text-sm px-2 py-0.5 bg-theme rounded-sm text-white">
-                {capitalizeFirstLetter(profile.role)}
+          <div className='mt-16 px-8 py-1'>
+            <div className='flex items-center justify-between gap-3'>
+              <div className='flex gap-3 items-center'>
+                <h1 className='text-2xl font-semibold text-primaryText'>
+                  {formatName(
+                    profile.firstName,
+                    profile.middleName,
+                    profile.lastName
+                  )}
+                </h1>
+                <div className='text-sm px-2 py-0.5 bg-theme rounded-sm text-white'>
+                  {capitalizeFirstLetter(profile.role)}
+                </div>
               </div>
-              <div className="flex items-center gap-1 ml-2">
+              <div className='flex items-center gap-1.5 ml-2'>
                 <div
-                  className={`rounded-full h-2.5 w-2.5 ${profile.status === "activated" ? "bg-green-600" : "bg-red-600"}`}
+                  className={`rounded-full h-2.5 w-2.5 ${lastSeen === "Active now" ? "bg-green-600" : "bg-red-600"}`}
                 ></div>
-                <span className="text-sm">
-                  {capitalizeFirstLetter(profile.status)}
-                </span>
+                <span className='text-sm text-secondaryText'>{lastSeen}</span>
               </div>
             </div>
 
