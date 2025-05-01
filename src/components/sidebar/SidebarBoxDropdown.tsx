@@ -13,6 +13,7 @@ export interface dropdownbtn {
     route : string,
     icon : any,
     iconClicked : any,
+    params : any,
 }
 
 export default function SidebarBoxDropdown(
@@ -57,22 +58,25 @@ export default function SidebarBoxDropdown(
                     isOpen ? "max-h-[500px] opacity-100 pb-2" : "max-h-0 opacity-0 pb-0"
                 }`}
             >
-                {btnList.map((item, index) => (
-                    <button
-                        key={index}
-                        onClick={() => { router.push(item.route);}}
-                        className={`w-full ${item.route === pathName ? "text-theme" : "text-cusGray"} hover:border hover:border-theme hover:border-opacity-30 rounded-lg  transition-colors flex flex-row justify-end items-center pr-3 pl-2 py-2 gap-1`}
-                    >   
-                        <Image
-                            src={item.route === pathName ? item.iconClicked : item.icon}
-                            width={22}
-                            height={22}
-                            alt={"icon"}
-                        />
-                        <span>{item.title}</span>
-                        
-                    </button>
-                ))}
+                {btnList.map((item, index) => {
+                    const isActive = pathName.startsWith(item.route);
+
+                    return (
+                        <button
+                            key={index}
+                            onClick={() => { router.push(`${item.route}${item.params ?? ""}`); }}
+                            className={`w-full ${isActive ? "text-theme" : "text-cusGray"} hover:border hover:border-theme hover:border-opacity-30 rounded-lg transition-colors flex flex-row justify-end items-center pr-3 pl-2 py-2 gap-1`}
+                        >   
+                            <Image
+                                src={isActive ? item.iconClicked : item.icon}
+                                width={22}
+                                height={22}
+                                alt="icon"
+                            />
+                            <span>{item.title}</span>
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );

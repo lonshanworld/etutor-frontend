@@ -63,33 +63,38 @@ export default function SideBarContainer() {
   const reportBtnList : dropdownbtn[] = [
     {
       title : "Active Users",
-      route : `${AppRouter.staffActiveUsers}?page=1`,
+      route : `${AppRouter.staffActiveUsers}`,
       icon : ActiveUsers,
       iconClicked : ActiveUsersClicked,
+      params : "?page=1",
     },
     {
       title : "Browsers Usage",
       route : AppRouter.staffBrowsers,
       icon : Browser,
       iconClicked : BrowserClicked,
+      params : undefined,
     },
     {
       title : "Viewed Pages",
       route : AppRouter.staffPages,
       icon : ViewPages,
       iconClicked : ViewPagesClicked,
+      params : undefined,
     },
     {
       title : "Students",
-      route : `${AppRouter.staffUnassignStudent}?page=1&search=&type=`,
+      route : `${AppRouter.staffUnassignStudent}`,
       icon : ActiveUsers,
       iconClicked : ActiveUsersClicked,
+      params : "",
     },
     {
       title : "Messages",
-      route : `${AppRouter.staffMessage}?page=1&search=&duration=&type=`,
+      route : `${AppRouter.staffMessage}`,
       icon : Chat,
       iconClicked : ChatClicked,
+      params : "?page=1&search=&duration=&type=",
     }
   ]; 
 
