@@ -47,9 +47,7 @@ const NotiList = ({
   }
 
   const getType = () => {
-    const notiType = title.split(" ");
-    setNotiType(notiType[0]);
-    console.log("split", notiType[0]);
+    setNotiType(title);
   };
 
   useEffect(() => {
