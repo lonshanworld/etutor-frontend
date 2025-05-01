@@ -59,6 +59,8 @@ export const APIS = {
     readNoti: "notifications/mark-read",
 
     updateProfile: "user/profile-picture/update",
+
+    sendLogout : (id : number) => `event/logout?id=${id}`,
   },
   PATCH: {
     updatePassword: "update-password", // reset password

@@ -11,3 +11,8 @@ export async function visitBrowser(name : string) : Promise<void>{
     const response = await PostRequest({},APIS.POST.increaseBrowserCount(name));
     console.log("checking browser count response",response, name);
 }
+
+export async function sendLogoutEvent(userId : number ) : Promise<void>{
+    const response = await PostRequest({},APIS.POST.sendLogout(userId));
+    console.log("checking logout event response", response);
+}

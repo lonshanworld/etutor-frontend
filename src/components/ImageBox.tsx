@@ -1,4 +1,6 @@
 import Image from "next/image";
+import placeholderProfile from "@/assets/images/placeholder-profile.png";
+
 
 export default function ImageBox(
     {
@@ -16,7 +18,7 @@ export default function ImageBox(
     >
       <Image
         src={
-          imageUrl ? imageUrl : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-pBfUzg3ft35hIK4QEw0w9qA_vYUTpSYWRQ&s"
+          imageUrl ? imageUrl : placeholderProfile
         }
         fill={true}
         alt="Profile"

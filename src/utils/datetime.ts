@@ -4,7 +4,9 @@ export function getLastActivityAgo(activityLog: {
   updated_at: string | null;
   created_at: string | null;
   last_activity_at: string | null;
-}): string {
+} | null | undefined): string {
+  if (!activityLog) return "-";
+
   const times = [
     activityLog.session_login,
     activityLog.session_logout,

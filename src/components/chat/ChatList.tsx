@@ -188,6 +188,7 @@ export default function ChatList({
             isChat={checkExist(chat)}
             isMine={msg.sender_id === user.id}
             message={msg as MessageType}
+            senderId={msg.sender_id}
           />
         ))}
 

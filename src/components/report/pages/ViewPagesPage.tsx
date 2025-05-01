@@ -1,12 +1,7 @@
 "use client";
 
 import PageTitle from "@/components/PageTitle";
-import dynamic from "next/dynamic";
-
-const CustomLineChart = dynamic(() => import('@/components/report/CustomLineChart'), {
-    ssr: false, // Disable server-side rendering
-    loading: () => <p>Loading...</p>
-  });
+import CustomLineChart from "../CustomLineChart";
 
 export default function ViewedPages(
     {
