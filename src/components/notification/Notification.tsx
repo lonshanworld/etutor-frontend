@@ -46,7 +46,11 @@ const Notification = () => {
   const fetchNoti = async () => {
     const response = await getNotifications();
     console.log("noti", response.data);
-    setNotiData(response.data);
+    const unreadNoti = response?.data?.filter(
+      (noti: any) => noti.read_at === null
+    );
+    console.log("unread noti", unreadNoti);
+    setNotiData(unreadNoti);
   };
 
   const splitType = (type: string) => {
@@ -63,9 +67,11 @@ const Notification = () => {
 
   const readNoti = async (id: number) => {
     const response = await readNotification(null, id);
-    console.log("read noti", notiData, response);
-    const newNotiList = notiData.filter((noti) => noti.notifiable_id !== id);
-    setNotiData(newNotiList);
+    console.log("read noti", response);
+    // const newNotiList = notiData.filter((noti) => !noti.read_at);
+    // setNotiData(newNotiList);
+    await fetchNoti();
+    // console.log("noti id", id);
   };
   return (
     <div className="relative">
@@ -95,7 +101,7 @@ const Notification = () => {
                 <NotiList
                   title={splitType(item.type)}
                   body={item.data.message}
-                  onClose={() => readNoti(item.notifiable_id)}
+                  onClose={() => readNoti(item.id)}
                   createdDate={item.created_at}
                 />
               </div>

@@ -7,6 +7,7 @@ import { AppRouter } from "@/router";
 import { useToast } from "@/stores/useToast";
 import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
+import { sendLogoutEvent } from "@/api/services/events";
 
 const ProfilePopup = ({
   setProfilePopup,
@@ -30,6 +31,9 @@ const ProfilePopup = ({
       });
 
       if (response.ok) {
+        if(user && user.id){
+          await sendLogoutEvent(user?.id);
+        }
         setProfilePopup(false);
         showToast("Logout successfully", "success");
         setUser(null);

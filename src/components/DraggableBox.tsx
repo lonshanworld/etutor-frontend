@@ -77,12 +77,11 @@ const DraggableButton = () => {
   }, [dragging, offset]);
 
   const handleLeave = () => {
-    console.log("clicked");
     setViewUser(null);
     // router.push();
     Cookies.remove("viewUser");
     showLoading();
-    window.location.href = AppRouter.staffStaff;
+    window.location.href = AppRouter.staffDashboard;
   };
 
   if (viewUser)

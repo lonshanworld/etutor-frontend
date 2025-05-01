@@ -47,7 +47,7 @@ export default function TableDemo({
   const { activeRowId, position, setActiveRow, closeOptionBox } =
     useOptionBoxStore();
 
-  const { user: loggedInUser, viewUser } = useUserStore();
+  const { user: loggedInUser, viewUser, isReadOnly } = useUserStore();
   const menuRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [showWarning, setShowWarning] = useState(false);
   const { selectedUser, setSelectedUser } = useSelectedUser();
@@ -260,8 +260,11 @@ export default function TableDemo({
                       onClick={() => handleMenuClick(user.id)}
                       className="p-2 rounded-md hover:bg-
                     optionBgHover"
+                      disabled={isReadOnly}
                     >
-                      <BsThreeDots />
+                      <BsThreeDots
+                        className={`${isReadOnly && "text-gray-300"}`}
+                      />
                     </button>
                   </TableCell>
                 )}
@@ -279,7 +282,7 @@ export default function TableDemo({
       {toast && <CustomToast message={toast.message} type={toast.type} />}
 
       {/* Option Box (Dropdown Menu) */}
-      {activeRowId && position && (
+      {activeRowId && position && !isReadOnly && (
         <div
           className="absolute bg-optionBackground text-optionFontColor shadow-md w-[150px] z-10 max-sm:text-sm"
           ref={optionRef}

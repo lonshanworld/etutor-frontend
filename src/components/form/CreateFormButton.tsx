@@ -4,6 +4,7 @@ import { UserRole } from "@/model/user";
 import { Button } from "../ui/button";
 import { useFormStore } from "@/stores/useFormStore";
 import { useSelectedUser } from "@/stores/useSelectedUser";
+import { useUserStore } from "@/stores/useUserStore";
 
 const CreateFormButton = ({ role }: { role: UserRole }) => {
   const {
@@ -14,6 +15,7 @@ const CreateFormButton = ({ role }: { role: UserRole }) => {
     setUpdateFormRendered,
   } = useFormStore();
   const { selectedUser, setSelectedUser } = useSelectedUser();
+  const { isReadOnly } = useUserStore();
   const handleClick = () => {
     setShowForm();
     setRole(role);
@@ -40,6 +42,7 @@ const CreateFormButton = ({ role }: { role: UserRole }) => {
       variant="default"
       className="max-sm:text-sm font-semibold p-3 sm:p-5 text-white max-sm:me-3"
       onClick={handleClick}
+      disabled={isReadOnly}
     >
       Create Account
     </Button>

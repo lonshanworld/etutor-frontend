@@ -12,17 +12,21 @@ import { api } from "../../../convex/_generated/api";
 import { useUserStore } from "@/stores/useUserStore";
 import { Id } from "../../../convex/_generated/dataModel";
 import { useToast } from "@/stores/useToast";
+import ImageBox from "../ImageBox";
+import { useChatProfileListStore } from "@/stores/useChatListProfile";
 
 
 export default function MessageBox(
     {
         isMine,
         message,
-        isChat
+        isChat,
+        senderId,
     } : {
         isMine : boolean,
         message : MessageType,
         isChat : boolean
+        senderId : number,
     }
 ){
     const [showDelete, setShowDelete] = useState(false);
@@ -33,6 +37,7 @@ export default function MessageBox(
     const deleteMessage = useMutation(api.message.deleteMessage);
     const deleteNote = useMutation(api.note.deleteNote);
     const {showToast} = useToast();
+    const {getOneProfileById} = useChatProfileListStore();
 
     // Handle click outside
     useEffect(() => {
@@ -99,7 +104,7 @@ export default function MessageBox(
         <div
         className={`w-full flex flex-row gap-3 ${isMine ? "justify-end items-end" : "justify-start items-start"}`}>
             {
-                isMine === false && <ProfileImageBox />
+                isMine === false && <ImageBox imageUrl={getOneProfileById(senderId)?.profile_picture} />
             }
             <div
             ref={messageRef}
@@ -149,7 +154,7 @@ export default function MessageBox(
                 </div>
             </div>
             {
-                isMine === true && <ProfileImageBox />
+                isMine === true && <ImageBox imageUrl={user?.profileImagePath} />
             }
         </div>
     );

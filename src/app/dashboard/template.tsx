@@ -93,7 +93,7 @@ export default function DashboardTemplate({
   useEffect(() => {
     const handleBeforeUnload = () => {
       if(user){
-        navigator.sendBeacon(`http://localhost:8000/api/logout?id=${user.id}`);
+        navigator.sendBeacon(`${process.env.NEXT_PUBLIC_API_URL}/event/logout?id=${user.id}`);
       }
   
       session_logout();

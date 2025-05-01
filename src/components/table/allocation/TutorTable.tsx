@@ -16,6 +16,8 @@ import { User } from "@/model/user";
 import { useAllocate } from "@/stores/useAllocate";
 import TutorAllocationPopup from "@/components/allocate/TutorAllocationPopup";
 import { useEffect, useState } from "react";
+import { useUserStore } from "@/stores/useUserStore";
+import { twMerge } from "tailwind-merge";
 
 type TableProps = {
   data: any[];
@@ -26,7 +28,7 @@ const TutorTable = ({ data, pageCount, currentPage }: TableProps) => {
   const { userList, setActiveUser, setUserList } = useAllocate();
   const [isTutorPopupShown, setIsTutorPopupShown] = useState(false);
   const [tutorData, setTutorData] = useState<any[]>([]);
-
+  const { isReadOnly } = useUserStore();
   const showTutorPopup = (user: User) => {
     setIsTutorPopupShown(true);
     setActiveUser(user);
@@ -93,8 +95,14 @@ const TutorTable = ({ data, pageCount, currentPage }: TableProps) => {
                   <div>
                     {/* <CustomButton text="Allocate" type="button" /> */}
                     <button
-                      className="bg-theme px-8 py-2 text-white rounded-sm hover:bg-themeHover transition-200"
+                      className={twMerge(
+                        "bg-theme px-8 py-2 text-white rounded-sm transition-200",
+                        isReadOnly
+                          ? "opacity-70"
+                          : "opacity-100 hover:bg-themeHover "
+                      )}
                       onClick={() => showTutorPopup(user)}
+                      disabled={isReadOnly}
                     >
                       Allocate
                     </button>
