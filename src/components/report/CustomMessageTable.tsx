@@ -146,7 +146,7 @@ export default function CustomMessageTable({
     if (search && searchInputRef.current) {
       searchInputRef.current.value = search;
     }
-  }, [search, duration, type]);
+  }, [search, duration, type, page]);
 
   function restartSearch() {
     router.replace(
@@ -227,7 +227,7 @@ export default function CustomMessageTable({
                           className={`border-[1px] border-tableRowBorder h-[20px]`}
                         >
                           <TableCell className="font-medium text-center">
-                            {index + 1}
+                            {(page - 1) * 10 + (index + 1)}
                           </TableCell>
                           <TableCell className="font-medium">
                             <p className="truncate text-center">
@@ -256,7 +256,7 @@ export default function CustomMessageTable({
                           className={`border-[1px] border-tableRowBorder h-[70px] py-0"`}
                         >
                           <TableCell className="font-medium text-center">
-                            {index + 1}
+                            {(page - 1) * 10 + (index + 1)}
                           </TableCell>
                           <TableCell className="font-medium">
                             <p className="truncate text-center">

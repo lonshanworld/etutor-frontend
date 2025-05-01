@@ -85,7 +85,7 @@ export default function CustomUnassignTable({
       }
     };
     fetchData();
-  }, [search, type]);
+  }, [search, type, page]);
 
   function restartSearch() {
     router.replace(
@@ -154,7 +154,7 @@ export default function CustomUnassignTable({
                           className={`border-[1px] border-tableRowBorder h-[20px]`}
                         >
                           <TableCell className="font-medium text-center">
-                            {index + 1}
+                          {(page - 1) * 10 + (index + 1)}
                           </TableCell>
                           <TableCell className="font-medium">
                             <p className="truncate text-center">
@@ -184,7 +184,7 @@ export default function CustomUnassignTable({
                           className={`border-[1px] border-tableRowBorder h-[70px] py-0"`}
                         >
                           <TableCell className="font-medium text-center">
-                            {index + 1}
+                            {(page - 1) * 10 + (index + 1)}
                           </TableCell>
                           <TableCell className="font-medium">
                             <p className="truncate text-center">
