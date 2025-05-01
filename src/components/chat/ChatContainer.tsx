@@ -6,12 +6,10 @@ export default function ChatContainer(){
     return(
         <div
         className="w-full h-full pl-4">
-            {/* <ChatProfle /> */}
             <div
             className="py-3">
                 <HorizontalDivider />
             </div>
-            {/* <ChatList /> */}
         </div>
     );
 }
