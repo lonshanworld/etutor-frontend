@@ -10,6 +10,7 @@ type TutorProps = {
   id: number;
   name: string;
   email: string;
+  profile_picture: string;
 };
 
 const MyTutor = ({
@@ -19,7 +20,7 @@ const MyTutor = ({
 }: {
   activeTab: number;
   setActiveTab: (value: number) => void;
-  activeUser: User | null;
+  activeUser: any;
 }) => {
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -29,11 +30,13 @@ const MyTutor = ({
 
   useEffect(() => {
     if (activeUser && activeUser.tutor) {
+      console.log("active.tutor", activeUser.tutor);
       setData([
         {
           id: activeUser.tutor.id,
           name: activeUser.tutor.name,
           email: activeUser.tutor.email,
+          profile_picture: activeUser.tutor.profile_picture,
         },
       ]);
     }

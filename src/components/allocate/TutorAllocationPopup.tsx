@@ -53,19 +53,22 @@ const TutorAllocationPopup = ({
     const tab = tabs.filter((tab) => tab.id === activeTab);
     return tab[0].component;
   };
+
   return (
     <div>
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[788px] h-screen md:h-[700px] md:rounded-lg bg-white z-20 p-10">
         <div className="profile flex items-center gap-3">
-          <div className="w-[105px] h-[105px] rounded-full overflow-hidden">
+          <div>
             {activeUser?.profileImagePath ? (
-              <img
-                src={activeUser?.profileImagePath ?? UserIcon.src}
-                className="w-full h-full object-cover"
-                alt=""
-              />
+              <div className="w-[105px] h-[105px] rounded-full overflow-hidden">
+                <img
+                  src={activeUser?.profileImagePath ?? UserIcon.src}
+                  className="w-full h-full object-cover"
+                  alt=""
+                />
+              </div>
             ) : (
-              <FaUserCircle className="text-8xl bg-theme rounded-full text-white" />
+              <FaUserCircle className="w-[105px] h-[105px] bg-theme rounded-full text-white" />
             )}
           </div>
           <div>

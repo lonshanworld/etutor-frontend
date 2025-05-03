@@ -32,16 +32,13 @@ const AvailableTutors = ({
 
   useEffect(() => {
     const handleSearch = async () => {
-      console.log("search...", searchData);
       if (searchData) {
         const response = await getTutors(1, searchData);
         const tutorResponse = response?.data.map(userFromJson);
-        console.log("search tutors", tutorResponse);
         const newTutorData: any[] = [];
 
         tutorResponse.forEach((tutor: any) => {
           if (tutor.studentCount < 10) {
-            console.log("sssssssssssss", tutor);
             newTutorData.push({
               id: tutor.info.id,
               name:
@@ -51,13 +48,12 @@ const AvailableTutors = ({
                 " " +
                 tutor.lastName,
               email: tutor.email,
+              profile_picture: tutor.profileImagePath,
             });
           }
         });
-        console.log("new...", newTutorData);
         setFilteredData(newTutorData);
         setHasMore(false);
-        //   setFilteredData(searchList);
       } else {
         setSearchCleared(true);
       }
@@ -80,7 +76,6 @@ const AvailableTutors = ({
       setLoading(true);
       const response = await getTutors(page, "");
       const tutorResponse = response?.data.map(userFromJson);
-      console.log("tutorresponse", tutorResponse);
       const newTutorData: any[] = [];
 
       tutorResponse.forEach((tutor: any) => {
@@ -94,6 +89,7 @@ const AvailableTutors = ({
               " " +
               tutor.lastName,
             email: tutor.email,
+            profile_picture: tutor.profileImagePath,
           });
         }
       });
@@ -114,7 +110,6 @@ const AvailableTutors = ({
         );
         return unique;
       });
-      console.log("tutors...", newTutorData);
 
       if (response.meta.current_page >= response.meta.last_page) {
         setHasMore(false);
@@ -146,8 +141,13 @@ const AvailableTutors = ({
 
   return (
     <div>
-      <div className="mt-10">
-        {tutors.length > 0 ? (
+      <div className="mt-10 relative">
+        {loading && (
+          <div className="absolute top-0 left-0 flex justify-center items-center bg-gray-50/80 w-full h-[330px] z-[100]">
+            <div className="w-10 h-10 border-4 border-theme border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+        {tutors.length > 0 && (
           <AllocationTable
             activePopup="student"
             data={filteredData}
@@ -158,7 +158,8 @@ const AvailableTutors = ({
             loading={loading}
             bottomRef={bottomRef}
           />
-        ) : (
+        )}
+        {!loading && tutors.length <= 0 && (
           <div className="flex flex-col items-center justify-center mt-20">
             <img
               src={NoAssignedStudents.src}

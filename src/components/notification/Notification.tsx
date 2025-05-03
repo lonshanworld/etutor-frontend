@@ -3,10 +3,6 @@ import NotiDark from "@/assets/svgs/noti.svg";
 import { useEffect, useRef, useState } from "react";
 import NotiList from "./NotiList";
 
-import Welcome from "@/assets/svgs/notifications/welcome.svg";
-import LastLogin from "@/assets/svgs/notifications/lastLogin.svg";
-import InactiveAlert from "@/assets/svgs/notifications/inactiveAlert.svg";
-import Assign from "@/assets/svgs/notifications/assigned.svg";
 import { useThemeStore } from "@/stores/useThemeStore";
 import {
   getNotifications,
@@ -23,6 +19,45 @@ const Notification = () => {
 
   const notiRef = useRef<HTMLDivElement | null>(null);
   const notiOpenRef = useRef<HTMLImageElement | null>(null);
+
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const observer = useRef<IntersectionObserver | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Initial load when component mounts
+    fetchNoti(1);
+  }, []);
+
+  useEffect(() => {
+    if (loading || !isNotiOpen) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
+  }, [isNotiOpen, loading, hasMore]);
+
+  useEffect(() => {
+    fetchNoti(page); // Normal loading when page changes
+  }, [page]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -43,32 +78,50 @@ const Notification = () => {
     };
   }, []);
 
-  const fetchNoti = async () => {
-    const response = await getNotifications();
-    console.log("noti", response);
-    const unreadNoti = response?.data?.filter(
-      (noti: any) => noti.read_at === null
-    );
-    setNotiData(unreadNoti);
+  const fetchNoti = async (page: number) => {
+    try {
+      setLoading(true);
+      const response = await getNotifications(page);
+      const unreadNoti = response?.data?.filter(
+        (noti: any) => noti.read_at === null
+      );
+
+      if (unreadNoti.length === 0 && page < response.pagination.last_page) {
+        // Automatically load the next page if no "Unassigned" students found
+        fetchNoti(page + 1);
+        return;
+      }
+
+      // Combine old and new, then remove duplicates by ID
+      setNotiData((prev) => {
+        const combined = [...prev, ...unreadNoti];
+        const unique = Array.from(
+          new Map(combined.map((s) => [s.id, s])).values()
+        );
+        return unique;
+      });
+
+      setHasMore(response.pagination.has_more_pages);
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch noti:", error);
+      setLoading(false);
+    }
   };
 
-  // const splitType = (type: string) => {
-  //   const typeArray = type.split("\\");
-  //   return typeArray[typeArray.length - 1].replace(/([a-z])([A-Z])/g, "$1 $2");
-  // };
-
-  useEffect(() => {
-    fetchNoti();
-  }, []);
   const openNoti = () => {
     setNotiOpen(!isNotiOpen);
   };
 
   const readNoti = async (id: number) => {
-    console.log("uuid", id);
     const response = await readNotification(id);
-    console.log("read noti", response);
-    await fetchNoti();
+    if (response.message == "Notifications marked as read") {
+      const newNotiData = notiData.filter((item) => item.id !== id);
+      setNotiData(newNotiData);
+    } else {
+      await fetchNoti(page);
+    }
   };
   return (
     <div className="relative">
@@ -121,6 +174,14 @@ const Notification = () => {
                   here.
                 </div>
               </div>
+            </div>
+          )}
+          {notiData.length > 0 && (
+            <div ref={bottomRef} className="h-1 w-full"></div>
+          )}
+          {loading && (
+            <div className="flex justify-center mt-2">
+              <div className="w-7 h-7 border-2 border-theme border-t-transparent rounded-full animate-spin"></div>
             </div>
           )}
         </div>

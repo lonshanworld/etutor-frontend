@@ -3,8 +3,8 @@ import { APIS } from "../api-constants";
 import { GetRequest, PostRequest } from "../general-api-services";
 import { Profile, profileFromJson } from "@/model/profile";
 
-export async function getNotifications(): Promise<any> {
-  const response = await GetRequest(APIS.GET.getNoti);
+export async function getNotifications(page: number): Promise<any> {
+  const response = await GetRequest(APIS.GET.getNoti + "?page=" + page);
 
   if (isErrorModel(response)) {
     throw response;
