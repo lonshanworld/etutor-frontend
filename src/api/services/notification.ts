@@ -12,10 +12,8 @@ export async function getNotifications(): Promise<any> {
   return response;
 }
 
-export async function readNotification(
-  body: any = {},
-  id: number
-): Promise<any> {
-  const response = await PostRequest(body, APIS.POST.readNoti + "?" + id);
+export async function readNotification(id: number): Promise<any> {
+  const response = await PostRequest(null, APIS.POST.readNoti + "?uuid=" + id);
+  console.log(APIS.POST.readNoti + "?uuid=" + id);
   return response;
 }
