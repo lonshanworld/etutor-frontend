@@ -45,18 +45,17 @@ const Notification = () => {
 
   const fetchNoti = async () => {
     const response = await getNotifications();
-    console.log("noti", response.data);
+    console.log("noti", response);
     const unreadNoti = response?.data?.filter(
       (noti: any) => noti.read_at === null
     );
-    console.log("unread noti", unreadNoti);
     setNotiData(unreadNoti);
   };
 
-  const splitType = (type: string) => {
-    const typeArray = type.split("\\");
-    return typeArray[typeArray.length - 1].replace(/([a-z])([A-Z])/g, "$1 $2");
-  };
+  // const splitType = (type: string) => {
+  //   const typeArray = type.split("\\");
+  //   return typeArray[typeArray.length - 1].replace(/([a-z])([A-Z])/g, "$1 $2");
+  // };
 
   useEffect(() => {
     fetchNoti();
@@ -66,12 +65,10 @@ const Notification = () => {
   };
 
   const readNoti = async (id: number) => {
-    const response = await readNotification(null, id);
+    console.log("uuid", id);
+    const response = await readNotification(id);
     console.log("read noti", response);
-    // const newNotiList = notiData.filter((noti) => !noti.read_at);
-    // setNotiData(newNotiList);
     await fetchNoti();
-    // console.log("noti id", id);
   };
   return (
     <div className="relative">
@@ -99,7 +96,10 @@ const Notification = () => {
             notiData.map((item) => (
               <div key={item.id}>
                 <NotiList
-                  title={splitType(item.type)}
+                  title={
+                    item.data.type.charAt(0).toUpperCase() +
+                    item.data.type.slice(1).toLowerCase()
+                  }
                   body={item.data.message}
                   onClose={() => readNoti(item.id)}
                   createdDate={item.created_at}

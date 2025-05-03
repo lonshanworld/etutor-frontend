@@ -182,7 +182,9 @@ export default function TableDemo({
       showToast("Error occurred while deactivating the user", "error");
     }
   };
-
+  useEffect(() => {
+    console.log("people", users);
+  }, []);
   return (
     <div className="sm:rounded-t-xl overflow-hidden">
       <Table className="border-collapse w-full bg-background sm:rounded-t-lg !overflow-hidden">

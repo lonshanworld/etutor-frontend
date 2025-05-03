@@ -60,11 +60,11 @@ export function PaginationDemo({
           <PaginationNext
             className={twMerge(
               "max-sm:w-7 max-sm:h-7",
-              currentPage === pageCount
+              currentPage === pageCount || !pageCount
                 ? "pointer-events-none opacity-50"
                 : undefined
             )}
-            aria-disabled={currentPage === pageCount}
+            aria-disabled={currentPage === pageCount || !pageCount}
             onClick={() =>
               router.push(`${url}?page=${currentPage + 1}${remainingUrl ?? ""}`)
             }

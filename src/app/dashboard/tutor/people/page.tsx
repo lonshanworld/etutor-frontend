@@ -36,7 +36,7 @@ export default async function PeoplePage({
         <div className="flex items-center w-[200px]">
           <BiFilterAlt className="text-cusGray ms-2 -me-6 z-10" />
           <FilterBox
-            placeholder="Filter Students"
+            placeholder="Filter Users"
             url={AppRouter.tutorPeople}
             className="ps-8 w-[200px]"
             selectedValue={filter}
