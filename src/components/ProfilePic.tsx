@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import placeholderProfile from "@/assets/images/Profile.png";
+import placeholderProfile from "@/assets/svgs/default-profile.svg";
 
 interface Props {
   profileUrl: string | null;
