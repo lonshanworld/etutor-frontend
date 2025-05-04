@@ -37,22 +37,22 @@ const AvailableStudents = ({
   const [loading, setLoading] = useState(false);
   const [searchCleared, setSearchCleared] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+  const [firstLoading, setFirstLoading] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
+  const [isAllocating, setAllocating] = useState(false);
+
   useEffect(() => {
     const handleSearch = async () => {
-      console.log("search...", searchData);
       if (searchData) {
         const response = await getStudents(1, searchData);
         const studentResponse = response?.data.map(userFromJson);
-        console.log("search students", studentResponse);
         const newStudentData: any[] = [];
 
         studentResponse.forEach((student: any) => {
           if (student.tutorSessionStatus === "Unassigned") {
-            console.log("sssssssssssss", student);
             newStudentData.push({
               id: student.info.id,
               name:
@@ -63,10 +63,10 @@ const AvailableStudents = ({
                 student.lastName,
               email: student.email,
               major: getMajorName(student.info.major_id),
+              profile_picture: student.profile_picture,
             });
           }
         });
-        console.log("new...", newStudentData);
         setFilteredData(newStudentData);
         setHasMore(false);
         //   setFilteredData(searchList);
@@ -105,13 +105,13 @@ const AvailableStudents = ({
   };
 
   const loadStudents = async (page: number) => {
+    if (page === 1) setFirstLoading(true);
     try {
       setLoading(true);
       const response = await getStudents(page, "");
       const studentResponse = response?.data.map(userFromJson);
 
       const newStudentData: any[] = [];
-
       studentResponse.forEach((student: any) => {
         if (student.tutorSessionStatus === "Unassigned") {
           newStudentData.push({
@@ -124,6 +124,7 @@ const AvailableStudents = ({
               student.lastName,
             email: student.email,
             major: getMajorName(student.info.major_id),
+            profile_picture: student.profileImagePath,
           });
         }
       });
@@ -160,6 +161,7 @@ const AvailableStudents = ({
       console.error("Failed to fetch students:", error);
       setLoading(false);
     }
+    setFirstLoading(false);
   };
 
   useEffect(() => {
@@ -178,8 +180,8 @@ const AvailableStudents = ({
   }, [loading, hasMore]);
 
   const allocate = async () => {
+    setAllocating(true);
     if (activeUser?.student?.length + selectedUsers.length > 10) {
-      console.log("You can only select up to 10 users");
       setShowWarning(true);
       setError(
         `You already have ${activeUser?.student?.length} students assigned. You can only assign ${10 - activeUser?.student?.length} more students.`
@@ -190,7 +192,6 @@ const AvailableStudents = ({
           student_id: selectedUsers,
           tutor_id: activeUser?.info.id,
         });
-        console.log("assigned", response);
         if (response.errorCode === 500) {
           showToast(response.errorText, "error");
         } else {
@@ -206,6 +207,7 @@ const AvailableStudents = ({
         showToast(error.errorText, "error");
       }
     }
+    setAllocating(false);
   };
 
   const columns = ["Name", "Email", "Major"];
@@ -213,21 +215,31 @@ const AvailableStudents = ({
     <div>
       <div className="flex justify-end">
         <button
+          onClick={allocate}
+          disabled={selectedUsers.length > 0 ? false : true}
+          type="button"
           className={twMerge(
-            "px-8 py-2 text-white rounded-md",
+            "text-white font-medium px-8 py-2 rounded-md text-center inline-flex items-center",
             selectedUsers.length > 0
               ? "bg-theme"
-              : "bg-gray-400  cursor-not-allowed"
+              : "bg-gray-400  cursor-not-allowed",
+            isAllocating && "pointer-events-none"
           )}
-          disabled={selectedUsers.length > 0 ? false : true}
-          onClick={allocate}
         >
-          Assign
+          {isAllocating && (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin me-2"></div>
+          )}
+          {isAllocating ? "Assigning" : "Assign"}
         </button>
       </div>
 
-      <div className="mt-5">
-        {students.length > 0 ? (
+      <div className="relative mt-5">
+        {firstLoading && (
+          <div className="absolute top-0 left-0 flex justify-center items-center bg-gray-50/80 w-full h-[330px] z-[100]">
+            <div className="w-10 h-10 border-4 border-theme border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+        {students.length > 0 && (
           <AllocationTable
             activePopup="tutor"
             data={filteredData}
@@ -237,7 +249,8 @@ const AvailableStudents = ({
             loading={loading}
             bottomRef={bottomRef}
           />
-        ) : (
+        )}
+        {!loading && students.length <= 0 && (
           <div className="flex flex-col items-center justify-center mt-20">
             <img
               src={NoAssignedStudents.src}
@@ -249,14 +262,11 @@ const AvailableStudents = ({
             No Unassigned Students
           </div>
         )}
-        {isError && (
-          <ErrorPopup />
-          // <WarningPopup
-          //   title="Student Allocation"
-          //   message="You can't assign more than 10 students to a tutor"
-          //   setShowWarning={setShowWarning}
-          //   onContinue={() => setShowWarning(false)}
-          // />
+        {isError && <ErrorPopup />}
+        {!firstLoading && loading && (
+          <div className="flex justify-center">
+            <div className="w-7 h-7 border-2 border-theme border-t-transparent rounded-full animate-spin"></div>
+          </div>
         )}
       </div>
     </div>

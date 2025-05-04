@@ -32,63 +32,23 @@ const AssignedStudents = ({
   const [selectAll, setSelectAll] = useState(false);
   const [data, setData] = useState<StudentProps[]>([]);
   const [filteredData, setFilteredData] = useState<StudentProps[]>([]);
+  const [isUnassiging, setIsUnassigning] = useState(false);
 
   const router = useRouter();
 
   const { showToast } = useToast();
   const columns = ["Name", "Email", "Major"];
 
-  //   {
-  //     id: 1,
-  //     firstName: "Michael",
-  //     middleName: "",
-  //     lastName: "Jackson",
-  //     email: "mike@gmail.com",
-  //     major: "Computer Science",
-  //   },
-  //   {
-  //     id: 2,
-  //     firstName: "Francis",
-  //     middleName: "C.",
-  //     lastName: "Murphy",
-  //     email: "murphy@gmail.com",
-  //     major: "SSADM",
-  //   },
-  //   {
-  //     id: 3,
-  //     firstName: "Michael",
-  //     middleName: "",
-  //     lastName: "Jackson",
-  //     email: "mike@gmail.com",
-  //     major: "Computer Science",
-  //   },
-  //   {
-  //     id: 4,
-  //     firstName: "Francis",
-  //     middleName: "C.",
-  //     lastName: "Murphy",
-  //     email: "murphy@gmail.com",
-  //     major: "SSADM",
-  //   },
-  //   {
-  //     id: 5,
-  //     firstName: "Michael",
-  //     middleName: "",
-  //     lastName: "Jackson",
-  //     email: "mike@gmail.com",
-  //     major: "Computer Science",
-  //   },
-  // ];
-  // const data: any = [];
-
   useEffect(() => {
     const totalStudents: any[] = [];
+    console.log("active users", activeUser);
     activeUser?.student.map((user: any) => {
       totalStudents.push({
         id: user.student.id,
         name: user.student.name,
         email: user.student.email,
         major: user.student.major.name,
+        profile_picture: user.student.profile_picture,
       });
     });
     setData(totalStudents);
@@ -117,6 +77,7 @@ const AssignedStudents = ({
   };
 
   const unassign = async () => {
+    setIsUnassigning(true);
     console.log("assigning...", selectedUsers);
     try {
       const response = await unassignedStudent({ student_id: selectedUsers });
@@ -130,8 +91,9 @@ const AssignedStudents = ({
     } catch (error: any) {
       showToast(error.errorText, "error");
     }
+    setIsUnassigning(false);
   };
-  console.log("select all", selectAll);
+
   return (
     <div>
       {data.length > 0 && (
@@ -142,7 +104,7 @@ const AssignedStudents = ({
           >
             {selectAll ? "Unselect All" : "Select All"}
           </button>
-          <button
+          {/* <button
             className={twMerge(
               "sm:px-8 px-5 py-2 max-sm:text-sm text-white rounded-md",
               selectedUsers.length > 0
@@ -153,6 +115,23 @@ const AssignedStudents = ({
             onClick={unassign}
           >
             Unassign
+          </button> */}
+          <button
+            onClick={unassign}
+            disabled={selectedUsers.length > 0 ? false : true}
+            type="button"
+            className={twMerge(
+              "text-white font-medium px-8 py-2 rounded-md text-center inline-flex items-center",
+              selectedUsers.length > 0
+                ? "bg-unassign"
+                : "bg-gray-400  cursor-not-allowed",
+              isUnassiging && "pointer-events-none"
+            )}
+          >
+            {isUnassiging && (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin me-2"></div>
+            )}
+            {isUnassiging ? "Unassigning" : "Unassign"}
           </button>
         </div>
       )}

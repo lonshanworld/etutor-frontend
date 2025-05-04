@@ -54,7 +54,7 @@ export const useEventStore = create<EchoState>((set, get) => ({
       broadcaster: 'reverb',
       key: 'local',
       wsHost: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
-      wsPort: 8080,
+      wsPort: process.env.NEXT_PUBLIC_WEBSOCKET_PORT,
       forceTLS: false,
       disableStats: true,
       enabledTransports: ['ws'],

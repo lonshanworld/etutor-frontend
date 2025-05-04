@@ -47,6 +47,9 @@ const AllocationTable = ({
   const { showToast } = useToast();
   const { activeUser } = useAllocate();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedTutor, setSelectedTutor] = useState<number | null>(null);
+
   const selectUser = (id: any) => {
     setSelectedUsers((prev: any) => {
       const userArray = Array.isArray(id) ? id : [id]; // Ensure `user` is an array
@@ -75,7 +78,7 @@ const AllocationTable = ({
   }, [selectedUsers]);
 
   const unassign = async () => {
-    console.log("unassigning...", activeUser?.info.id);
+    setIsLoading(true);
     try {
       const response = await unassignedStudent({
         student_id: [activeUser?.info.id],
@@ -91,10 +94,12 @@ const AllocationTable = ({
       console.error("Failed to unassign:", error);
       showToast(error.errorText, "error");
     }
+    setIsLoading(false);
   };
 
   const allocate = async (tutor: User) => {
-    console.log("assigning...", tutor.id, activeUser?.info.id);
+    setSelectedTutor(tutor.id);
+    setIsLoading(true);
     try {
       const response = await allocateStudent({
         student_id: [activeUser?.info?.id],
@@ -115,7 +120,9 @@ const AllocationTable = ({
       console.error("Failed to unassign:", error);
       showToast(error.errorText, "error");
     }
+    setIsLoading(false);
   };
+
   return (
     <div className="relative sm:rounded-t-md border-t-[1px]">
       <div className="relative sm:rounded-t-md border-t-[1px] max-h-[330px] overflow-y-auto custom-scrollbar">
@@ -168,11 +175,11 @@ const AllocationTable = ({
 
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
-                        <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] object-cover flex items-center">
-                          {user.profileImagePath ? (
+                        <div className="sm:w-[30px] sm:h-[30px] w-[15px] h-[15px] rounded-full overflow-hidden flex items-center">
+                          {user.profile_picture ? (
                             <img
-                              src={user.profileImagePath}
-                              className=""
+                              src={user.profile_picture}
+                              className="object-cover"
                               alt=""
                             />
                           ) : (
@@ -195,12 +202,18 @@ const AllocationTable = ({
                         {activePopup === "tutor" ? (
                           <div>{user.major}</div>
                         ) : activeTab == 1 ? (
-                          <div
-                            className="text-red-500 cursor-pointer"
-                            onClick={unassign}
-                          >
-                            Unassign
-                          </div>
+                          isLoading ? (
+                            <div className="w-5 h-5 border-2 border-theme border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                            <div
+                              className="text-red-500 cursor-pointer"
+                              onClick={unassign}
+                            >
+                              Unassign
+                            </div>
+                          )
+                        ) : selectedTutor === user.id && isLoading ? (
+                          <div className="w-5 h-5 border-2 border-theme border-t-transparent rounded-full animate-spin"></div>
                         ) : (
                           <div
                             className="text-blue-500 cursor-pointer"
@@ -234,7 +247,7 @@ const AllocationTable = ({
         </div>
         <div ref={bottomRef} className="h-1"></div>
 
-        {loading && <p className="text-center">Loading more...</p>}
+        {/* {loading && <p className="text-center">Loading more...</p>} */}
       </div>
     </div>
   );

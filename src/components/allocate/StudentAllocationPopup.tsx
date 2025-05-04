@@ -19,7 +19,7 @@ const StudentAllocationPopup = ({
 }) => {
   const { activeUser } = useAllocate();
   const [activeTab, setActiveTab] = useState(1);
-
+  console.log("active student", activeUser);
   const [searchData, setSearchData] = useState("");
 
   const tabs = [

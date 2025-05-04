@@ -1,27 +1,14 @@
 import Image from "next/image";
-import placeholderProfile from "@/assets/images/placeholder-profile.png";
+import placeholderProfile from "@/assets/svgs/default-profile.svg";
 
-
-export default function ImageBox(
-    {
-        imageUrl
-    } : {
-        imageUrl? : string | null,
-    }
-) {
-
-
+export default function ImageBox({ imageUrl }: { imageUrl?: string | null }) {
   return (
-    <div
-      className="w-11 h-11 rounded-full bg-secondaryBackground relative overflow-clip cursor-pointer"
-    >
+    <div className='w-11 h-11 rounded-full bg-secondaryBackground relative overflow-clip cursor-pointer'>
       <Image
-        src={
-          imageUrl ? imageUrl : placeholderProfile
-        }
+        src={imageUrl ? imageUrl : placeholderProfile}
         fill={true}
-        alt="Profile"
-        className="absolute object-cover"
+        alt='Profile'
+        className='absolute object-cover'
       />
     </div>
   );

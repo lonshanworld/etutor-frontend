@@ -9,17 +9,20 @@ import InactiveAlert from "@/assets/svgs/notifications/inactiveAlert.svg";
 import Assign from "@/assets/svgs/notifications/assigned.svg";
 import Unassign from "@/assets/images/notifications/Unassign.png";
 import Logout from "@/assets/images/notifications/Logout.png";
+import { twMerge } from "tailwind-merge";
 
 const NotiList = ({
   title,
   body,
   onClose,
   createdDate,
+  isLastItem = false,
 }: {
   title: string;
   body: string;
   onClose: any;
   createdDate: ISOStringFormat;
+  isLastItem?: boolean;
 }) => {
   const [notiType, setNotiType] = useState<string>("");
 
@@ -62,9 +65,9 @@ const NotiList = ({
         return LastLogin.src;
       case "Inactive":
         return InactiveAlert.src;
-      case "Assign":
+      case "New_student":
         return Assign.src;
-      case "Unsign":
+      case "Unassignment":
         return Unassign.src;
       case "Logout":
         return Logout.src;
@@ -74,7 +77,12 @@ const NotiList = ({
   };
 
   return (
-    <div className="relative flex justify-start items-center gap-5 p-2 pt-6 border-b-2 border-gray-300 max-w-[350px] w-full">
+    <div
+      className={twMerge(
+        "relative flex justify-start items-center gap-5 p-2 pt-6 max-w-[350px] w-full",
+        !isLastItem && "border-b-2 border-gray-300"
+      )}
+    >
       <div className="bg-gray-300 rounded-full w-12 h-12 min-w-12 flex items-center justify-center">
         <img src={getIcon()} alt="" />
       </div>
