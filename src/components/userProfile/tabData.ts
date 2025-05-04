@@ -4,7 +4,13 @@ import { dataLabels } from "./profileConstants";
 export function getOtherUserAbout(user: Profile | null) {
   return [
     { label: dataLabels.dob, value: user?.dateOfBirth },
-    { label: dataLabels.gender, value: user?.gender },
+    {
+      label: dataLabels.gender,
+      value:
+        user &&
+        user?.gender?.charAt(0).toUpperCase() +
+          user?.gender?.slice(1).toLowerCase(),
+    },
     { label: dataLabels.nationality, value: user?.nationality },
     { label: dataLabels.passport, value: user?.passport },
     { label: dataLabels.address, value: user?.address },
