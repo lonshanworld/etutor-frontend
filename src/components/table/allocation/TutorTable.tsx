@@ -60,7 +60,9 @@ const TutorTable = ({ data, pageCount, currentPage }: TableProps) => {
                 className="border-[1px] border-tableRowBorder h-[70px]"
               >
                 <TableCell className="font-medium ps-5 lg:ps-8">
-                  {currentPage > 1 ? currentPage * 10 + (index + 1) : index + 1}
+                  {currentPage > 1
+                    ? (currentPage - 1) * 10 + (index + 1)
+                    : index + 1}
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">

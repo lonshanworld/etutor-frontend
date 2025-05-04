@@ -59,7 +59,7 @@ const StudentAllocationPopup = ({
                 alt=""
               />
             ) : (
-              <FaUserCircle className="text-8xl bg-theme rounded-full text-white" />
+              <FaUserCircle className="w-[105px] h-[105px] bg-theme rounded-full text-white" />
             )}
           </div>
           <div>
