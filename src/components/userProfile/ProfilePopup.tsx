@@ -1,5 +1,5 @@
 import { useUserStore } from "@/stores/useUserStore";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Profile from "@/assets/images/Profile.png";
 import { LuLogOut } from "react-icons/lu";
 import { useRouter } from "next/navigation";
@@ -20,21 +20,24 @@ const ProfilePopup = ({
 }) => {
   const { user, setUser } = useUserStore();
   const { showToast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const popupRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const handleLogout = async () => {
+    setLoading(true);
     try {
       const response = await fetch("/api/logout", {
         method: "POST",
       });
 
       if (response.ok) {
-        if(user && user.id){
+        if (user && user.id) {
           await sendLogoutEvent(user?.id);
         }
         setProfilePopup(false);
+        setLoading(false);
         showToast("Logout successfully", "success");
         setUser(null);
       }
@@ -42,6 +45,7 @@ const ProfilePopup = ({
       // Redirect to login page after successful logout
       router.push(AppRouter.loginPage);
     } catch (error) {
+      setLoading(false);
       showToast("Logout Failed", "error");
     }
   };
@@ -90,15 +94,23 @@ const ProfilePopup = ({
             <div className="mx-5 h-[2px] bg-paginationBorder "></div>
           </div>
         )}
-        <div
-          className="logout flex justify-center items-center gap-3 m-1 h-[40px] sm:h-[52px] rounded-lg cursor-pointer hover:bg-optionBgHover transition-200"
-          onClick={handleLogout}
-        >
-          <div>
-            <LuLogOut className="text-red-500 font-bold text-2xl" />
-            {/* <img src={Logout.src} alt="" /> */}
-          </div>
-          <div className="text-sm sm:text-lg">Logout</div>
+        <div>
+          {loading ? (
+            <div className="logout flex justify-center items-center gap-3 m-1 h-[40px] sm:h-[52px] rounded-lg">
+              <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin me-2"></div>
+              <div className="text-sm sm:text-lg">Logging Out</div>
+            </div>
+          ) : (
+            <div
+              className="logout flex justify-center items-center gap-3 m-1 h-[40px] sm:h-[52px] rounded-lg cursor-pointer hover:bg-optionBgHover transition-200"
+              onClick={handleLogout}
+            >
+              <div>
+                <LuLogOut className="text-red-500 font-bold text-2xl" />
+              </div>
+              <div className="text-sm sm:text-lg">Logout</div>
+            </div>
+          )}
         </div>
       </div>
       <div

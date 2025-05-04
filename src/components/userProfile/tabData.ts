@@ -19,7 +19,7 @@ export function getCurrentUserAbout(user: Profile | null) {
         user?.firstName + " " + (user?.middleName ?? "") + " " + user?.lastName,
     },
     { label: "Email", value: user?.email },
-    { label: "Phone No", value: "09756042421" },
+    { label: "Phone No", value: user?.phoneNumber },
     ...getOtherUserAbout(user),
   ];
 }

@@ -30,7 +30,6 @@ const MyTutor = ({
 
   useEffect(() => {
     if (activeUser && activeUser.tutor) {
-      console.log("active.tutor", activeUser.tutor);
       setData([
         {
           id: activeUser.tutor.id,

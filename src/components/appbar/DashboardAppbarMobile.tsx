@@ -3,6 +3,7 @@
 import { MdMenuOpen } from "react-icons/md";
 import ProfileImageBox from "../ProfileImageBox";
 import Notification from "../notification/Notification";
+import NotiIcon from "../notification/NotiIcon";
 
 export default function DashboardAppbarMobile({
   onClickMenu,
@@ -16,7 +17,7 @@ export default function DashboardAppbarMobile({
         className="text-theme w-10 h-10 active:text-backgroundOpposite cursor-pointer"
       />
       <div className="flex items-center gap-5">
-        <Notification />
+        <NotiIcon />
         <ProfileImageBox />
       </div>
     </div>
