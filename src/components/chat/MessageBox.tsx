@@ -143,7 +143,7 @@ export default function MessageBox(
                 }
                 
                 <span
-                className={`text-base ${message.deleted_at ? "text-red-500" : "text-font"}`}>{message.context}</span>
+                className={`text-base ${message.deleted_at ? "text-red-500" : "text-font"} select-none`}>{message.context}</span>
                 <div
                 className={`w-full ${isMine ? "justify-end" : "justify-start"} flex flex-row items-center gap-2`}>
                     <span
