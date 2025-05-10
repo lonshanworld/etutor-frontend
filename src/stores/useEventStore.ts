@@ -88,10 +88,10 @@ export const useEventStore = create<EchoState>((set, get) => ({
     });
 
     // Add listener for Echo connection state
-    echo.connector.pusher.connection.bind('disconnected', () => {
-      console.log('WebSocket disconnected');
-      set({ connected: false });
-    });
+    // echo.connector.pusher.connection.bind('disconnected', () => {
+    //   console.log('WebSocket disconnected');
+    //   set({ connected: false });
+    // });
     // if (!echo) {
     //   console.warn('Echo is not initialized');
     //   return;
